@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="styles.css">
 <style>
 .admin-shell{max-width:1180px;margin:auto;padding:32px 18px}.admin-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.admin-head h1{margin:0}.admin-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.admin-nav button{border:1px solid #dfe5ee;background:#fff;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}.admin-nav button.active{background:#163b6d;color:#fff;border-color:#163b6d}.admin-panel{background:#fff;border:1px solid #e4e9f1;border-radius:16px;padding:22px;box-shadow:0 8px 30px rgba(20,45,80,.06)}.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field input,.field textarea,.field select{font:inherit;padding:11px 12px;border:1px solid #d7deea;border-radius:9px;background:#fff}.field textarea{min-height:100px;resize:vertical}.admin-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.table-wrap{overflow:auto;margin-top:20px}.admin-table{width:100%;border-collapse:collapse;min-width:800px}.admin-table th,.admin-table td{padding:11px;border-bottom:1px solid #edf0f5;text-align:left;vertical-align:top}.admin-table th{font-size:12px;text-transform:uppercase;color:#65738a}.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700;background:#eef3fa}.notice{padding:12px;border-radius:10px;background:#f5f7fb;margin-bottom:16px}.hidden{display:none!important}.csvbox{border:2px dashed #d5ddea;border-radius:12px;padding:18px}.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.stat{background:#f7f9fc;padding:16px;border-radius:12px}.stat b{font-size:24px;display:block}.danger{color:#a32626}.small{font-size:12px;color:#68758a}@media(max-width:760px){.admin-grid,.stat-row{grid-template-columns:1fr}.admin-head{align-items:flex-start;flex-direction:column}}
+.mock-picker{max-height:460px;overflow:auto;border:1px solid #e4e9f1;border-radius:12px;margin:12px 0}.mock-q{display:flex;gap:10px;padding:12px;border-bottom:1px solid #edf0f5;align-items:flex-start}.mock-q:last-child{border-bottom:0}.mock-q input{margin-top:4px}.mock-q p{margin:0;font-size:14px}.mock-q small{display:block;color:#68758a;margin-top:4px}.mock-q.selected{background:#f5f8fd}
 </style>
 </head>
 <body>
@@ -16,7 +17,7 @@
 <div id="adminApp" class="hidden">
 <div class="admin-head"><div><div class="eyebrow">CONTENT MANAGEMENT</div><h1>AxomPrep Admin</h1><p class="small">Manage questions and current affairs without editing code.</p></div><div id="adminUser" class="small"></div></div>
 <div class="stat-row"><div class="stat"><span>Published Questions</span><b id="qCount">—</b></div><div class="stat"><span>Draft / Review</span><b id="reviewCount">—</b></div><div class="stat"><span>Current Affairs</span><b id="caCount">—</b></div></div>
-<div class="admin-nav"><button class="active" data-tab="questions">Questions</button><button data-tab="add">Add Question</button><button data-tab="csv">CSV Import</button><button data-tab="current">Current Affairs</button></div>
+<div class="admin-nav"><button class="active" data-tab="questions">Questions</button><button data-tab="add">Add Question</button><button data-tab="mocks">Mock Tests</button><button data-tab="csv">CSV Import</button><button data-tab="current">Current Affairs</button></div>
 <section id="tab-questions" class="admin-panel tab"><h2>Question bank</h2><p class="small">Recent questions. Use status to control what appears publicly.</p><div class="table-wrap"><table class="admin-table"><thead><tr><th>Question</th><th>Subject</th><th>Exam</th><th>Status</th><th>Action</th></tr></thead><tbody id="questionRows"></tbody></table></div></section>
 <section id="tab-add" class="admin-panel tab hidden"><h2>Add question</h2><div id="formMsg" class="notice hidden"></div><form id="questionForm"><div class="admin-grid">
 <label class="field full">Question<textarea id="qtext" required></textarea></label>
@@ -28,6 +29,30 @@
 <label class="field">Tags<input id="tags" placeholder="assam, history, adre"></label>
 </div><div class="admin-actions"><button class="btn primary" type="submit">Save Question</button><button class="btn light" type="reset">Clear</button></div></form></section>
 <section id="tab-csv" class="admin-panel tab hidden"><h2>Bulk CSV import</h2><div class="notice">Use the same column format planned for AxomPrep: <b>question, option_a, option_b, option_c, option_d, answer, explanation, exam, subject, topic, difficulty, year, tags, status</b>.</div><div class="csvbox"><input type="file" id="csvFile" accept=".csv"><p class="small">The import runs in your browser and sends rows directly to Supabase. Keep the first row as column headers.</p><button class="btn primary" id="importCsv">Import CSV</button></div><div id="csvMsg" class="notice hidden"></div></section>
+
+<section id="tab-mocks" class="admin-panel tab hidden">
+<h2>Mock test builder</h2>
+<p class="small">Create and publish timed tests by selecting questions from your published question bank.</p>
+<div id="mockMsg" class="notice hidden"></div>
+<form id="mockForm"><div class="admin-grid">
+<label class="field"><span>Test title</span><input id="mockTitle" required placeholder="ADRE Full Mock Test 1"></label>
+<label class="field"><span>Test code</span><input id="mockCode" required placeholder="ADRE-FULL-01"></label>
+<label class="field"><span>Exam</span><select id="mockExam"></select></label>
+<label class="field"><span>Duration (minutes)</span><input id="mockDuration" type="number" min="1" value="60" required></label>
+<label class="field"><span>Questions</span><input id="mockTotal" type="number" min="1" value="50" required></label>
+<label class="field"><span>Marks / question</span><input id="mockMarks" type="number" min="0" step="0.25" value="1" required></label>
+<label class="field"><span>Negative mark</span><input id="mockNegative" type="number" min="0" step="0.25" value="0"></label>
+<label class="field"><span>Status</span><select id="mockStatus"><option value="draft">Draft</option><option value="review">Review</option><option value="approved">Approved</option><option value="published">Published</option></select></label>
+<label class="field full"><span>Description</span><textarea id="mockDescription" placeholder="What this test covers..."></textarea></label>
+</div>
+<h3 style="margin-top:24px">Select questions</h3>
+<div class="admin-actions"><input id="mockSearch" placeholder="Search questions..." style="flex:1;min-width:220px;padding:11px 12px;border:1px solid #d7deea;border-radius:9px"><button class="btn light" type="button" id="selectVisible">Select visible</button><button class="btn light" type="button" id="clearSelected">Clear selection</button></div>
+<div id="mockQuestionPicker" class="mock-picker"></div>
+<div class="small" id="mockSelectedCount">0 questions selected</div>
+<div class="admin-actions"><button class="btn primary" type="submit">Save Mock Test</button><button class="btn light" type="reset">Clear</button></div>
+</form>
+<div class="table-wrap"><table class="admin-table"><thead><tr><th>Test</th><th>Exam</th><th>Questions</th><th>Duration</th><th>Status</th><th>Action</th></tr></thead><tbody id="mockRows"></tbody></table></div>
+</section>
 <section id="tab-current" class="admin-panel tab hidden"><h2>Current affairs</h2><div id="caMsg" class="notice hidden"></div><form id="caForm"><div class="admin-grid"><label class="field full">Title<input id="caTitle" required></label><label class="field">Category<input id="caCategory" placeholder="Assam / India / World"></label><label class="field">Published date<input id="caDate" type="date" required></label><label class="field full">Content<textarea id="caContent" required></textarea></label><label class="field">Publish<select id="caPublish"><option value="true">Yes</option><option value="false">No</option></select></label></div><div class="admin-actions"><button class="btn primary">Publish / Save</button></div></form><div class="table-wrap"><table class="admin-table"><thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Published</th></tr></thead><tbody id="caRows"></tbody></table></div></section>
 </div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="admin.js"></script>

@@ -14,3 +14,41 @@ async function loadCurrent(){const {data}=await client.from('current_affairs').s
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 document.querySelectorAll('.admin-nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.admin-nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));$('tab-'+b.dataset.tab).classList.remove('hidden')});
 init();
+
+// ===== Mock Test Builder =====
+let mockQuestions=[]; let mockSelected=new Set();
+async function loadMockBuilder(){
+  const {data:exams}=await client.from('exams').select('id,name').order('name');
+  $('mockExam').innerHTML=(exams||[]).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');
+  const {data,error}=await client.from('questions').select('id,question,year,subjects(name),exams(name)').eq('status','published').order('created_at',{ascending:false}).limit(1000);
+  if(error){msg('mockMsg',error.message);return}
+  mockQuestions=data||[]; renderMockPicker(); await loadMockTests();
+}
+function renderMockPicker(){
+  const term=($('mockSearch')?.value||'').toLowerCase().trim();
+  const rows=mockQuestions.filter(q=>!term||q.question.toLowerCase().includes(term)||(q.subjects?.name||'').toLowerCase().includes(term)||(q.exams?.name||'').toLowerCase().includes(term));
+  $('mockQuestionPicker').innerHTML=rows.map(q=>`<label class="mock-q ${mockSelected.has(q.id)?'selected':''}"><input type="checkbox" value="${q.id}" ${mockSelected.has(q.id)?'checked':''}><span><p>${esc(q.question)}</p><small>${esc(q.exams?.name||'')} • ${esc(q.subjects?.name||'')}${q.year?' • '+q.year:''}</small></span></label>`).join('')||'<div class="notice">No published questions found.</div>';
+  $('mockQuestionPicker').querySelectorAll('input').forEach(cb=>cb.onchange=()=>{if(cb.checked)mockSelected.add(cb.value);else mockSelected.delete(cb.value);cb.closest('.mock-q').classList.toggle('selected',cb.checked);updateMockCount()});
+  updateMockCount();
+}
+function updateMockCount(){if($('mockSelectedCount'))$('mockSelectedCount').textContent=`${mockSelected.size} question${mockSelected.size===1?'':'s'} selected`;}
+$('mockSearch')?.addEventListener('input',renderMockPicker);
+$('selectVisible')?.addEventListener('click',()=>{$('mockQuestionPicker').querySelectorAll('input').forEach(cb=>{mockSelected.add(cb.value);cb.checked=true;cb.closest('.mock-q').classList.add('selected')});updateMockCount()});
+$('clearSelected')?.addEventListener('click',()=>{mockSelected.clear();renderMockPicker()});
+$('mockForm')?.addEventListener('reset',()=>{setTimeout(()=>{mockSelected.clear();renderMockPicker()},0)});
+async function loadMockTests(){
+ const {data,error}=await client.from('mock_tests_v1').select('id,code,title,duration_minutes,total_questions,status,exam_id,exams(name)').order('created_at',{ascending:false}).limit(100);
+ if(error){msg('mockMsg',error.message);return}
+ $('mockRows').innerHTML=(data||[]).map(t=>`<tr><td><b>${esc(t.title)}</b><div class="small">${esc(t.code)}</div></td><td>${esc(t.exams?.name||'')}</td><td>${t.total_questions}</td><td>${t.duration_minutes} min</td><td><span class="badge">${esc(t.status)}</span></td><td><button class="btn light" onclick="setMockStatus('${t.id}','${t.status==='published'?'draft':'published'}')">${t.status==='published'?'Unpublish':'Publish'}</button></td></tr>`).join('')||'<tr><td colspan="6">No mock tests yet.</td></tr>';
+}
+window.setMockStatus=async(id,status)=>{const {error}=await client.from('mock_tests_v1').update({status,updated_at:new Date().toISOString()}).eq('id',id);if(error)msg('mockMsg',error.message);else{msg('mockMsg',`Mock test ${status}.`);await loadMockTests()}};
+$('mockForm')?.addEventListener('submit',async e=>{
+ e.preventDefault(); const total=Number($('mockTotal').value); if(mockSelected.size!==total){msg('mockMsg',`Select exactly ${total} questions before saving. You currently selected ${mockSelected.size}.`);return}
+ const {data:{user}}=await client.auth.getUser(); if(!user){msg('mockMsg','Login session expired.');return}
+ const row={code:$('mockCode').value.trim(),title:$('mockTitle').value.trim(),description:$('mockDescription').value.trim()||null,exam_id:$('mockExam').value||null,duration_minutes:Number($('mockDuration').value),total_questions:total,marks_per_question:Number($('mockMarks').value),negative_mark:Number($('mockNegative').value||0),status:$('mockStatus').value,created_by:user.id,updated_at:new Date().toISOString()};
+ const ins=await client.from('mock_tests_v1').insert(row).select('id').single(); if(ins.error){msg('mockMsg',ins.error.message);return}
+ const selected=[...mockSelected]; const links=selected.map((question_id,i)=>({mock_test_id:ins.data.id,question_id,question_order:i+1}));
+ const link=await client.from('mock_test_questions_v1').insert(links); if(link.error){await client.from('mock_tests_v1').delete().eq('id',ins.data.id);msg('mockMsg','Test was not saved: '+link.error.message);return}
+ msg('mockMsg',`Mock test “${row.title}” saved successfully.`); $('mockForm').reset(); await loadMockTests();
+});
+const _oldInit=init; init=async function(){await _oldInit(); if(!$('mockForm'))return; await loadMockBuilder();};

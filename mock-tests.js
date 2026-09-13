@@ -3,12 +3,13 @@ const client=supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 
-const TESTS=[
- {code:'ADRE-FULL-01',exam:'ADRE',title:'ADRE Full Mock Test',description:'Mixed Assam GK, Mathematics, Reasoning, English and General Knowledge.',questions:50,minutes:60},
- {code:'APSC-GS-01',exam:'APSC',title:'APSC General Studies Mock',description:'General Studies practice covering Assam and India-focused topics.',questions:50,minutes:60},
- {code:'SSC-MIX-01',exam:'SSC',title:'SSC Practice Mock',description:'Mixed aptitude, reasoning, English and general awareness practice.',questions:50,minutes:60},
- {code:'POLICE-MIX-01',exam:'Assam Police',title:'Assam Police Practice Mock',description:'Mixed recruitment-oriented practice for Assam Police aspirants.',questions:50,minutes:60}
+let TESTS=[
+ {code:'ADRE-FULL-01',exam:'ADRE',title:'ADRE Full Mock Test',description:'Mixed Assam GK, Mathematics, Reasoning, English and General Knowledge.',questions:50,minutes:60,marks:1,negative:0},
+ {code:'APSC-GS-01',exam:'APSC',title:'APSC General Studies Mock',description:'General Studies practice covering Assam and India-focused topics.',questions:50,minutes:60,marks:1,negative:0},
+ {code:'SSC-MIX-01',exam:'SSC',title:'SSC Practice Mock',description:'Mixed aptitude, reasoning, English and general awareness practice.',questions:50,minutes:60,marks:1,negative:0},
+ {code:'POLICE-MIX-01',exam:'Assam Police',title:'Assam Police Practice Mock',description:'Mixed recruitment-oriented practice for Assam Police aspirants.',questions:50,minutes:60,marks:1,negative:0}
 ];
+
 let currentUser=null,currentTest=null,questions=[],answers=[],idx=0,timer=null,remaining=0,startedAt=0,questionStartedAt=0,attemptId=null,submitted=false;
 
 async function init(){
@@ -19,7 +20,15 @@ async function init(){
  $('logoutBtn').onclick=async()=>{await client.auth.signOut();location.href='index.html';};
  $('menuBtn').onclick=()=>document.querySelector('nav')?.classList.toggle('mobile-show');
  document.querySelectorAll('.mock-filter').forEach(b=>b.onclick=()=>{document.querySelectorAll('.mock-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderCatalogue(b.dataset.exam);});
- await renderCatalogue('all');
+ await loadPublishedTests();
+ renderCatalogue('all');
+}
+
+async function loadPublishedTests(){
+ const {data,error}=await client.from('mock_tests_v1').select('id,code,title,description,duration_minutes,total_questions,marks_per_question,negative_mark,exam_id,exams(name)').eq('status','published').order('created_at',{ascending:false});
+ if(error){console.warn('Builder tests unavailable; using built-in tests.',error.message);return;}
+ const dynamic=(data||[]).map(t=>({id:t.id,code:t.code,exam:t.exams?.name||'Exam',title:t.title,description:t.description||'',questions:t.total_questions,minutes:t.duration_minutes,marks:Number(t.marks_per_question||1),negative:Number(t.negative_mark||0),dynamic:true}));
+ if(dynamic.length)TESTS=dynamic;
 }
 
 function renderCatalogue(filter){
@@ -30,13 +39,20 @@ function renderCatalogue(filter){
 window.startMock=async code=>{
  currentTest=TESTS.find(t=>t.code===code); if(!currentTest)return;
  $('mockCatalogue').classList.add('hidden'); $('mockPanel').classList.remove('hidden'); $('mockPanel').innerHTML='<div class="loading">Preparing your mock test…</div>';
- const {data,error}=await client.from('questions').select('id,question,option_a,option_b,option_c,option_d,answer,explanation,exam_id,subjects(name),exams(name)').eq('status','published').limit(1000);
- if(error){showRunError(error.message);return;}
- let pool=data||[];
- const examPool=pool.filter(q=>(q.exams?.name||'').toLowerCase()===currentTest.exam.toLowerCase());
- if(examPool.length>=currentTest.questions)pool=examPool;
+ let pool=[];
+ if(currentTest.dynamic){
+   const {data,error}=await client.from('mock_test_questions_v1').select('question_order,questions(id,question,option_a,option_b,option_c,option_d,answer,explanation,exam_id,subjects(name),exams(name))').eq('mock_test_id',currentTest.id).order('question_order');
+   if(error){showRunError(error.message);return;}
+   pool=(data||[]).map(x=>x.questions).filter(Boolean);
+ } else {
+   const {data,error}=await client.from('questions').select('id,question,option_a,option_b,option_c,option_d,answer,explanation,exam_id,subjects(name),exams(name)').eq('status','published').limit(1000);
+   if(error){showRunError(error.message);return;}
+   pool=data||[];
+   const examPool=pool.filter(q=>(q.exams?.name||'').toLowerCase()===currentTest.exam.toLowerCase());
+   if(examPool.length>=currentTest.questions)pool=examPool;
+ }
  if(pool.length<currentTest.questions){showRunError(`This mock needs ${currentTest.questions} published questions, but only ${pool.length} suitable questions are currently available. Add and publish more questions from the Admin panel.`);return;}
- questions=pool.sort(()=>Math.random()-.5).slice(0,currentTest.questions);
+ questions=currentTest.dynamic?pool:pool.sort(()=>Math.random()-.5).slice(0,currentTest.questions);
  answers=questions.map(q=>({question_id:q.id,selected_answer:null,correct_answer:q.answer,is_correct:false,time_spent_seconds:0}));
  idx=0;remaining=currentTest.minutes*60;startedAt=Date.now();questionStartedAt=Date.now();submitted=false;
  const ins=await client.from('mock_attempts_v1').insert({user_id:currentUser.id,test_code:currentTest.code,test_title:currentTest.title,exam_name:currentTest.exam,total_questions:questions.length,time_limit_seconds:remaining,completed:false}).select('id').single();
