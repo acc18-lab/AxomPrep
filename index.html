@@ -40,41 +40,41 @@
 
 <section class="section" id="exams"><div class="section-head"><div><div class="eyebrow">CHOOSE YOUR TARGET</div><h2>Prepare for your exam</h2></div><a href="#practice">View all →</a></div>
 <div class="exam-grid">
-  <article class="exam-card accent"><div class="icon">AD</div><h3>ADRE</h3><p>Assam Direct Recruitment</p><button onclick="filterExam('ADRE')">Practice ADRE →</button></article>
-  <article class="exam-card"><div class="icon">AP</div><h3>APSC</h3><p>Assam Public Service Commission</p><button onclick="filterExam('APSC')">Practice APSC →</button></article>
-  <article class="exam-card"><div class="icon">SC</div><h3>SSC</h3><p>Staff Selection Commission</p><button onclick="filterExam('SSC')">Practice SSC →</button></article>
-  <article class="exam-card"><div class="icon">AS</div><h3>Assam Police</h3><p>Recruitment preparation</p><button onclick="filterExam('Assam Police')">Practice →</button></article>
+  <article class="exam-card accent"><div class="icon exam-icon"><span>AD</span></div><h3>ADRE</h3><p>Assam Direct Recruitment</p><button onclick="filterExam('ADRE')">Practice ADRE →</button></article>
+  <article class="exam-card"><div class="icon exam-icon"><span>AP</span></div><h3>APSC</h3><p>Assam Public Service Commission</p><button onclick="filterExam('APSC')">Practice APSC →</button></article>
+  <article class="exam-card"><div class="icon exam-icon"><span>SC</span></div><h3>SSC</h3><p>Staff Selection Commission</p><button onclick="filterExam('SSC')">Practice SSC →</button></article>
+  <article class="exam-card"><div class="icon exam-icon"><span>AS</span></div><h3>Assam Police</h3><p>Recruitment preparation</p><button onclick="filterExam('Assam Police')">Practice →</button></article>
 </div></section>
 
 <section class="section alt" id="practice"><div class="section-head"><div><div class="eyebrow">PRACTICE SMARTER</div><h2>Practice by subject</h2></div></div>
 <div class="subject-grid" id="subjectGrid">
-  <button onclick="loadPractice('Assam GK')">Assam GK <small>History • Geography • Culture</small></button>
-  <button onclick="loadPractice('Mathematics')">Mathematics <small>Arithmetic • Algebra • DI</small></button>
-  <button onclick="loadPractice('Reasoning')">Reasoning <small>Verbal • Non-verbal • Logic</small></button>
-  <button onclick="loadPractice('English')">English <small>Grammar • Vocabulary</small></button>
-  <button onclick="loadPractice('General Knowledge')">General Knowledge <small>India • World • Static GK</small></button>
-  <button onclick="loadPractice('General Science')">General Science <small>Physics • Chemistry • Biology</small></button>
-  <button onclick="loadPractice('Computer')">Computer <small>Basics • Internet • Office</small></button>
-  <button onclick="loadPractice('Current Affairs')">Current Affairs <small>National • Assam • World</small></button>
+  <button class="subject-card" onclick="loadPractice('Assam GK')"><span class="subject-icon">✦</span><span class="subject-name">Assam GK</span><small>History • Geography • Culture</small></button>
+  <button class="subject-card" onclick="loadPractice('Mathematics')"><span class="subject-icon">∑</span><span class="subject-name">Mathematics</span><small>Arithmetic • Algebra • DI</small></button>
+  <button class="subject-card" onclick="loadPractice('Reasoning')"><span class="subject-icon">◎</span><span class="subject-name">Reasoning</span><small>Verbal • Non-verbal • Logic</small></button>
+  <button class="subject-card" onclick="loadPractice('English')"><span class="subject-icon">Aa</span><span class="subject-name">English</span><small>Grammar • Vocabulary</small></button>
+  <button class="subject-card" onclick="loadPractice('General Knowledge')"><span class="subject-icon">◈</span><span class="subject-name">General Knowledge</span><small>India • World • Static GK</small></button>
+  <button class="subject-card" onclick="loadPractice('General Science')"><span class="subject-icon">⚗</span><span class="subject-name">General Science</span><small>Physics • Chemistry • Biology</small></button>
+  <button class="subject-card" onclick="loadPractice('Computer')"><span class="subject-icon">▣</span><span class="subject-name">Computer</span><small>Basics • Internet • Office</small></button>
+  <button class="subject-card" onclick="loadPractice('Current Affairs')"><span class="subject-icon">◉</span><span class="subject-name">Current Affairs</span><small>National • Assam • World</small></button>
 </div>
 <div id="practicePanel" class="question-panel hidden"></div></section>
 
-<section class="section" id="quiz"><div class="daily"><div><div class="eyebrow">EVERY DAY COUNTS</div><h2>Today's Daily Quiz</h2><p>10 questions • 10 minutes • instant results • daily streak.</p><button class="btn primary" id="startQuiz">Start Daily Quiz</button></div><div class="score-ring"><b id="quizScore">0</b><span>/ 10</span></div></div><div id="quizPanel" class="quiz-panel hidden"></div></section>
+<section class="section" id="quiz"><div class="daily"><div><div class="eyebrow">EVERY DAY COUNTS</div><h2>Today's Daily Quiz</h2><p>10 questions • 10 minutes • instant results • daily streak.</p><button class="btn primary" id="startQuiz">Start Daily Quiz</button></div><div class="daily-visual"><div class="daily-badge">Q</div><div class="score-ring"><b id="quizScore">0</b><span>/ 10</span></div></div></div><div id="quizPanel" class="quiz-panel hidden"></div></section>
 
 <section class="section alt" id="mock"><div class="section-head"><div><div class="eyebrow">EXAM SIMULATION</div><h2>Mock tests</h2><p>Timed tests designed to feel like the real exam.</p></div></div>
 <div class="mock-grid">
- <article class="mock-card"><span>ADRE</span><h3>ADRE Full Mock Test</h3><p>100 questions • 120 minutes</p><button class="btn primary" onclick="requireLogin()">Start Mock</button></article>
- <article class="mock-card"><span>SSC</span><h3>SSC Practice Mock</h3><p>50 questions • 60 minutes</p><button class="btn primary" onclick="requireLogin()">Start Mock</button></article>
- <article class="mock-card premium"><span>PRO</span><h3>Premium Test Series</h3><p>Full-length tests + analytics</p><button class="btn dark" onclick="location.hash='pricing'">Unlock Premium</button></article>
+ <article class="mock-card"><div class="feature-icon">AD</div><span>ADRE</span><h3>ADRE Full Mock Test</h3><p>100 questions • 120 minutes</p><button class="btn primary" onclick="requireLogin()">Start Mock</button></article>
+ <article class="mock-card"><div class="feature-icon">SC</div><span>SSC</span><h3>SSC Practice Mock</h3><p>50 questions • 60 minutes</p><button class="btn primary" onclick="requireLogin()">Start Mock</button></article>
+ <article class="mock-card premium"><div class="feature-icon premium-icon">PRO</div><span>PRO</span><h3>Premium Test Series</h3><p>Full-length tests + analytics</p><button class="btn dark" onclick="location.hash='pricing'">Unlock Premium</button></article>
 </div></section>
 
 <section class="section" id="current"><div class="section-head"><div><div class="eyebrow">STAY UPDATED</div><h2>Current Affairs</h2></div><a href="current-affairs.html">See all →</a></div><div id="currentGrid" class="news-grid"><div class="loading">Loading current affairs…</div></div></section>
 
 <section class="section alt" id="books"><div class="section-head"><div><div class="eyebrow">RECOMMENDED RESOURCES</div><h2>Books for aspirants</h2></div></div>
 <div class="book-grid">
- <article class="book-card"><div class="book-cover">ASSAM<br>GK</div><h3>Assam General Knowledge</h3><p>For ADRE, APSC & Assam exams</p><div><a href="#" class="affiliate">Amazon</a><a href="#" class="affiliate">Flipkart</a></div></article>
- <article class="book-card"><div class="book-cover">MATH</div><h3>Quantitative Aptitude</h3><p>Practice & concept building</p><div><a href="#" class="affiliate">Amazon</a><a href="#" class="affiliate">Flipkart</a></div></article>
- <article class="book-card"><div class="book-cover">REASON</div><h3>Reasoning Practice</h3><p>Competitive exam reasoning</p><div><a href="#" class="affiliate">Amazon</a><a href="#" class="affiliate">Flipkart</a></div></article>
+ <article class="book-card"><div class="book-cover book-cover-gk"><b>ASSAM</b><strong>GK</strong></div><h3>Assam General Knowledge</h3><p>For ADRE, APSC & Assam exams</p><div><a href="#" class="affiliate">Amazon</a><a href="#" class="affiliate">Flipkart</a></div></article>
+ <article class="book-card"><div class="book-cover book-cover-math"><b>MATH</b><strong>+</strong></div><h3>Quantitative Aptitude</h3><p>Practice & concept building</p><div><a href="#" class="affiliate">Amazon</a><a href="#" class="affiliate">Flipkart</a></div></article>
+ <article class="book-card"><div class="book-cover book-cover-reason"><b>REASON</b><strong>?</strong></div><h3>Reasoning Practice</h3><p>Competitive exam reasoning</p><div><a href="#" class="affiliate">Amazon</a><a href="#" class="affiliate">Flipkart</a></div></article>
 </div></section>
 
 <section class="section pricing" id="pricing"><div class="center"><div class="eyebrow">LEVEL UP</div><h2>Simple plans for serious aspirants</h2><p>Start free. Upgrade when you need more practice.</p></div>
