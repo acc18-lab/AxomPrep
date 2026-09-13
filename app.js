@@ -11,7 +11,7 @@ $('tabLogin').onclick=()=>openAuth(false);$('tabSignup').onclick=()=>openAuth(tr
 $('authForm').onsubmit=async e=>{e.preventDefault();const email=$('email').value,password=$('password').value,name=$('fullName').value;
 let r=isSignup?await client.auth.signUp({email,password,options:{data:{full_name:name}}}):await client.auth.signInWithPassword({email,password});
 if(r.error){$('authMsg').textContent=r.error.message;return}
-$('authMsg').textContent=isSignup?'Account created. Check your email if confirmation is enabled.':'Logged in.';setTimeout(closeModal,900);updateAuthUI()};
+$('authMsg').textContent=isSignup?'Account created. Check your email if confirmation is enabled.':'Logged in.';const returnTo=sessionStorage.getItem('axomprep_admin_return');if(!isSignup&&returnTo){sessionStorage.removeItem('axomprep_admin_return');setTimeout(()=>location.href=returnTo,400);return}setTimeout(closeModal,900);updateAuthUI()};
 async function updateAuthUI(){const {data}=await client.auth.getUser();if(data.user){$('loginBtn').textContent='Dashboard';$('loginBtn').onclick=()=>location.hash='dashboard';$('signupBtn').textContent='Logout';$('signupBtn').onclick=async()=>{await client.auth.signOut();location.reload()}}}
 async function loadPractice(subject){location.hash='practice';const panel=$('practicePanel');panel.classList.remove('hidden');panel.innerHTML='<div class="loading">Loading questions…</div>';
 const {data,error}=await client.from('questions').select('id,question,option_a,option_b,option_c,option_d,answer,explanation').eq('status','published').eq('subject_id',(await getSubjectId(subject))).limit(10);
