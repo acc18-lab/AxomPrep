@@ -28,4 +28,5 @@ window.loadPractice=loadPractice;window.filterExam=()=>location.hash='practice';
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 async function loadCurrent(){const g=$('currentGrid');const {data}=await client.from('current_affairs').select('title,content,category,published_date').eq('is_published',true).order('published_date',{ascending:false}).limit(3);if(!data?.length){g.innerHTML='<div class="loading">Current affairs will appear here after publication from the admin panel.</div>';return}g.innerHTML=data.map(n=>`<article class="news-card"><small>${escapeHtml(n.category||'CURRENT AFFAIRS')} • ${n.published_date}</small><h3>${escapeHtml(n.title)}</h3><p>${escapeHtml((n.content||'').slice(0,150))}</p></article>`).join('')}
 $('startQuiz').onclick=startQuiz;
+if(location.hash==='#login')openAuth(false);
 loadCurrent();updateAuthUI();
