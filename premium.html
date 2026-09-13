@@ -1,19 +1,82 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Premium | AxomPrep</title>
-<link rel="stylesheet" href="styles.css">
-<style>
-.premium-wrap{max-width:1050px;margin:0 auto;padding:40px 18px}.premium-hero{text-align:center}.plans{display:flex;justify-content:center;margin:28px 0}.plan{max-width:430px;width:100%;padding:30px;border:1px solid #e5e7eb;border-radius:20px;background:#fff;box-shadow:0 10px 30px rgba(15,23,42,.07);text-align:center}.price{font-size:48px;font-weight:800;margin:12px}.price small{font-size:16px;font-weight:500;color:#64748b}.features{text-align:left;line-height:2;margin:20px 0}.premium-status{margin-top:20px;padding:14px;border-radius:12px;background:#f1f5f9;color:#334155}.pay{border:0;cursor:pointer;width:100%;padding:13px;border-radius:10px;font-weight:700;font-size:16px}
-</style></head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AxomPrep Premium — Prepare Today. Rank Tomorrow.</title>
+  <meta name="description" content="AxomPrep Premium — premium competitive exam preparation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Assamese:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .premium-page{padding:72px 8% 90px;min-height:calc(100vh - 72px);background:linear-gradient(180deg,#f7f9fc 0%,#fff 65%)}
+    .premium-heading{text-align:center;max-width:720px;margin:0 auto 36px}
+    .premium-heading h1{font-size:clamp(34px,5vw,52px);line-height:1.08;margin:10px 0 14px}
+    .premium-heading h1 span{color:#f28c28}
+    .premium-heading p{color:#617089;font-size:16px}
+    .premium-card{max-width:470px;margin:0 auto;background:#fff;border:1px solid #e5eaf1;border-radius:20px;padding:34px;box-shadow:0 18px 50px rgba(16,46,89,.10)}
+    .premium-card-top{text-align:center}
+    .premium-badge{display:inline-block;background:#fff1e3;color:#d66f0b;border-radius:999px;padding:6px 12px;font-size:11px;font-weight:800;letter-spacing:.08em}
+    .premium-card h2{margin:16px 0 4px;font-size:25px}
+    .premium-price{font-size:50px;font-weight:800;color:#102e59;margin:8px 0}
+    .premium-price small{font-size:15px;font-weight:600;color:#718096}
+    .premium-features{list-style:none;padding:0;margin:24px 0}
+    .premium-features li{padding:9px 0;color:#40516a;border-bottom:1px solid #eef1f5}
+    .premium-features li:last-child{border-bottom:0}
+    .premium-features li::before{content:"✓";font-weight:800;color:#f28c28;margin-right:10px}
+    .premium-message{margin-top:16px;padding:12px;border-radius:10px;background:#f1f5f9;color:#52627a;text-align:center;font-size:13px}
+    .premium-note{text-align:center;color:#7b8799;font-size:12px;margin-top:14px}
+  </style>
+</head>
 <body>
-<header class="site-header"><div class="container"><a class="logo" href="index.html">AxomPrep</a><nav><a href="index.html">Home</a><a href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="books.html">Books</a><a href="dashboard.html">Dashboard</a></nav></div></header>
-<main class="premium-wrap"><section class="premium-hero"><div class="eyebrow">AXOMPREP PREMIUM</div><h1>Unlock Premium Preparation</h1><p>More practice, deeper preparation and premium study resources.</p></section>
-<div class="plans"><div class="plan"><h2>Premium</h2><div class="price">₹249 <small>/ month</small></div>
-<ul class="features"><li>Premium question sets</li><li>Premium mock tests</li><li>Premium study content</li><li>Performance-focused preparation</li><li>Subscription status in your dashboard</li></ul>
-<button id="payBtn" class="btn primary pay">Upgrade for ₹249</button><div id="status" class="premium-status">Checking your subscription...</div>
-</div></div></main>
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="brand-mark">A</span><span>Axom<span>Prep</span></span></a>
+  <nav>
+    <a href="index.html#practice">Practice</a>
+    <a href="index.html#quiz">Daily Quiz</a>
+    <a href="mock-tests.html">Mock Tests</a>
+    <a href="current-affairs.html">Current Affairs</a>
+    <a href="books.html">Books</a>
+    <a href="premium.html">Premium</a>
+    <a href="dashboard.html">Dashboard</a>
+  </nav>
+  <div class="nav-actions">
+    <button class="btn ghost" id="loginBtn" onclick="location.href='index.html'">Login</button>
+    <button class="btn primary" id="signupBtn" onclick="location.href='index.html'">Get Started</button>
+  </div>
+</header>
+
+<main class="premium-page">
+  <section class="premium-heading">
+    <div class="eyebrow">AXOMPREP PREMIUM</div>
+    <h1>Unlock <span>Premium</span> Preparation</h1>
+    <p>More practice, deeper preparation and premium study resources built for competitive-exam aspirants.</p>
+  </section>
+
+  <section class="premium-card">
+    <div class="premium-card-top">
+      <span class="premium-badge">MONTHLY PLAN</span>
+      <h2>AxomPrep Premium</h2>
+      <div class="premium-price">₹249 <small>/ month</small></div>
+    </div>
+
+    <ul class="premium-features">
+      <li>Premium question sets</li>
+      <li>Premium mock tests</li>
+      <li>Premium study content</li>
+      <li>Performance-focused preparation</li>
+      <li>Premium status in your dashboard</li>
+    </ul>
+
+    <button id="payBtn" class="btn primary large full">Upgrade for ₹249</button>
+    <div id="status" class="premium-message">Checking your subscription...</div>
+    <div class="premium-note">Secure payment via Razorpay. Test Mode can be used before launch.</div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="config.js"></script><script src="premium.js"></script>
-</body></html>
+<script src="config.js"></script>
+<script src="premium.js"></script>
+</body>
+</html>

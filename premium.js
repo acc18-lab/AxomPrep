@@ -1,30 +1,85 @@
-const {createClient}=supabase;
-const client=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-const PRICE=24900;
-let user=null;
+const cfg = window.AXOMPREP_CONFIG;
+const client = window.supabase.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey);
+const PRICE_PAISE = 24900;
+let user = null;
 
-async function init(){
- const {data}=await client.auth.getUser(); user=data?.user||null;
- if(!user){document.getElementById('status').textContent='Please log in before upgrading.';return;}
- const {data:sub}=await client.from('subscriptions').select('*').eq('user_id',user.id).eq('status','active').order('expires_at',{ascending:false}).limit(1).maybeSingle();
- if(sub && (!sub.expires_at || new Date(sub.expires_at)>new Date())){
-   document.getElementById('status').textContent=`Premium active until ${new Date(sub.expires_at).toLocaleDateString('en-IN')}.`;
-   document.getElementById('payBtn').disabled=true; document.getElementById('payBtn').textContent='Premium Active'; return;
- }
- document.getElementById('status').textContent='You are currently on the Free plan.';
+const $ = id => document.getElementById(id);
+
+async function initPremium() {
+  try {
+    const { data, error } = await client.auth.getUser();
+    if (error) throw error;
+    user = data?.user || null;
+
+    if (!user) {
+      $('status').textContent = 'Please log in from AxomPrep before upgrading.';
+      return;
+    }
+
+    const { data: sub, error: subError } = await client
+      .from('subscriptions')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .order('expires_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (!subError && sub && (!sub.expires_at || new Date(sub.expires_at) > new Date())) {
+      $('status').textContent = `Premium active until ${new Date(sub.expires_at).toLocaleDateString('en-IN')}.`;
+      $('payBtn').disabled = true;
+      $('payBtn').textContent = 'Premium Active';
+      return;
+    }
+
+    $('status').textContent = 'You are currently on the Free plan.';
+  } catch (err) {
+    console.error('Premium init error:', err);
+    $('status').textContent = 'Please log in to continue.';
+  }
 }
-document.getElementById('payBtn').addEventListener('click',async()=>{
- if(!user){alert('Please log in first.');return;}
- if(typeof Razorpay==='undefined'){alert('Payment checkout is not available yet. Add your Razorpay key in config.js.');return;}
- const key=window.RAZORPAY_KEY_ID;
- if(!key || key.includes('YOUR_')){alert('Razorpay is not configured yet. Add the Razorpay Key ID to config.js.');return;}
- const options={key,amount:PRICE,currency:'INR',name:'AxomPrep',description:'AxomPrep Premium - 1 month',prefill:{email:user.email||''},
- handler:async function(response){
-   const {error}=await client.from('payments').insert({user_id:user.id,amount:249,currency:'INR',status:'paid',provider:'razorpay',provider_payment_id:response.razorpay_payment_id});
-   if(error){alert('Payment received, but recording the payment failed. Contact admin.');console.error(error);return;}
-   alert('Payment successful. Your subscription will be activated after payment verification.');
-   await init();
- }};
- new Razorpay(options).open();
+
+$('payBtn').addEventListener('click', async () => {
+  if (!user) {
+    alert('Please log in to AxomPrep first, then open Premium again.');
+    return;
+  }
+
+  if (typeof window.Razorpay === 'undefined') {
+    alert('Razorpay Checkout could not be loaded. Please refresh the page.');
+    return;
+  }
+
+  const key = window.RAZORPAY_KEY_ID;
+  if (!key || key.includes('YOUR_')) {
+    alert('Razorpay Key ID is missing in config.js.');
+    return;
+  }
+
+  const options = {
+    key: key,
+    amount: PRICE_PAISE,
+    currency: 'INR',
+    name: 'AxomPrep',
+    description: 'AxomPrep Premium — 1 Month',
+    prefill: { email: user.email || '' },
+    theme: { color: '#f28c28' },
+    handler: async function (response) {
+      console.log('Razorpay test payment:', response);
+
+      // Payment verification and Premium activation must be done server-side
+      // through a Razorpay webhook before this is used for real customers.
+      $('status').textContent = 'Payment received. Premium activation requires payment verification.';
+      alert('Payment successful in Razorpay Test Mode. Server-side verification is required before Premium is activated.');
+    }
+  };
+
+  const razorpay = new window.Razorpay(options);
+  razorpay.on('payment.failed', function (response) {
+    console.error('Razorpay payment failed:', response.error);
+    alert('Payment failed or was cancelled. Please try again.');
+  });
+  razorpay.open();
 });
-init();
+
+initPremium();

@@ -7,4 +7,6 @@ window.AXOMPREP_CONFIG = {
   supabasePublishableKey: "sb_publishable_xmKF8T5qyAe2TbztGSflPA_HnjKNT_z"
 };
 
+// Razorpay TEST MODE Key ID.
+// Never put the Razorpay Key Secret here.
 window.RAZORPAY_KEY_ID = "rzp_test_TbZfPoScSsSZkV";
