@@ -1,0 +1,10 @@
+AXOMPREP DEPLOYMENT — NEXT STEPS
+
+1. Create a GitHub account/repository for this website OR use Vercel's upload/import flow if available.
+2. Deploy this folder to Vercel.
+3. Add axomprep.online as a custom domain.
+4. GoDaddy DNS will then be updated with the records Vercel gives you.
+5. Test login, Daily Quiz and Practice.
+6. Next build: full Admin CMS, mock-test timer/results, dashboard, bookmarks, discussions and Razorpay subscription flow.
+
+Do not share your GoDaddy password, OTP, Supabase database password, or Supabase secret/service-role key.

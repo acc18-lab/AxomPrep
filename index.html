@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AxomPrep — Prepare Today. Rank Tomorrow.</title>
+  <meta name="description" content="AxomPrep — Assam-focused preparation for ADRE, APSC, SSC and other competitive exams.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Assamese:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#home"><span class="brand-mark">A</span><span>Axom<span>Prep</span></span></a>
+  <nav>
+    <a href="#practice">Practice</a><a href="#quiz">Daily Quiz</a><a href="#mock">Mock Tests</a>
+    <a href="#current">Current Affairs</a><a href="#books">Books</a><a href="#pricing">Premium</a>
+  </nav>
+  <div class="nav-actions"><button class="btn ghost" id="loginBtn">Login</button><button class="btn primary" id="signupBtn">Get Started</button></div>
+  <button class="menu" id="menuBtn">☰</button>
+</header>
+
+<main>
+<section id="home" class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">ASSAM'S COMPETITIVE EXAM PREP PLATFORM</div>
+    <h1>Crack <span>ADRE, APSC & SSC</span> with AxomPrep.</h1>
+    <p>Daily MCQs, Assam GK, current affairs, mock tests and smart practice — built for aspirants who want to improve every day.</p>
+    <div class="hero-actions"><button class="btn primary large" onclick="location.hash='quiz'">Start Today's Quiz →</button><button class="btn light large" onclick="location.hash='practice'">Explore Practice</button></div>
+    <div class="trust"><span>✓ Free daily questions</span><span>✓ Assam-focused</span><span>✓ Mobile friendly</span></div>
+  </div>
+  <div class="hero-card">
+    <div class="mini-top"><span>Today's Challenge</span><b>10 Q</b></div>
+    <div class="quiz-visual"><div class="qbadge">Q</div><div><small>ASSAM GK</small><h3>Test your knowledge of Assam</h3></div></div>
+    <div class="progress"><i></i></div><div class="mini-bottom"><span>Daily streak</span><strong>7 days</strong></div>
+  </div>
+</section>
+
+<section class="stats"><div><b>10,000+</b><span>Practice Questions</span></div><div><b>ADRE • APSC • SSC</b><span>Major Exams</span></div><div><b>Daily</b><span>Fresh Questions</span></div><div><b>Free</b><span>To Get Started</span></div></section>
+
+<section class="section" id="exams"><div class="section-head"><div><div class="eyebrow">CHOOSE YOUR TARGET</div><h2>Prepare for your exam</h2></div><a href="#practice">View all →</a></div>
+<div class="exam-grid">
+  <article class="exam-card accent"><div class="icon">AD</div><h3>ADRE</h3><p>Assam Direct Recruitment</p><button onclick="filterExam('ADRE')">Practice ADRE →</button></article>
+  <article class="exam-card"><div class="icon">AP</div><h3>APSC</h3><p>Assam Public Service Commission</p><button onclick="filterExam('APSC')">Practice APSC →</button></article>
+  <article class="exam-card"><div class="icon">SC</div><h3>SSC</h3><p>Staff Selection Commission</p><button onclick="filterExam('SSC')">Practice SSC →</button></article>
+  <article class="exam-card"><div class="icon">AS</div><h3>Assam Police</h3><p>Recruitment preparation</p><button onclick="filterExam('Assam Police')">Practice →</button></article>
+</div></section>
+
+<section class="section alt" id="practice"><div class="section-head"><div><div class="eyebrow">PRACTICE SMARTER</div><h2>Practice by subject</h2></div></div>
+<div class="subject-grid" id="subjectGrid">
+  <button onclick="loadPractice('Assam GK')">Assam GK <small>History • Geography • Culture</small></button>
+  <button onclick="loadPractice('Mathematics')">Mathematics <small>Arithmetic • Algebra • DI</small></button>
+  <button onclick="loadPractice('Reasoning')">Reasoning <small>Verbal • Non-verbal • Logic</small></button>
+  <button onclick="loadPractice('English')">English <small>Grammar • Vocabulary</small></button>
+  <button onclick="loadPractice('General Knowledge')">General Knowledge <small>India • World • Static GK</small></button>
+  <button onclick="loadPractice('General Science')">General Science <small>Physics • Chemistry • Biology</small></button>
+  <button onclick="loadPractice('Computer')">Computer <small>Basics • Internet • Office</small></button>
+  <button onclick="loadPractice('Current Affairs')">Current Affairs <small>National • Assam • World</small></button>
+</div>
+<div id="practicePanel" class="question-panel hidden"></div></section>
+
+<section class="section" id="quiz"><div class="daily"><div><div class="eyebrow">EVERY DAY COUNTS</div><h2>Today's Daily Quiz</h2><p>10 quick questions. Check your answer instantly and build your streak.</p><button class="btn primary" id="startQuiz">Start Daily Quiz</button></div><div class="score-ring"><b id="quizScore">0</b><span>/ 10</span></div></div><div id="quizPanel" class="quiz-panel hidden"></div></section>
+
+<section class="section alt" id="mock"><div class="section-head"><div><div class="eyebrow">EXAM SIMULATION</div><h2>Mock tests</h2><p>Timed tests designed to feel like the real exam.</p></div></div>
+<div class="mock-grid">
+ <article class="mock-card"><span>ADRE</span><h3>ADRE Full Mock Test</h3><p>100 questions • 120 minutes</p><button class="btn primary" onclick="requireLogin()">Start Mock</button></article>
+ <article class="mock-card"><span>SSC</span><h3>SSC Practice Mock</h3><p>50 questions • 60 minutes</p><button class="btn primary" onclick="requireLogin()">Start Mock</button></article>
+ <article class="mock-card premium"><span>PRO</span><h3>Premium Test Series</h3><p>Full-length tests + analytics</p><button class="btn dark" onclick="location.hash='pricing'">Unlock Premium</button></article>
+</div></section>
+
+<section class="section" id="current"><div class="section-head"><div><div class="eyebrow">STAY UPDATED</div><h2>Current Affairs</h2></div><a href="#">See all →</a></div><div id="currentGrid" class="news-grid"><div class="loading">Loading current affairs…</div></div></section>
+
+<section class="section alt" id="books"><div class="section-head"><div><div class="eyebrow">RECOMMENDED RESOURCES</div><h2>Books for aspirants</h2></div></div>
+<div class="book-grid">
+ <article class="book-card"><div class="book-cover">ASSAM<br>GK</div><h3>Assam General Knowledge</h3><p>For ADRE, APSC & Assam exams</p><div><a href="#" class="affiliate">Amazon</a><a href="#" class="affiliate">Flipkart</a></div></article>
+ <article class="book-card"><div class="book-cover">MATH</div><h3>Quantitative Aptitude</h3><p>Practice & concept building</p><div><a href="#" class="affiliate">Amazon</a><a href="#" class="affiliate">Flipkart</a></div></article>
+ <article class="book-card"><div class="book-cover">REASON</div><h3>Reasoning Practice</h3><p>Competitive exam reasoning</p><div><a href="#" class="affiliate">Amazon</a><a href="#" class="affiliate">Flipkart</a></div></article>
+</div></section>
+
+<section class="section pricing" id="pricing"><div class="center"><div class="eyebrow">LEVEL UP</div><h2>Simple plans for serious aspirants</h2><p>Start free. Upgrade when you need more practice.</p></div>
+<div class="price-grid"><article><span>FREE</span><h3>₹0</h3><p>For getting started</p><ul><li>Daily quiz</li><li>Selected practice questions</li><li>Basic Assam GK</li><li>Community access</li></ul><button class="btn light">Current plan</button></article>
+<article class="featured"><span>PRO ASPIRANT</span><h3>₹799 <small>/ year</small></h3><p>For focused preparation</p><ul><li>Unlimited practice</li><li>Full mock tests</li><li>Detailed explanations</li><li>Previous-year questions</li><li>Performance analytics</li></ul><button class="btn primary" onclick="requireLogin()">Get Premium</button></article></div></section>
+
+<section class="cta"><div><div class="eyebrow">YOUR NEXT RANK STARTS HERE</div><h2>Prepare today. Rank tomorrow.</h2><p>Make AxomPrep part of your daily routine.</p></div><button class="btn light large" onclick="location.hash='quiz'">Take Today's Quiz →</button></section>
+</main>
+
+<footer><div class="brand"><span class="brand-mark">A</span><span>Axom<span>Prep</span></span></div><p>Prepare Today. Rank Tomorrow.</p><div><a href="#">About</a><a href="#">Contact</a><a href="#">Privacy</a><a href="#">Terms</a></div><small>© 2026 AxomPrep. All rights reserved.</small></footer>
+
+<div class="modal hidden" id="authModal"><div class="modal-box"><button class="close" onclick="closeModal()">×</button><div class="auth-tabs"><button class="active" id="tabLogin">Login</button><button id="tabSignup">Create account</button></div><form id="authForm"><label>Email<input type="email" id="email" required></label><label>Password<input type="password" id="password" required minlength="6"></label><label id="nameWrap" class="hidden">Full name<input type="text" id="fullName"></label><button class="btn primary full" id="authSubmit">Login</button><p id="authMsg"></p></form></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body></html>
