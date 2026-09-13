@@ -14,7 +14,7 @@
   <a class="brand" href="#home"><span class="brand-mark">A</span><span>Axom<span>Prep</span></span></a>
   <nav>
     <a href="#practice">Practice</a><a href="#quiz">Daily Quiz</a><a href="#mock">Mock Tests</a>
-    <a href="#current">Current Affairs</a><a href="#books">Books</a><a href="#pricing">Premium</a>
+    <a href="current-affairs.html">Current Affairs</a><a href="#books">Books</a><a href="#pricing">Premium</a>
   </nav>
   <div class="nav-actions"><button class="btn ghost" id="loginBtn">Login</button><button class="btn primary" id="signupBtn">Get Started</button></div>
   <button class="menu" id="menuBtn">☰</button>
@@ -63,12 +63,12 @@
 
 <section class="section alt" id="mock"><div class="section-head"><div><div class="eyebrow">EXAM SIMULATION</div><h2>Mock tests</h2><p>Timed tests designed to feel like the real exam.</p></div></div>
 <div class="mock-grid">
- <article class="mock-card"><span>ADRE</span><h3>ADRE Full Mock Test</h3><p>100 questions • 120 minutes</p><button class="btn primary" onclick="location.href='mock-tests.html'">Start Mock</button></article>
- <article class="mock-card"><span>SSC</span><h3>SSC Practice Mock</h3><p>50 questions • 60 minutes</p><button class="btn primary" onclick="location.href='mock-tests.html'">Start Mock</button></article>
+ <article class="mock-card"><span>ADRE</span><h3>ADRE Full Mock Test</h3><p>100 questions • 120 minutes</p><button class="btn primary" onclick="requireLogin()">Start Mock</button></article>
+ <article class="mock-card"><span>SSC</span><h3>SSC Practice Mock</h3><p>50 questions • 60 minutes</p><button class="btn primary" onclick="requireLogin()">Start Mock</button></article>
  <article class="mock-card premium"><span>PRO</span><h3>Premium Test Series</h3><p>Full-length tests + analytics</p><button class="btn dark" onclick="location.hash='pricing'">Unlock Premium</button></article>
 </div></section>
 
-<section class="section" id="current"><div class="section-head"><div><div class="eyebrow">STAY UPDATED</div><h2>Current Affairs</h2></div><a href="#">See all →</a></div><div id="currentGrid" class="news-grid"><div class="loading">Loading current affairs…</div></div></section>
+<section class="section" id="current"><div class="section-head"><div><div class="eyebrow">STAY UPDATED</div><h2>Current Affairs</h2></div><a href="current-affairs.html">See all →</a></div><div id="currentGrid" class="news-grid"><div class="loading">Loading current affairs…</div></div></section>
 
 <section class="section alt" id="books"><div class="section-head"><div><div class="eyebrow">RECOMMENDED RESOURCES</div><h2>Books for aspirants</h2></div></div>
 <div class="book-grid">
