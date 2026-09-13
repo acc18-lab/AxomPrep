@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mock Tests — AxomPrep</title>
+<meta name="description" content="Timed mock tests for ADRE, APSC, SSC and Assam competitive exams.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Assamese:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="mock-page">
+<header class="topbar">
+<a class="brand" href="index.html#home"><span class="brand-mark">A</span><span>Axom<span>Prep</span></span></a>
+<nav><a href="index.html#practice">Practice</a><a href="index.html#quiz">Daily Quiz</a><a class="active" href="mock-tests.html">Mock Tests</a><a href="index.html#current">Current Affairs</a><a href="index.html#books">Books</a><a href="index.html#pricing">Premium</a></nav>
+<div class="nav-actions"><button class="btn light" id="dashboardBtn">Dashboard</button><button class="btn primary" id="logoutBtn">Logout</button></div><button class="menu" id="menuBtn">☰</button>
+</header>
+<main class="mock-main">
+<section class="mock-hero"><div><div class="eyebrow">EXAM SIMULATION</div><h1>Mock tests built for serious practice.</h1><p>Timed question sets, instant scoring and detailed review. Choose your target exam and test yourself under pressure.</p></div><div class="mock-hero-card"><span>SIMULATION MODE</span><strong>Real exam rhythm</strong><small>Navigate • Answer • Review • Submit</small></div></section>
+<section class="mock-filters"><button class="mock-filter active" data-exam="all">All</button><button class="mock-filter" data-exam="ADRE">ADRE</button><button class="mock-filter" data-exam="APSC">APSC</button><button class="mock-filter" data-exam="SSC">SSC</button><button class="mock-filter" data-exam="Assam Police">Assam Police</button></section>
+<section id="mockCatalogue" class="mock-catalogue"><div class="loading">Loading mock tests…</div></section>
+<section id="mockPanel" class="mock-run hidden"></section>
+</main>
+<footer><div class="brand"><span class="brand-mark">A</span><span>Axom<span>Prep</span></span></div><p>Prepare Today. Rank Tomorrow.</p><small>© 2026 AxomPrep. All rights reserved.</small></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="mock-tests.js"></script>
+</body></html>
