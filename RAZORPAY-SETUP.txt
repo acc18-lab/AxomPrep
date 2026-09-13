@@ -1,0 +1,6 @@
+Add this to config.js before testing Razorpay Checkout:
+
+window.RAZORPAY_KEY_ID = 'YOUR_RAZORPAY_KEY_ID';
+
+Never put a Razorpay secret/key-secret or Supabase service-role key in frontend code.
+Production payment verification must happen server-side/webhook.

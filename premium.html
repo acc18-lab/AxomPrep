@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Premium | AxomPrep</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+.premium-wrap{max-width:1050px;margin:0 auto;padding:40px 18px}.premium-hero{text-align:center}.plans{display:flex;justify-content:center;margin:28px 0}.plan{max-width:430px;width:100%;padding:30px;border:1px solid #e5e7eb;border-radius:20px;background:#fff;box-shadow:0 10px 30px rgba(15,23,42,.07);text-align:center}.price{font-size:48px;font-weight:800;margin:12px}.price small{font-size:16px;font-weight:500;color:#64748b}.features{text-align:left;line-height:2;margin:20px 0}.premium-status{margin-top:20px;padding:14px;border-radius:12px;background:#f1f5f9;color:#334155}.pay{border:0;cursor:pointer;width:100%;padding:13px;border-radius:10px;font-weight:700;font-size:16px}
+</style></head>
+<body>
+<header class="site-header"><div class="container"><a class="logo" href="index.html">AxomPrep</a><nav><a href="index.html">Home</a><a href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="books.html">Books</a><a href="dashboard.html">Dashboard</a></nav></div></header>
+<main class="premium-wrap"><section class="premium-hero"><div class="eyebrow">AXOMPREP PREMIUM</div><h1>Unlock Premium Preparation</h1><p>More practice, deeper preparation and premium study resources.</p></section>
+<div class="plans"><div class="plan"><h2>Premium</h2><div class="price">₹249 <small>/ month</small></div>
+<ul class="features"><li>Premium question sets</li><li>Premium mock tests</li><li>Premium study content</li><li>Performance-focused preparation</li><li>Subscription status in your dashboard</li></ul>
+<button id="payBtn" class="btn primary pay">Upgrade for ₹249</button><div id="status" class="premium-status">Checking your subscription...</div>
+</div></div></main>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="config.js"></script><script src="premium.js"></script>
+</body></html>
