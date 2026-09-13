@@ -1,33 +1,23 @@
-# AxomPrep Website — Supabase Connected Starter
+# AxomPrep Practice Engine v1
 
-This package is the first connected website build for axomprep.online.
+Adds a dedicated `practice.html` experience using the existing published `questions` Question Bank.
 
-## Included
-- Responsive AxomPrep landing page
-- ADRE / APSC / SSC / Assam Police sections
-- Practice by subject
-- Daily quiz connected to Supabase published questions
-- Current Affairs connected to Supabase
-- Login / registration through Supabase Auth
-- Premium and mock-test presentation
-- Books/affiliate presentation
-- Mobile-first styling
+## Features
+- Exam → Subject → Topic cascading filters
+- Difficulty filter
+- 10 / 20 / 50 question sessions
+- Randomized published questions
+- One-question-at-a-time interface
+- Countdown timer
+- Instant answer + explanation
+- Question navigation
+- Score, accuracy, attempted count and time
+- Answer review
+- Saves logged-in attempts to `practice_attempts_v1` / `practice_answers_v1`
 
-## Supabase configuration
-`config.js` contains the Supabase project URL and publishable browser key supplied during setup.
+## Setup
+1. Run `practice-schema.sql` in Supabase SQL Editor.
+2. Copy `practice.html`, `practice.js`, `practice.css`, `config.js`, and `styles.css` to the production site root.
+3. Add/link `practice.html` from the homepage navigation and exam/subject practice buttons.
 
-Never add a secret/service-role key to the browser.
-
-## Deployment
-This is a static frontend and can be deployed to Vercel, Netlify, GitHub Pages (with suitable configuration), or other static hosting.
-
-For production:
-1. Connect the repository/folder to your hosting provider.
-2. Add `axomprep.online` as the custom domain.
-3. Configure DNS at GoDaddy using the records shown by the hosting provider.
-4. Keep Supabase Row Level Security enabled.
-5. Add admin-only policies before enabling question editing.
-6. Add real payment verification before selling subscriptions.
-
-## Current limitation
-The visual admin dashboard, full mock-test engine, discussions, and payment checkout are staged for the next build. The database schema from the previous step already contains the tables needed for these modules.
+The browser only uses the existing Supabase publishable key. Never place a service-role key in these files.

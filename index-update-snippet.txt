@@ -1,0 +1,1 @@
+Replace homepage Practice navigation with href="practice.html" and exam cards/subject buttons with links or location.href to practice.html. Existing homepage pricing remains ₹249/month.
