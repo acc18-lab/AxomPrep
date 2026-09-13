@@ -1,0 +1,19 @@
+VERCEL ENVIRONMENT VARIABLES REQUIRED
+
+SUPABASE_URL
+Your Supabase project URL.
+
+SUPABASE_SERVICE_ROLE_KEY
+Your Supabase service-role/secret key. Add ONLY in Vercel Environment Variables.
+NEVER put it in GitHub, config.js, HTML or browser JavaScript.
+
+RAZORPAY_KEY_ID
+Your Razorpay TEST or LIVE Key ID.
+
+RAZORPAY_KEY_SECRET
+Your Razorpay API Key Secret. Vercel environment variable only.
+
+RAZORPAY_WEBHOOK_SECRET
+A separate secret you create when configuring the Razorpay webhook.
+
+For Test Mode, use the rzp_test_ Key ID. Switch to Live credentials only after the complete flow has been tested.

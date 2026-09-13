@@ -1,0 +1,7 @@
+{
+  "name": "axomprep-premium-payments",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.0"
+  }
+}
