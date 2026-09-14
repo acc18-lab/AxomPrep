@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADRE 2024 Bulk Import | AxomPrep Admin</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script>
+<style>
+body{background:#f7f9fc;color:#102a4c}.shell{max-width:1200px;margin:auto;padding:30px 18px 60px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:22px}.eyebrow{font-size:12px;letter-spacing:1.4px;font-weight:800;color:#f28c28}.head h1{margin:7px 0}.muted,.small{color:#6b7c94;font-size:13px}
+.panel{background:#fff;border:1px solid #dfe7f1;border-radius:16px;padding:20px;box-shadow:0 8px 28px rgba(16,42,76,.05);margin-bottom:18px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}.primary{background:#f28c28;color:#fff}.light{background:#edf3fb;color:#173b69}.danger{background:#fff0f0;color:#9d2828}
+.drop{border:2px dashed #cfdbea;border-radius:14px;padding:28px;text-align:center}.drop.drag{border-color:#f28c28;background:#fffaf5}.drop input{margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.stat{background:#f6f8fb;border-radius:12px;padding:15px}.stat b{font-size:26px;display:block}.stat span{font-size:11px;color:#75839a}
+.filters{display:flex;gap:10px;align-items:end;flex-wrap:wrap}.field{min-width:170px;flex:1}.field label{display:block;font-size:11px;font-weight:800;color:#667891;margin-bottom:6px}.field select,.field input{width:100%;box-sizing:border-box;padding:10px;border:1px solid #d5dfeb;border-radius:9px}
+.table-wrap{overflow:auto;max-height:560px;border:1px solid #e4eaf1;border-radius:12px;margin-top:18px}.table{width:100%;border-collapse:collapse;min-width:1050px}.table th,.table td{padding:10px;border-bottom:1px solid #edf1f5;text-align:left;vertical-align:top}.table th{position:sticky;top:0;background:#f8fafc;font-size:11px;text-transform:uppercase;color:#708097;z-index:1}.q{max-width:430px;line-height:1.4}.badge{display:inline-block;padding:4px 7px;border-radius:999px;font-size:10px;font-weight:800;margin:2px}.ok{background:#eaf8f0;color:#23704a}.review{background:#fff4df;color:#8b6615}.error{background:#ffefef;color:#a32121}.notice{display:none;margin-top:14px;padding:12px;border-radius:10px;background:#f0f5fb}.notice.show{display:block}.progress{height:10px;background:#e9eef4;border-radius:99px;overflow:hidden;margin:12px 0}.progress i{display:block;height:100%;background:#1553a0;width:0}.empty{padding:28px;text-align:center;color:#74839a}
+@media(max-width:800px){.stats{grid-template-columns:1fr 1fr}}@media(max-width:560px){.stats{grid-template-columns:1fr}.head{flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="index.html">Axom<span>Prep</span></a><div class="nav-actions"><a class="btn light" href="admin.html">Admin</a><a class="btn light" href="previous-year.html">PYQs</a><button class="btn primary" id="logout">Logout</button></div></header>
+<main class="shell">
+<div class="head"><div><div class="eyebrow">QUESTION BANK</div><h1>ADRE 2024 Bulk Import</h1><div class="muted">Preview the verified ADRE/SLRC 2024 Set-A dataset before importing it into the live Question Bank.</div></div><div class="actions"><a class="btn light" href="https://www.axomprep.online/previous-year.html">View PYQs</a></div></div>
+
+<section class="panel">
+<h2>1. Choose CSV</h2>
+<div class="drop" id="drop"><strong>Drop your ADRE CSV here</strong><div class="small">or select the prepared CSV from the import kit</div><input type="file" id="file" accept=".csv"></div>
+<div class="small" style="margin-top:10px">Recommended file: <b>ADRE-2024-All-Questions-Set-A.csv</b>. The importer also accepts the QuestionBank-only CSV.</div>
+<div class="notice" id="notice"></div>
+<div class="stats">
+<div class="stat"><span>Total rows</span><b id="total">0</b></div>
+<div class="stat"><span>Ready / verified</span><b id="ready">0</b></div>
+<div class="stat"><span>Needs review</span><b id="needs">0</b></div>
+<div class="stat"><span>Duplicate candidates</span><b id="dupes">0</b></div>
+</div>
+</section>
+
+<section class="panel" id="importPanel" style="display:none">
+<h2>2. Review & import</h2>
+<div class="filters">
+<div class="field"><label>Import scope</label><select id="scope"><option value="ready">Verified rows only (recommended)</option><option value="all">All rows</option><option value="review">Needs review only</option></select></div>
+<div class="field"><label>Initial status</label><select id="status"><option value="published">Published</option><option value="review">Review</option><option value="draft">Draft</option></select></div>
+<div class="actions"><button class="btn light" id="selectReady">Select ready</button><button class="btn light" id="selectAll">Select all</button><button class="btn light" id="clearSel">Clear selection</button><button class="btn primary" id="import">Import selected</button></div>
+</div>
+<div class="progress"><i id="prog"></i></div>
+<div class="small" id="progressText">0 selected</div>
+<div class="table-wrap"><table class="table"><thead><tr><th></th><th>Paper</th><th>Q</th><th>Question</th><th>Exam</th><th>Year</th><th>Answer</th><th>Verification</th></tr></thead><tbody id="rows"></tbody></table></div>
+</section>
+</main>
+<script src="adre-import.js"></script>
+</body></html>
