@@ -24,41 +24,56 @@
     <div>
       <div class="eyebrow">YOUR PREPARATION</div>
       <h1>Welcome back, <span id="userName">Aspirant</span></h1>
-      <p>Track your Daily Quiz and Mock Test performance and see where you can improve.</p>
+      <p>Track Daily Quiz, Practice, PYQ and Mock Test performance in one place.</p>
     </div>
     <div class="streak-card"><div class="streak-icon">🔥</div><div><strong id="streakValue">0 days</strong><span>Current streak</span></div></div>
   </section>
 
   <section class="dashboard-stats">
     <article><span>Total quizzes</span><strong id="statAttempts">0</strong><small>Daily Quiz attempts</small></article>
-    <article><span>Mock tests</span><strong id="statMockAttempts">0</strong><small>Completed mocks</small></article>
-    <article><span>Questions</span><strong id="statQuestions">0</strong><small>Across all completed tests</small></article>
-    <article><span>Average score</span><strong id="statAverage">0%</strong><small>Daily Quiz + Mock Tests</small></article>
+    <article><span>Questions</span><strong id="statQuestions">0</strong><small>Questions answered</small></article>
+    <article><span>Average score</span><strong id="statAverage">0%</strong><small>Across Daily Quizzes</small></article>
     <article><span>Best score</span><strong id="statBest">0%</strong><small>Your highest result</small></article>
   </section>
 
   <section class="dashboard-grid">
     <article class="dashboard-card performance-card">
-      <div class="dashboard-card-head"><div><div class="eyebrow">PERFORMANCE</div><h2>Subject-wise accuracy</h2></div><span id="performanceNote">Daily Quiz</span></div>
-      <div id="subjectPerformance" class="subject-performance"><div class="loading">Loading performance…</div></div>
+      <div class="dashboard-card-head"><div><div class="eyebrow">ALL ACTIVITIES</div><h2>Performance by source</h2></div><span>Combined accuracy</span></div>
+      <div id="sourceBreakdown" class="subject-performance"><div class="loading">Loading analytics…</div></div>
     </article>
     <article class="dashboard-card improve-card">
-      <div class="dashboard-card-head"><div><div class="eyebrow">FOCUS NEXT</div><h2>Improve these areas</h2></div></div>
+      <div class="dashboard-card-head"><div><div class="eyebrow">FOCUS NEXT</div><h2>Weak topics</h2></div></div>
       <div id="improveList"><div class="loading">Analysing your answers…</div></div>
     </article>
   </section>
 
-  <section class="dashboard-card recent-card">
-    <div class="dashboard-card-head"><div><div class="eyebrow">HISTORY</div><h2>Recent Mock Tests</h2></div><a class="dashboard-link" href="mock-tests.html">Take a mock test →</a></div>
-    <div class="table-wrap"><table><thead><tr><th>Test</th><th>Date</th><th>Score</th><th>Accuracy</th><th>Time</th></tr></thead><tbody id="mockAttemptRows"><tr><td colspan="5">Loading history…</td></tr></tbody></table></div>
+  <section class="dashboard-grid">
+    <article class="dashboard-card">
+      <div class="dashboard-card-head"><div><div class="eyebrow">SUBJECTS</div><h2>Subject-wise accuracy</h2></div></div>
+      <div id="subjectPerformance" class="subject-performance"><div class="loading">Loading…</div></div>
+    </article>
+    <article class="dashboard-card">
+      <div class="dashboard-card-head"><div><div class="eyebrow">EXAMS</div><h2>Exam-wise accuracy</h2></div></div>
+      <div id="examPerformance" class="subject-performance"><div class="loading">Loading…</div></div>
+    </article>
+  </section>
+
+  <section class="dashboard-card">
+    <div class="dashboard-card-head"><div><div class="eyebrow">TOPICS</div><h2>Topic performance</h2></div><span>All answer data</span></div>
+    <div id="topicPerformance" class="subject-performance"><div class="loading">Loading…</div></div>
+  </section>
+
+  <section class="dashboard-card" style="margin-top:18px">
+    <div class="dashboard-card-head"><div><div class="eyebrow">TREND</div><h2>Recent accuracy</h2></div><span>Last 14 active days</span></div>
+    <div id="trendList"></div>
   </section>
 
   <section class="dashboard-card recent-card">
-    <div class="dashboard-card-head"><div><div class="eyebrow">HISTORY</div><h2>Recent Daily Quizzes</h2></div><a class="dashboard-link" href="index.html#quiz">Take today's quiz →</a></div>
-    <div class="table-wrap"><table><thead><tr><th>Date</th><th>Score</th><th>Accuracy</th><th>Time</th></tr></thead><tbody id="attemptRows"><tr><td colspan="4">Loading history…</td></tr></tbody></table></div>
+    <div class="dashboard-card-head"><div><div class="eyebrow">HISTORY</div><h2>Recent Daily Quizzes</h2></div><a class="dashboard-link" href="quiz.html">Take today's quiz →</a></div>
+    <div class="table-wrap"><table><thead><tr><th>Date</th><th>Source</th><th>Activity</th><th>Score</th><th>Accuracy</th><th>Time</th></tr></thead><tbody id="attemptRows"><tr><td colspan="6">Loading history…</td></tr></tbody></table></div>
   </section>
 
-  <section class="dashboard-tip"><div><div class="eyebrow">NEXT STEP</div><h2>Consistency beats cramming.</h2><p>Take the Daily Quiz and Mock Tests regularly, then use your weak subjects to guide your practice.</p></div><a class="btn primary" href="index.html#practice">Practice Now →</a></section>
+  <section class="dashboard-tip"><div><div class="eyebrow">NEXT STEP</div><h2>Consistency beats cramming.</h2><p>Take the Daily Quiz regularly and use your weak subjects to guide your practice.</p></div><a class="btn primary" href="practice.html">Practice Now →</a></section>
 </main>
 
 <footer><div class="brand"><span class="brand-mark">A</span><span>Axom<span>Prep</span></span></div><p>Prepare Today. Rank Tomorrow.</p><small>© 2026 AxomPrep. All rights reserved.</small></footer>
