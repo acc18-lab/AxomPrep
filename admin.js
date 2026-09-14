@@ -33,7 +33,7 @@ async function loadStats(){
  const [{count:q},{count:r},{count:c}]=await Promise.all([
   client.from('questions').select('*',{count:'exact',head:true}).eq('status','published'),
   client.from('questions').select('*',{count:'exact',head:true}).in('status',['draft','review']),
-  client.from('current_affairs_v1').select('*',{count:'exact',head:true})
+  client.from('current_affairs').select('*',{count:'exact',head:true})
  ]);
  $('qCount').textContent=q??0;$('reviewCount').textContent=r??0;$('caCount').textContent=c??0;
 }
@@ -62,7 +62,60 @@ function detectDuplicates(){
 $('questionMaster').onchange=()=>{const ids=filteredQuestions().map(q=>q.id);ids.forEach(id=>$('questionMaster').checked?selectedQuestions.add(id):selectedQuestions.delete(id));renderQuestions()};
 $('selectAllQuestions').onclick=()=>{filteredQuestions().forEach(q=>selectedQuestions.add(q.id));renderQuestions()};
 $('clearQuestionSelection').onclick=()=>{selectedQuestions.clear();renderQuestions()};
-$('applyBulkStatus').onclick=async()=>{const status=$('bulkStatus').value;if(!status){msg('formMsg','Choose a status first.');return}if(!selectedQuestions.size){msg('formMsg','Select at least one question.');return}const ids=[...selectedQuestions];const {error}=await client.from('questions').update({status,updated_at:new Date().toISOString()}).in('id',ids);if(error){msg('formMsg',error.message);return}selectedQuestions.clear();msg('formMsg',`${ids.length} question(s) moved to ${status}.`);await loadQuestions();await loadStats()};
+$('applyBulkStatus').onclick=async()=>{
+  const status=$('bulkStatus').value;
+  if(!status){alert('Choose a status first.');return}
+  if(!selectedQuestions.size){alert('Select at least one question first.');return}
+
+  const ids=[...selectedQuestions];
+  const button=$('applyBulkStatus');
+  const oldText=button.textContent;
+  button.disabled=true;
+  button.textContent='Applying...';
+
+  try{
+    const {data:{user},error:userError}=await client.auth.getUser();
+    if(userError) throw userError;
+    if(!user) throw new Error('Your login session has expired. Please log in again.');
+
+    const {data:profile,error:profileError}=await client
+      .from('profiles')
+      .select('role')
+      .eq('id',user.id)
+      .maybeSingle();
+    if(profileError) throw profileError;
+    if(profile?.role!=='admin') throw new Error('Admin access is required.');
+
+    // Update in batches so a large ADRE selection does not fail because of a long request.
+    let updated=0;
+    const now=new Date().toISOString();
+
+    for(let i=0;i<ids.length;i+=50){
+      const batch=ids.slice(i,i+50);
+      const {error}=await client
+        .from('questions')
+        .update({status,updated_at:now})
+        .in('id',batch);
+
+      if(error) throw new Error(error.message+(error.details?` | ${error.details}`:'')+(error.hint?` | Hint: ${error.hint}`:''));
+      updated+=batch.length;
+    }
+
+    selectedQuestions.clear();
+    $('bulkStatus').value='';
+    msg('formMsg',`${updated} question(s) moved to ${status}.`);
+    alert(`${updated} question(s) successfully moved to ${status}.`);
+    await loadQuestions();
+    await loadStats();
+  }catch(error){
+    console.error('Bulk status update failed:',error);
+    msg('formMsg','Bulk update failed: '+(error?.message||error));
+    alert('Bulk update failed:\\n\\n'+(error?.message||error));
+  }finally{
+    button.disabled=false;
+    button.textContent=oldText;
+  }
+};
 
 function populateEdit(q){
  $('editId').value=q.id;$('editQtext').value=q.question||'';$('editA').value=q.option_a||'';$('editB').value=q.option_b||'';$('editC').value=q.option_c||'';$('editD').value=q.option_d||'';$('editAnswer').value=q.answer||'A';$('editExam').value=q.exam_id||'';$('editSubject').value=q.subject_id||'';$('editDifficulty').value=q.difficulty||'medium';$('editYear').value=q.year||'';$('editExplanation').value=q.explanation||'';$('editStatus').value=q.status||'draft';$('editTags').value=tagsArray(q.tags).join(', ');
@@ -90,13 +143,8 @@ async function previewCSV(){
 $('previewCsv').onclick=previewCSV;
 $('importCsv').onclick=async()=>{if(!csvValidRows.length){msg('csvMsg','Preview the CSV first.');return}const {data:{user}}=await client.auth.getUser();const payload=csvValidRows.map(x=>({...x,created_by:user?.id||null}));const {error}=await client.from('questions').insert(payload);if(error){msg('csvMsg',error.message);return}msg('csvMsg',`Imported ${payload.length} questions successfully.`);csvValidRows=[];$('importCsv').disabled=true;await loadQuestions();await loadStats()};
 
-let caEditingId=null;
-function caReset(){caEditingId=null;$('caForm').reset();$('caId').value='';$('caDate').value=new Date().toISOString().slice(0,10);$('caSaveBtn').textContent='Save Article'}
-$('caClearBtn').onclick=caReset;
-$('caForm').onsubmit=async e=>{e.preventDefault();const {data:{user}}=await client.auth.getUser();if(!user){msg('caMsg','Login session expired.');return}const status=$('caStatus').value;const row={title:$('caTitle').value.trim(),title_assamese:$('caTitleAs').value.trim()||null,summary:$('caSummary').value.trim()||null,summary_assamese:$('caSummaryAs').value.trim()||null,content:$('caContent').value.trim(),content_assamese:$('caContentAs').value.trim()||null,category:$('caCategory').value,published_date:$('caDate').value,source_name:$('caSource').value.trim()||null,source_url:$('caSourceUrl').value.trim()||null,image_url:$('caImage').value.trim()||null,status,featured:$('caFeatured').value==='true',updated_at:new Date().toISOString()};if(status==='published')row.published_at=new Date().toISOString();let result;if(caEditingId)result=await client.from('current_affairs_v1').update(row).eq('id',caEditingId);else result=await client.from('current_affairs_v1').insert({...row,created_by:user.id});if(result.error){msg('caMsg',result.error.message);return}msg('caMsg',caEditingId?'Article updated successfully.':'Article created successfully.');caReset();await loadCurrent();await loadStats()};
-async function loadCurrent(){const {data,error}=await client.from('current_affairs_v1').select('*').order('published_date',{ascending:false}).limit(100);if(error){msg('caMsg',error.message);return}$('caRows').innerHTML=(data||[]).map(x=>`<tr><td><b>${esc(x.title)}</b>${x.title_assamese?`<div class="small">${esc(x.title_assamese)}</div>`:''}</td><td>${esc(x.category||'')}</td><td>${x.published_date||''}</td><td><span class="badge">${esc(x.status)}</span></td><td>${x.featured?'Yes':'No'}</td><td><button class="btn light" onclick="editCA('${x.id}')">Edit</button> <button class="btn light" onclick="deleteCA('${x.id}')">Delete</button></td></tr>`).join('')||'<tr><td colspan="6">No current-affairs articles yet.</td></tr>'}
-window.editCA=async id=>{const {data,error}=await client.from('current_affairs_v1').select('*').eq('id',id).single();if(error){msg('caMsg',error.message);return}caEditingId=id;for(const [k,v] of Object.entries({'caTitle':data.title,'caTitleAs':data.title_assamese||'','caSummary':data.summary||'','caSummaryAs':data.summary_assamese||'','caContent':data.content,'caContentAs':data.content_assamese||'','caCategory':data.category,'caDate':data.published_date,'caSource':data.source_name||'','caSourceUrl':data.source_url||'','caImage':data.image_url||'','caStatus':data.status,'caFeatured':String(data.featured)}))if($(k))$(k).value=v;$('caId').value=id;$('caSaveBtn').textContent='Update Article';document.querySelector('[data-tab="current"]').click();window.scrollTo({top:0,behavior:'smooth'})};
-window.deleteCA=async id=>{if(!confirm('Delete this current-affairs article?'))return;const {error}=await client.from('current_affairs_v1').delete().eq('id',id);msg('caMsg',error?error.message:'Article deleted.');if(!error)await loadCurrent()};
+$('caForm').onsubmit=async e=>{e.preventDefault();const row={title:$('caTitle').value,content:$('caContent').value,category:$('caCategory').value,published_date:$('caDate').value,is_published:$('caPublish').value==='true'};const {error}=await client.from('current_affairs').insert(row);msg('caMsg',error?'Error: '+error.message:'Current affair saved.');if(!error){$('caForm').reset();await loadCurrent();await loadStats()}};
+async function loadCurrent(){const {data,error}=await client.from('current_affairs').select('title,category,published_date,is_published').order('published_date',{ascending:false}).limit(30);if(error){msg('caMsg',error.message);return}$('caRows').innerHTML=(data||[]).map(x=>`<tr><td>${esc(x.title)}</td><td>${esc(x.category||'')}</td><td>${x.published_date||''}</td><td>${x.is_published?'Yes':'No'}</td></tr>`).join('')||'<tr><td colspan="4">No current affairs yet.</td></tr>'}
 
 // Mock test builder retained and initialized correctly.
 let mockQuestions=[];let mockSelected=new Set();
