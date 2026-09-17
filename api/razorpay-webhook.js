@@ -1,4 +1,8 @@
-const { admin, json, verifyWebhookSignature, activatePremium } = require('./_common');
+const { admin, json, verifyWebhookSignature, activatePremium, getRawBody } = require('./_common');
+
+// Vercel's Node serverless runtime may otherwise parse req.body before the
+// handler sees it. Razorpay signature verification must use the original bytes.
+module.exports.config = { api: { bodyParser: false } };
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
@@ -7,12 +11,25 @@ module.exports = async (req, res) => {
     const signature = req.headers['x-razorpay-signature'];
     if (!signature) return json(res, 400, { error: 'Missing Razorpay signature' });
 
-    const raw = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
-    if (!verifyWebhookSignature(raw, signature)) return json(res, 400, { error: 'Invalid webhook signature' });
+    const rawBuffer = await getRawBody(req);
+    const raw = rawBuffer.toString('utf8');
 
-    const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    if (!verifyWebhookSignature(rawBuffer, signature)) {
+      return json(res, 400, { error: 'Invalid webhook signature' });
+    }
+
+    let payload;
+    try {
+      payload = JSON.parse(raw);
+    } catch {
+      return json(res, 400, { error: 'Invalid webhook JSON' });
+    }
+
+    const eventId = req.headers['x-razorpay-event-id'];
     const event = payload?.event;
 
+    // Razorpay can deliver the same event more than once. The payment_id
+    // uniqueness check in activatePremium is the final idempotency barrier.
     if (event === 'payment.captured') {
       const entity = payload?.payload?.payment?.entity;
       if (!entity || Number(entity.amount) !== 24900 || entity.currency !== 'INR') {
@@ -27,15 +44,10 @@ module.exports = async (req, res) => {
 
       if (!order) return json(res, 404, { error: 'Order not found' });
 
-      const { data: existing } = await admin.from('premium_payments_v1')
-        .select('id')
-        .eq('payment_id', entity.id)
-        .maybeSingle();
-
-      if (!existing) {
-        await activatePremium(order.user_id, entity.id, orderId, Number(entity.amount));
-      }
+      await activatePremium(order.user_id, entity.id, orderId, Number(entity.amount));
     }
+
+    console.log('Razorpay webhook processed', { event, eventId });
 
     return json(res, 200, { ok: true });
   } catch (e) {

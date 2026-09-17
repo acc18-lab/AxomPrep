@@ -47,50 +47,95 @@ async function razorpayRequest(path, options = {}) {
   return data;
 }
 
+function safeEqualHex(a, b) {
+  try {
+    const aa = Buffer.from(String(a || ''), 'utf8');
+    const bb = Buffer.from(String(b || ''), 'utf8');
+    if (aa.length !== bb.length) return false;
+    return crypto.timingSafeEqual(aa, bb);
+  } catch {
+    return false;
+  }
+}
+
 function verifyPaymentSignature(orderId, paymentId, signature) {
   const expected = crypto
     .createHmac('sha256', RAZORPAY_KEY_SECRET)
     .update(`${orderId}|${paymentId}`)
     .digest('hex');
-  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+  return safeEqualHex(expected, signature);
 }
 
 function verifyWebhookSignature(rawBody, signature) {
   const expected = crypto.createHmac('sha256', RAZORPAY_WEBHOOK_SECRET)
     .update(rawBody)
     .digest('hex');
-  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+  return safeEqualHex(expected, signature);
+}
+
+function getRawBody(req) {
+  if (Buffer.isBuffer(req.rawBody)) return Promise.resolve(req.rawBody);
+  if (typeof req.rawBody === 'string') return Promise.resolve(Buffer.from(req.rawBody));
+  if (Buffer.isBuffer(req.body)) return Promise.resolve(req.body);
+  if (typeof req.body === 'string') return Promise.resolve(Buffer.from(req.body));
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on('data', c => chunks.push(Buffer.isBuffer(c) ? c : Buffer.from(c)));
+    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('error', reject);
+  });
 }
 
 async function activatePremium(userId, paymentId, orderId, amount) {
   const now = new Date();
-  const expires = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-  const { error: paymentError } = await admin.from('premium_payments_v1').upsert({
-    user_id: userId,
-    order_id: orderId,
-    payment_id: paymentId,
-    amount,
-    currency: 'INR',
-    status: 'captured'
-  }, { onConflict: 'payment_id' });
+  // Insert the payment first. The unique payment_id constraint is the idempotency gate.
+  const { data: insertedPayment, error: paymentError } = await admin
+    .from('premium_payments_v1')
+    .insert({
+      user_id: userId,
+      order_id: orderId,
+      payment_id: paymentId,
+      amount,
+      currency: 'INR',
+      status: 'captured'
+    })
+    .select('id')
+    .maybeSingle();
 
-  if (paymentError) throw paymentError;
+  if (paymentError && paymentError.code !== '23505') throw paymentError;
 
-  const { error: orderError } = await admin.from('premium_orders_v1')
-    .update({ status: 'paid', razorpay_payment_id: paymentId, paid_at: now.toISOString() })
+  // A duplicate webhook/callback for the same Razorpay payment must not create
+  // another 30-day subscription.
+  if (!insertedPayment) {
+    const { data: existingSub, error: existingError } = await admin
+      .from('premium_subscriptions_v1')
+      .select('expires_at')
+      .eq('provider_payment_id', paymentId)
+      .maybeSingle();
+
+    if (existingError) throw existingError;
+    if (existingSub) return new Date(existingSub.expires_at);
+  }
+
+  await admin.from('premium_orders_v1')
+    .update({
+      status: 'paid',
+      razorpay_payment_id: paymentId,
+      paid_at: now.toISOString()
+    })
     .eq('razorpay_order_id', orderId);
 
-  if (orderError) throw orderError;
-
-  // Extend an existing active plan instead of losing remaining paid time.
-  const { data: current } = await admin.from('premium_subscriptions_v1')
+  const { data: current, error: currentError } = await admin
+    .from('premium_subscriptions_v1')
     .select('*')
     .eq('user_id', userId)
     .eq('status', 'active')
     .order('expires_at', { ascending: false })
     .limit(1)
     .maybeSingle();
+
+  if (currentError) throw currentError;
 
   const starts = current && current.expires_at && new Date(current.expires_at) > now
     ? new Date(current.expires_at)
@@ -108,9 +153,23 @@ async function activatePremium(userId, paymentId, orderId, amount) {
     provider: 'razorpay',
     provider_payment_id: paymentId
   });
-  if (subError) throw subError;
+
+  if (subError) {
+    // A race may have inserted the same payment between the idempotency check
+    // and the subscription insert. Return the existing subscription when that happens.
+    if (subError.code === '23505') {
+      const { data: existingSub, error: existingError } = await admin
+        .from('premium_subscriptions_v1')
+        .select('expires_at')
+        .eq('provider_payment_id', paymentId)
+        .maybeSingle();
+      if (existingError) throw existingError;
+      if (existingSub) return new Date(existingSub.expires_at);
+    }
+    throw subError;
+  }
 
   return end;
 }
 
-module.exports = { admin, json, requireUser, razorpayRequest, verifyPaymentSignature, verifyWebhookSignature, activatePremium };
+module.exports = { admin, json, requireUser, razorpayRequest, verifyPaymentSignature, verifyWebhookSignature, activatePremium, getRawBody };
