@@ -1,0 +1,6 @@
+/* AxomPrep Premium access states */
+.premium-status{margin:10px 0 18px;padding:10px 13px;border-radius:10px;font-size:13px}
+.premium-status a{font-weight:800;color:#c66509;text-decoration:none}
+.premium-active{background:#eef8f1;color:#246b46;border:1px solid #cde8d6}
+.premium-locked{background:#fff4e7;color:#7b5a2d;border:1px solid #f1d5ad}
+.premium-badge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:#fff1e3;color:#c66509;font-size:10px;font-weight:800;letter-spacing:.4px}

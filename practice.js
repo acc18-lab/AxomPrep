@@ -3,10 +3,13 @@ const client=supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 let questions=[], answers=[], index=0, startedAt=0, timer=null, seconds=0, submitted=false;
-let exams=[],subjects=[],topics=[];
+let exams=[],subjects=[],topics=[]; let premiumState={active:false,loading:true,error:null};
 
 async function init(){
   bindAuth();
+  premiumState=await AxomPrepPremium.getState();
+  renderPremiumStatus();
+
   const params=new URLSearchParams(location.search);
   await Promise.all([loadExams(),loadSubjects()]);
   const exam=params.get('exam'),subject=params.get('subject'),topic=params.get('topic');
@@ -26,20 +29,41 @@ async function loadTopics(){
   const sid=$('subjectFilter').value;
   let q=client.from('topics').select('id,name,subject_id').order('name');
   if(sid)q=q.eq('subject_id',sid);
-  const {data,error}=await q;
+  let {data,error}=await q;
   if(error){$('topicFilter').innerHTML='<option value="">All Topics</option>';return}
   topics=data||[];$('topicFilter').innerHTML='<option value="">All Topics</option>'+topics.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');
+}
+function renderPremiumStatus(){
+  const box=$('premiumStatus'); if(!box)return;
+  if(premiumState.loading){box.innerHTML='Checking Premium access…';return}
+  if(premiumState.active){
+    box.className='premium-status premium-active';
+    box.innerHTML='<strong>Premium active</strong> — Premium question sets are unlocked.';
+  }else{
+    box.className='premium-status premium-locked';
+    box.innerHTML='<strong>Free plan</strong> — Premium-tagged questions are locked. <a href="premium.html">Upgrade for ₹249/month →</a>';
+  }
 }
 function setStatus(t){$('practiceStatus').textContent=t||''}
 async function startPractice(){
   stopTimer(); submitted=false;setStatus('Loading published questions…');
   const exam=$('examFilter').value,subject=$('subjectFilter').value,topic=$('topicFilter').value,diff=$('difficultyFilter').value,count=Number($('countFilter').value||10);
-  let q=client.from('questions').select('id,question,option_a,option_b,option_c,option_d,answer,explanation,difficulty,year,tags,exam_id,subject_id,topic_id,exams(name),subjects(name)').eq('status','published').limit(500);
+  let q=client.from('questions').select('id,question,option_a,option_b,option_c,option_d,answer,explanation,difficulty,year,tags,exam_id,subject_id,topic_id,exams(name),subjects(name)').eq('status','published').limit(500); if(!premiumState.active) q=q.not('tags','cs','{PREMIUM}');
   if(exam)q=q.eq('exam_id',exam);if(subject)q=q.eq('subject_id',subject);if(topic)q=q.eq('topic_id',topic);if(diff)q=q.eq('difficulty',diff);
-  const {data,error}=await q;
-  if(error){setStatus(error.message);return}
-  if(!data?.length){setStatus('No published questions match these filters.');$('practiceArea').innerHTML='<div class="practice-empty"><h3>No questions found</h3><p>Try broader filters or add more published questions from Admin.</p></div>';return}
-  questions=data.sort(()=>Math.random()-.5).slice(0,count);index=0;answers=new Array(questions.length).fill(null);startedAt=Date.now();seconds=Math.max(300,questions.length*45);renderQuestion();setStatus(`${questions.length} questions loaded.`);timer=setInterval(()=>{seconds--;renderTimer();if(seconds<=0)submitPractice(true)},1000);
+  let {data,error}=await q;
+  if(error){
+    // Some Supabase/PostgREST versions may reject the array filter syntax.
+    // Fall back to a client-side safety filter so the UI remains usable.
+    console.warn(error);
+    const fallback=await client.from('questions').select('id,question,option_a,option_b,option_c,option_d,answer,explanation,difficulty,year,tags,exam_id,subject_id,topic_id,exams(name),subjects(name)').eq('status','published').limit(500);
+    if(fallback.error){setStatus(fallback.error.message);return}
+    const safe=(fallback.data||[]).filter(q=>premiumState.active||!AxomPrepPremium.isTaggedPremium(q.tags));
+    data=safe;
+  }
+  if(!data?.length){setStatus('No published questions match these filters.');$('practiceArea').innerHTML=premiumState.active
+      ? '<div class="practice-empty"><h3>No questions found</h3><p>Try broader filters or add more published questions from Admin.</p></div>'
+      : '<div class="practice-empty"><h3>Premium questions are locked</h3><p>Try a broader set of free questions or upgrade to access Premium question sets.</p><a class="btn primary" href="premium.html">Upgrade for ₹249/month</a></div>';return}
+  questions=data.sort(()=>Math.random()-.5).slice(0,count);index=0;answers=new Array(questions.length).fill(null);startedAt=Date.now();seconds=Math.max(300,questions.length*45);renderQuestion();setStatus(`${questions.length} ${premiumState.active?'available':'free'} questions loaded.`);timer=setInterval(()=>{seconds--;renderTimer();if(seconds<=0)submitPractice(true)},1000);
 }
 function renderTimer(){const e=$('practiceTimer');if(!e)return;const m=Math.floor(Math.max(seconds,0)/60),s=Math.max(seconds,0)%60;e.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;e.classList.toggle('warning',seconds<=60)}
 function renderQuestion(){

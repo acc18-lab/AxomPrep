@@ -1,7 +1,25 @@
 (()=>{const c=window.AXOMPREP_CONFIG||{},sb=window.supabase.createClient(c.supabaseUrl,c.supabasePublishableKey),$=id=>document.getElementById(id);
-let rows=[],examNames={},subjectNames={},session=[],pos=0,answered=false;
+let rows=[],examNames={},subjectNames={},session=[],pos=0,answered=false,premiumState={active:false};
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-async function init(){const params=new URLSearchParams(location.search);const requestedExam=params.get("exam")||"";const requestedSubject=params.get("subject")||"";const requestedYear=params.get("year")||"";const [{data:ex},{data:su}]=await Promise.all([sb.from("exams").select("id,name").order("name"),sb.from("subjects").select("id,name").order("name")]);
+async function lookupsOnly(){
+  const [{data:ex},{data:su}]=await Promise.all([
+    sb.from("exams").select("id,name").order("name"),
+    sb.from("subjects").select("id,name").order("name")
+  ]);
+  (ex||[]).forEach(x=>examNames[x.id]=x.name);
+  (su||[]).forEach(x=>subjectNames[x.id]=x.name);
+}
+async function init(){
+  premiumState=await AxomPrepPremium.getState();
+  if(!premiumState.active){
+    $('premiumGate').style.display='block';
+    $('grid').style.display='none';
+    $('empty').style.display='none';
+    $('total').textContent='—'; $('groups').textContent='—'; $('years').textContent='—';
+    await lookupsOnly();
+    return;
+  }
+const params=new URLSearchParams(location.search);const requestedExam=params.get("exam")||"";const requestedSubject=params.get("subject")||"";const requestedYear=params.get("year")||"";const [{data:ex},{data:su}]=await Promise.all([sb.from("exams").select("id,name").order("name"),sb.from("subjects").select("id,name").order("name")]);
 (ex||[]).forEach(x=>{examNames[x.id]=x.name;$("exam").insertAdjacentHTML("beforeend",`<option value="${x.id}">${esc(x.name)}</option>`)});$("exam").value=requestedExam;
 (su||[]).forEach(x=>{subjectNames[x.id]=x.name;$("subject").insertAdjacentHTML("beforeend",`<option value="${x.id}">${esc(x.name)}</option>`)});$("subject").value=requestedSubject;$("year").value=requestedYear;
 await load()}
