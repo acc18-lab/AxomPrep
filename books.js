@@ -1,5 +1,4 @@
-const { createClient } = supabase;
-const client = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const client = window.supabase?.createClient(AXOMPREP_CONFIG.supabaseUrl, AXOMPREP_CONFIG.supabasePublishableKey);
 let books=[], cats=new Set(), exams=new Set();
 
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
@@ -65,6 +64,13 @@ function render(){
 }
 
 async function loadBooks(){
+  if(!client){
+    console.error('Supabase client is unavailable.');
+    books=starterBooks.map((x,i)=>({...x,id:`starter-${i+1}`,featured:i<6}));
+    books.forEach(b=>{if(b.category)cats.add(b.category);(b.exam_name||'').split(/[•|]/).map(x=>x.trim()).filter(Boolean).forEach(x=>exams.add(x));});
+    setFilters();render();
+    return;
+  }
   const res=await client.from('books_v1').select('*').eq('status','published').order('featured',{ascending:false}).order('created_at',{ascending:false});
   if(res.error){
     console.error(res.error);
@@ -78,5 +84,6 @@ async function loadBooks(){
 }
 document.addEventListener('input',e=>{if(e.target.id==='search')render()});
 document.addEventListener('change',e=>{if(e.target.id==='category'||e.target.id==='exam')render()});
-document.addEventListener('click',async e=>{const a=e.target.closest('a[data-book]');if(!a||a.dataset.book.startsWith('starter-'))return;try{await client.from('book_clicks_v1').insert({book_id:a.dataset.book,store:a.dataset.store});}catch(_){}});
-loadBooks();
+document.addEventListener('click',async e=>{const a=e.target.closest('a[data-book]');if(!a||a.dataset.book.startsWith('starter-')||!client)return;try{await client.from('book_clicks_v1').insert({book_id:a.dataset.book,store:a.dataset.store});}catch(_){}});
+
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',loadBooks); else loadBooks();

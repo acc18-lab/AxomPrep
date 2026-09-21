@@ -80,12 +80,10 @@
 
 <section class="section" id="current"><div class="section-head"><div><div class="eyebrow">STAY UPDATED</div><h2>Current Affairs</h2></div><a href="current-affairs.html">See all →</a></div><div id="currentGrid" class="news-grid"><div class="loading">Loading current affairs…</div></div></section>
 
-<section class="section alt" id="books"><div class="section-head"><div><div class="eyebrow">RECOMMENDED RESOURCES</div><h2>Books for aspirants</h2></div></div>
-<div class="book-grid">
- <article class="book-card"><div class="book-cover book-cover-gk"><b>ASSAM</b><strong>GK</strong></div><h3>Assam General Knowledge</h3><p>For ADRE, APSC & Assam exams</p><div><a href="#" class="affiliate">Amazon</a><a href="#" class="affiliate">Flipkart</a></div></article>
- <article class="book-card"><div class="book-cover book-cover-math"><b>MATH</b><strong>+</strong></div><h3>Quantitative Aptitude</h3><p>Practice & concept building</p><div><a href="#" class="affiliate">Amazon</a><a href="#" class="affiliate">Flipkart</a></div></article>
- <article class="book-card"><div class="book-cover book-cover-reason"><b>REASON</b><strong>?</strong></div><h3>Reasoning Practice</h3><p>Competitive exam reasoning</p><div><a href="#" class="affiliate">Amazon</a><a href="#" class="affiliate">Flipkart</a></div></article>
-</div></section>
+<section class="section alt" id="books"><div class="section-head"><div><div class="eyebrow">RECOMMENDED RESOURCES</div><h2>Books for aspirants</h2><p>Hand-picked resources for ADRE, APSC, SSC, Assam Police and related exams.</p></div><a href="books.html">View all books →</a></div>
+<div id="homeBooksGrid" class="book-grid home-book-grid"><div class="home-books-loading">Loading recommended books…</div></div>
+<div class="home-books-disclosure">Some purchase links may be affiliate links. AxomPrep may earn a commission from eligible purchases at no extra cost to you.</div>
+</section>
 
 <section class="section pricing" id="pricing"><div class="center"><div class="eyebrow">LEVEL UP</div><h2>Simple plans for serious aspirants</h2><p>Start free. Upgrade when you need more practice.</p></div>
 <div class="price-grid"><article><span>FREE</span><h3>₹0</h3><p>For getting started</p><ul><li>Daily quiz</li><li>Selected practice questions</li><li>Basic Assam GK</li><li>Community access</li></ul><button class="btn light">Current plan</button></article>
@@ -100,6 +98,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="app.js"></script>
+<script src="homepage-books.js"></script>
 <script>
 (async function loadHomepageCurrentAffairs(){
   const grid=document.getElementById('currentGrid');
