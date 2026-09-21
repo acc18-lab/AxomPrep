@@ -23,12 +23,23 @@ module.exports = async (req, res) => {
     }
 
     const payment = await razorpayRequest(`/payments/${encodeURIComponent(razorpay_payment_id)}`);
-    if (payment.status !== 'captured' || Number(payment.amount) !== 24900 || payment.order_id !== razorpay_order_id) {
-      return json(res, 400, { error: 'Payment is not a verified ₹249 captured payment' });
+    if (payment.status !== 'captured' || Number(payment.amount) !== Number(order.amount) || payment.order_id !== razorpay_order_id) {
+      return json(res, 400, { error: 'Payment is not a verified captured payment for this plan' });
     }
 
-    const expiresAt = await activatePremium(user.id, razorpay_payment_id, razorpay_order_id, 24900);
-    return json(res, 200, { ok: true, status: 'active', expires_at: expiresAt.toISOString() });
+    const expiresAt = await activatePremium(
+      user.id,
+      razorpay_payment_id,
+      razorpay_order_id,
+      Number(order.amount),
+      order.plan_code
+    );
+    return json(res, 200, {
+      ok: true,
+      status: 'active',
+      plan_code: order.plan_code,
+      expires_at: expiresAt.toISOString()
+    });
   } catch (e) {
     console.error(e);
     return json(res, e.statusCode || 500, { error: e.message || 'Payment verification failed' });

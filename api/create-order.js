@@ -1,10 +1,13 @@
-const { admin, json, requireUser, razorpayRequest } = require('./_common');
+const { admin, json, requireUser, razorpayRequest, getPlan } = require('./_common');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
 
   try {
     const user = await requireUser(req);
+    const planCode = req.body?.plan_code;
+    const plan = getPlan(planCode);
+    if (!plan) return json(res, 400, { error: 'Invalid premium plan selected.' });
 
     const { data: active } = await admin.from('premium_subscriptions_v1')
       .select('expires_at')
@@ -20,24 +23,30 @@ module.exports = async (req, res) => {
     const order = await razorpayRequest('/orders', {
       method: 'POST',
       body: JSON.stringify({
-        amount: 24900,
+        amount: plan.amountPaise,
         currency: 'INR',
-        receipt: `axomprep_${Date.now()}`,
-        notes: { user_id: user.id, plan_code: 'premium_monthly' }
+        receipt: `axomprep_${plan.code}_${Date.now()}`.slice(0, 40),
+        notes: { user_id: user.id, plan_code: plan.code }
       })
     });
 
     const { error } = await admin.from('premium_orders_v1').insert({
       user_id: user.id,
       razorpay_order_id: order.id,
-      amount: 24900,
+      amount: plan.amountPaise,
       currency: 'INR',
-      plan_code: 'premium_monthly',
+      plan_code: plan.code,
       status: 'created'
     });
     if (error) throw error;
 
-    return json(res, 200, { id: order.id, amount: order.amount, currency: order.currency });
+    return json(res, 200, {
+      id: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      plan_code: plan.code,
+      plan_name: plan.name
+    });
   } catch (e) {
     console.error(e);
     return json(res, e.statusCode || 500, { error: e.message || 'Unable to create order' });

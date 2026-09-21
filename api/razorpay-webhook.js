@@ -1,8 +1,4 @@
-const { admin, json, verifyWebhookSignature, activatePremium, getRawBody } = require('./_common');
-
-// Vercel's Node serverless runtime may otherwise parse req.body before the
-// handler sees it. Razorpay signature verification must use the original bytes.
-module.exports.config = { api: { bodyParser: false } };
+const { admin, json, verifyWebhookSignature, activatePremium, getPlan } = require('./_common');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
@@ -11,28 +7,15 @@ module.exports = async (req, res) => {
     const signature = req.headers['x-razorpay-signature'];
     if (!signature) return json(res, 400, { error: 'Missing Razorpay signature' });
 
-    const rawBuffer = await getRawBody(req);
-    const raw = rawBuffer.toString('utf8');
+    const raw = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+    if (!verifyWebhookSignature(raw, signature)) return json(res, 400, { error: 'Invalid webhook signature' });
 
-    if (!verifyWebhookSignature(rawBuffer, signature)) {
-      return json(res, 400, { error: 'Invalid webhook signature' });
-    }
-
-    let payload;
-    try {
-      payload = JSON.parse(raw);
-    } catch {
-      return json(res, 400, { error: 'Invalid webhook JSON' });
-    }
-
-    const eventId = req.headers['x-razorpay-event-id'];
+    const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const event = payload?.event;
 
-    // Razorpay can deliver the same event more than once. The payment_id
-    // uniqueness check in activatePremium is the final idempotency barrier.
     if (event === 'payment.captured') {
       const entity = payload?.payload?.payment?.entity;
-      if (!entity || Number(entity.amount) !== 24900 || entity.currency !== 'INR') {
+      if (!entity || entity.currency !== 'INR') {
         return json(res, 400, { error: 'Unexpected payment payload' });
       }
 
@@ -44,10 +27,20 @@ module.exports = async (req, res) => {
 
       if (!order) return json(res, 404, { error: 'Order not found' });
 
-      await activatePremium(order.user_id, entity.id, orderId, Number(entity.amount));
-    }
+      const plan = getPlan(order.plan_code);
+      if (!plan || Number(entity.amount) !== plan.amountPaise || Number(order.amount) !== plan.amountPaise) {
+        return json(res, 400, { error: 'Unexpected payment amount or plan' });
+      }
 
-    console.log('Razorpay webhook processed', { event, eventId });
+      const { data: existing } = await admin.from('premium_payments_v1')
+        .select('id')
+        .eq('payment_id', entity.id)
+        .maybeSingle();
+
+      if (!existing) {
+        await activatePremium(order.user_id, entity.id, orderId, Number(entity.amount), order.plan_code);
+      }
+    }
 
     return json(res, 200, { ok: true });
   } catch (e) {
