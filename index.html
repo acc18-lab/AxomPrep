@@ -86,8 +86,18 @@
 </section>
 
 <section class="section pricing" id="pricing"><div class="center"><div class="eyebrow">LEVEL UP</div><h2>Simple plans for serious aspirants</h2><p>Start free. Upgrade when you need more practice.</p></div>
-<div class="price-grid"><article><span>FREE</span><h3>₹0</h3><p>For getting started</p><ul><li>Daily quiz</li><li>Selected practice questions</li><li>Basic Assam GK</li><li>Community access</li></ul><button class="btn light">Current plan</button></article>
-<article class="featured"><span>PREMIUM</span><h3>₹249 <small>/ month</small></h3><p>For focused preparation</p><ul><li>Premium question sets</li><li>Premium mock tests</li><li>Premium study content</li><li>Previous-year questions</li><li>Performance analytics</li></ul><button class="btn primary" onclick="location.href='premium.html'">Upgrade for ₹249</button></article></div></section>
+<div class="price-grid home-price-grid">
+<article><span>FREE</span><h3>₹0</h3><p>For getting started</p><ul><li>Daily quiz</li><li>Selected practice questions</li><li>Basic Assam GK</li><li>Community access</li></ul><button class="btn light">Current plan</button></article>
+<article class="featured premium-plan"><span>PREMIUM · 1 MONTH</span><h3>₹49 <small>/ 30 days</small></h3><p>Flexible monthly access</p><ul><li>Premium question sets</li><li>Premium mock tests</li><li>Premium study content</li><li>Previous-year questions</li><li>Performance analytics</li></ul><button class="btn primary" onclick="location.href='premium.html'">Get Premium — ₹49</button></article>
+<article class="featured premium-plan three-month"><span>PREMIUM · 3 MONTHS</span><h3>₹129 <small>/ 90 days</small></h3><p>More time to prepare</p><ul><li>Premium question sets</li><li>Premium mock tests</li><li>Premium study content</li><li>Previous-year questions</li><li>Performance analytics</li></ul><button class="btn primary" onclick="location.href='premium.html'">Get Premium — ₹129</button></article>
+</div>
+<style>
+.home-price-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+.home-price-grid .premium-plan{position:relative;}
+.home-price-grid .premium-plan.three-month{transform:translateY(-4px);}
+@media (max-width:900px){.home-price-grid{grid-template-columns:1fr;}.home-price-grid .premium-plan.three-month{transform:none;}}
+</style>
+</section>
 
 <section class="cta"><div><div class="eyebrow">YOUR NEXT RANK STARTS HERE</div><h2>Prepare today. Rank tomorrow.</h2><p>Make AxomPrep part of your daily routine.</p></div><button class="btn light large" onclick="location.hash='quiz'">Take Today's Quiz →</button></section>
 </main>
@@ -98,7 +108,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="app.js"></script>
-<script src="book-covers.js"></script>
 <script src="homepage-books.js"></script>
 <script>
 (async function loadHomepageCurrentAffairs(){
