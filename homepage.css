@@ -1,0 +1,133 @@
+/* AxomPrep Student-first homepage redesign v1
+   Scoped to the homepage so other pages keep the existing global design. */
+
+:root{
+  --stu-navy:#0d2b52;
+  --stu-blue:#1553a0;
+  --stu-blue-2:#2878c9;
+  --stu-orange:#f28c28;
+  --stu-bg:#f7f9fc;
+  --stu-line:#dfe7f1;
+  --stu-muted:#61738d;
+  --stu-card:#fff;
+  --stu-shadow:0 14px 38px rgba(16,42,76,.075);
+}
+
+body{background:#fff;color:#102a4c}
+.student-topbar{background:rgba(255,255,255,.96);backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(16,42,76,.045);z-index:50}
+.topbar-inner{width:100%;display:flex;align-items:center;justify-content:space-between;gap:22px}
+.student-topbar nav{align-items:center}
+.student-topbar nav a{padding:9px 7px;border-radius:8px;transition:background .18s ease,color .18s ease}
+.student-topbar nav a:hover{background:#f0f5fb;color:var(--stu-blue)}
+.student-topbar .nav-actions .btn{white-space:nowrap}
+.mobile-nav{display:none}
+
+.student-hero{max-width:1380px;margin:0 auto;padding:58px 5.5% 48px;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:44px;background:radial-gradient(circle at 93% 8%,rgba(242,140,40,.19),transparent 25%),radial-gradient(circle at 5% 15%,rgba(40,120,201,.1),transparent 23%),linear-gradient(180deg,#f7faff 0%,#fff 100%)}
+.student-hero .hero-copy{padding-left:12px}
+.student-hero h1{font-size:clamp(42px,5.3vw,72px);letter-spacing:-2.6px;line-height:.99;margin:14px 0 20px;max-width:680px}
+.student-hero h1 span{color:var(--stu-blue)}
+.student-hero p{font-size:18px;line-height:1.72;max-width:650px;color:#5c718d}
+.student-hero .hero-actions{margin:26px 0 20px}
+.student-proof{display:flex;gap:14px;flex-wrap:wrap}
+.student-proof span{padding:9px 11px;border:1px solid var(--stu-line);background:#fff;border-radius:10px;color:#6a7b91;font-size:11px;box-shadow:0 5px 16px rgba(16,42,76,.04)}
+.student-proof b{color:var(--stu-navy)}
+.student-hero-visual{position:relative;min-height:370px;display:flex;align-items:center}
+.student-hero-visual img{border-radius:28px;box-shadow:0 24px 60px rgba(13,43,82,.18);width:100%;max-height:560px;object-fit:cover;object-position:center}
+.hero-float{position:absolute;display:flex;gap:10px;align-items:center;padding:11px 13px;background:rgba(255,255,255,.96);border:1px solid rgba(223,231,241,.95);border-radius:13px;box-shadow:0 12px 28px rgba(13,43,82,.14);backdrop-filter:blur(8px)}
+.hero-float b{display:block;font-size:11px;color:var(--stu-navy)}
+.hero-float small{display:block;margin-top:2px;font-size:9px;color:#718299}
+.float-top{left:-12px;top:24px}.float-bottom{right:-12px;bottom:24px}
+.float-icon{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#e8f7ef;color:#18834f;font-weight:900;font-size:13px}
+.float-icon.orange{background:#fff0df;color:#d36b0c}
+
+.student-statbar{max-width:1200px;margin:0 auto 6px;padding:17px 18px;display:grid;grid-template-columns:repeat(4,1fr);background:var(--stu-navy);color:#fff;border-radius:18px;box-shadow:0 14px 34px rgba(13,43,82,.15);position:relative;z-index:3}
+.student-statbar div{padding:5px 20px;border-right:1px solid rgba(255,255,255,.12)}
+.student-statbar div:last-child{border-right:0}
+.student-statbar strong,.student-statbar span{display:block}
+.student-statbar strong{font-size:15px}.student-statbar span{margin-top:4px;color:#b9c9df;font-size:10px}
+
+.student-section-head{margin-bottom:24px}
+.student-section-head h2{font-size:32px;line-height:1.15;letter-spacing:-.7px}
+.student-section-head p{max-width:690px;margin:6px 0 0;line-height:1.6}
+.student-exam-section{padding-top:72px;padding-bottom:62px}
+.student-exam-grid{grid-template-columns:repeat(4,1fr);gap:16px}
+.student-exam-card{display:block;text-decoration:none;color:inherit;padding:20px;border-radius:18px;min-height:205px;position:relative;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.student-exam-card:hover{transform:translateY(-4px);box-shadow:var(--stu-shadow);border-color:#cfdae7}
+.student-exam-card::after{content:"";position:absolute;right:-30px;bottom:-34px;width:125px;height:125px;border-radius:50%;background:rgba(242,140,40,.08)}
+.exam-card-top{display:flex;align-items:center;justify-content:space-between}
+.exam-logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:11px;color:#fff;box-shadow:0 7px 16px rgba(16,42,76,.14)}
+.exam-arrow{color:#94a3b8;font-size:17px}
+.exam-label{margin-top:18px;font-size:10px;letter-spacing:.11em;font-weight:900;color:#7b8b9f}
+.student-exam-card h3{font-size:17px;line-height:1.28;margin:6px 0}
+.student-exam-card p{line-height:1.5;min-height:52px}
+.student-card-link{font-size:11px;font-weight:900;color:var(--stu-blue)}
+.exam-adre .exam-logo{background:linear-gradient(135deg,#1553a0,#317dcc)}
+.exam-apsc .exam-logo{background:linear-gradient(135deg,#7d31c8,#b24bdd)}
+.exam-ssc .exam-logo{background:linear-gradient(135deg,#10815a,#2ab477)}
+.exam-police .exam-logo{background:linear-gradient(135deg,#d86f10,#f49a2d)}
+
+.student-steps-section{padding-top:48px;padding-bottom:68px;background:#fff}
+.study-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.study-steps article{display:flex;gap:14px;padding:20px;border:1px solid var(--stu-line);border-radius:17px;background:#fbfcfe;box-shadow:0 8px 22px rgba(16,42,76,.04)}
+.step-number{flex:none;font-size:11px;font-weight:900;color:var(--stu-orange);background:#fff1e2;border-radius:10px;padding:8px 9px;height:max-content}
+.study-steps h3{font-size:15px;margin:0 0 6px}.study-steps p{font-size:12px;line-height:1.55;margin:0;color:#677991}
+
+.student-subject-grid .subject-card{min-height:122px!important;padding:22px 48px 20px 64px!important}
+.student-subject-grid .subject-card b{display:block;margin-top:9px;font-size:10px;color:rgba(255,255,255,.95)}
+.student-subject-grid .subject-card .subject-icon{top:22px}
+
+.student-quiz-section{padding-top:62px;padding-bottom:70px}
+.student-daily-card{padding:36px 40px;border-radius:23px;box-shadow:0 18px 42px rgba(13,43,82,.14)}
+.quiz-perks{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0 20px}.quiz-perks span{font-size:10px;padding:7px 9px;background:rgba(255,255,255,.08);border-radius:999px;color:#d6e1ef}
+.student-daily-visual{gap:20px}
+.student-daily-visual .score-ring{box-shadow:0 10px 24px rgba(242,140,40,.16)}
+
+.student-mock-grid{grid-template-columns:repeat(3,1fr);gap:16px}
+.student-mock-card{padding:22px;min-height:220px;display:flex;flex-direction:column}
+.mock-top{display:flex;align-items:center;justify-content:space-between}.mock-top>span{font-size:9px;font-weight:900;letter-spacing:.1em;color:#8090a4}
+.student-mock-card h3{font-size:18px;line-height:1.25;margin:14px 0 6px}.student-mock-card p{margin-top:0}.student-mock-card .btn{margin-top:auto;align-self:flex-start}
+
+.student-news-section{padding-top:70px;padding-bottom:68px}
+.news-grid{margin-top:18px}
+.news-card{box-shadow:0 9px 24px rgba(16,42,76,.055)}
+.news-card .news-body{padding:17px}
+.news-card h3{font-size:17px}
+.news-featured{background:#fff2df;color:#cb690d;padding:3px 6px;border-radius:999px}
+.news-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
+.news-source{font-size:10px;color:#7a8aa0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.student-books-section{padding-top:70px;padding-bottom:68px}
+.home-book-card{padding:14px;gap:14px;border-radius:19px}
+.home-book-cover{width:112px;min-width:112px;height:160px;border-radius:13px}
+.home-book-body h3{font-size:15px}
+.home-book-body p{font-size:10px;line-height:1.55}
+.home-book-actions .home-affiliate{padding:7px 10px}
+
+.student-pricing{padding-top:74px;padding-bottom:82px}
+.student-price-grid{max-width:960px;grid-template-columns:repeat(3,1fr);gap:16px}
+.student-plan{padding:27px 24px!important;border-radius:19px!important;display:flex;flex-direction:column}
+.plan-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10px;font-weight:900;letter-spacing:.06em;color:#718198}
+.plan-tag{padding:5px 7px;border-radius:999px;background:#f1f5fa;color:#6b7c92;font-size:8px;letter-spacing:.05em}.plan-tag.orange{background:#fff0df;color:#cd6d0d}
+.student-plan h3{font-size:39px!important;letter-spacing:-1px}.student-plan h3 small{font-size:13px;font-weight:700;letter-spacing:0;color:#708098}
+.student-plan p{min-height:42px}.student-plan ul{margin:0 0 18px}.student-plan .btn{margin-top:auto}
+.featured-long{transform:translateY(-5px)}
+
+.student-cta{margin:44px auto 62px;max-width:1230px;border-radius:25px;padding:42px 46px;box-shadow:0 18px 40px rgba(16,42,76,.14)}
+.student-cta h2{font-size:34px;letter-spacing:-.6px}
+.student-cta a{text-decoration:none}
+
+.student-footer{display:block;padding:38px 6% 24px;background:#0b2446;color:#aebed2}
+.footer-main{display:flex;align-items:center;justify-content:space-between;gap:30px;max-width:1200px;margin:0 auto 24px}.footer-main .brand{color:#fff}.footer-main p{font-size:11px;margin:7px 0 0;color:#9cb0c8}.footer-links{display:flex;gap:18px;flex-wrap:wrap}.footer-links a{color:#c7d4e4;font-size:11px}.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:16px;display:flex;justify-content:space-between;gap:15px;max-width:1200px;margin:auto;font-size:10px;color:#92a8c2}
+
+@media(max-width:1100px){
+  .student-hero{grid-template-columns:1fr;max-width:100%;padding:42px 6%}.student-hero .hero-copy{padding-left:0}.student-hero-visual{order:-1;min-height:0}.student-statbar{margin:0 5% 6px}.student-exam-grid{grid-template-columns:1fr 1fr}.student-subject-grid{grid-template-columns:1fr 1fr!important}.home-book-grid{grid-template-columns:1fr 1fr}.student-price-grid{max-width:760px;grid-template-columns:1fr}
+  .featured-long{transform:none}
+}
+@media(max-width:900px){
+  .student-topbar nav,.student-topbar .nav-actions{display:none}.student-topbar .menu{display:block}.mobile-nav{position:absolute;left:4%;right:4%;top:66px;background:#fff;border:1px solid var(--stu-line);border-radius:15px;box-shadow:0 14px 30px rgba(16,42,76,.14);padding:10px}.mobile-nav.open{display:grid}.mobile-nav a{padding:11px 12px;color:#18345f;text-decoration:none;font-size:12px;font-weight:800;border-radius:9px}.mobile-nav a:hover{background:#f3f7fb}
+  .study-steps,.student-mock-grid{grid-template-columns:1fr}.student-statbar{grid-template-columns:1fr 1fr}.student-statbar div{border-right:0}.student-daily-card{display:flex;flex-direction:column;gap:20px}.student-daily-visual{justify-content:flex-start}.student-cta{margin:36px 6% 52px}
+}
+@media(max-width:650px){
+  .student-hero{padding:24px 16px 36px}.student-hero h1{font-size:40px;letter-spacing:-1.5px}.student-hero p{font-size:15px}.student-hero .hero-actions{flex-direction:column}.student-proof{display:grid;grid-template-columns:1fr}.student-hero-visual img{border-radius:18px}.hero-float{display:none}.student-statbar{margin:0 16px 4px;padding:15px;border-radius:14px;grid-template-columns:1fr 1fr}.student-statbar strong{font-size:13px}.student-statbar span{font-size:9px}
+  .student-exam-section,.student-steps-section,.student-news-section,.student-books-section,.student-pricing{padding-top:54px;padding-bottom:54px}.section{padding-left:16px;padding-right:16px}.student-section-head{align-items:flex-start;flex-direction:column;gap:8px}.student-section-head h2{font-size:28px}.student-exam-grid,.student-subject-grid,.home-book-grid{grid-template-columns:1fr!important}.student-exam-card{min-height:190px}.student-subject-grid .subject-card{min-height:98px!important}.student-daily-card{padding:28px}.student-daily-visual{justify-content:space-between}.student-cta{padding:30px;margin:30px 16px 42px}.student-cta h2{font-size:28px}.footer-main{align-items:flex-start;flex-direction:column}.footer-links{gap:10px 14px}.footer-bottom{flex-direction:column}
+}
