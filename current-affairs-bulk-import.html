@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Current Affairs Bulk Import | AxomPrep</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+body{background:#f7f9fc;color:#102a4c}.shell{max-width:1220px;margin:auto;padding:30px 18px 60px}.head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}
+.eyebrow{font-size:12px;letter-spacing:1.4px;font-weight:800;color:#f28c28}.head h1{margin:7px 0}.muted,.small{color:#687b95;font-size:13px}
+.panel{background:#fff;border:1px solid #dfe7f1;border-radius:16px;padding:20px;box-shadow:0 8px 28px rgba(16,42,76,.05);margin:18px 0}
+.drop{border:2px dashed #cfdae8;border-radius:14px;padding:28px;text-align:center}.drop.drag{border-color:#f28c28;background:#fffaf5}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.stat{background:#f7f9fc;border-radius:12px;padding:14px}.stat b{display:block;font-size:26px}.stat span{font-size:11px;color:#75839a}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.field{min-width:190px}.field label{display:block;font-size:11px;font-weight:800;color:#667891;margin-bottom:6px}.field select{width:100%;padding:10px;border:1px solid #d6e0ec;border-radius:9px}
+.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:800;cursor:pointer}.primary{background:#f28c28;color:#fff}.light{background:#edf3fb;color:#173b69}
+.progress{height:10px;background:#eaf0f5;border-radius:99px;overflow:hidden;margin:15px 0}.progress i{display:block;height:100%;background:#1553a0;width:0}
+.table-wrap{overflow:auto;max-height:620px;border:1px solid #e3e9f0;border-radius:12px}.table{width:100%;border-collapse:collapse;min-width:1100px}.table th,.table td{padding:10px;border-bottom:1px solid #edf1f5;text-align:left;vertical-align:top}.table th{position:sticky;top:0;background:#f8fafc;font-size:11px;color:#718199;text-transform:uppercase}.q{max-width:480px;line-height:1.4}.badge{display:inline-block;padding:4px 7px;border-radius:999px;background:#edf4ff;color:#1553a0;font-size:10px;font-weight:800}.warn{background:#fff4df;color:#8c6817}.ok{background:#eaf7ef;color:#276c48}.notice{display:none;padding:12px;border-radius:10px;background:#f1f5fa;margin-top:12px}.notice.show{display:block}
+@media(max-width:800px){.stats{grid-template-columns:1fr 1fr}.head{flex-direction:column}}@media(max-width:520px){.stats{grid-template-columns:1fr}}
+</style></head>
+<body>
+<header class="topbar"><a class="brand" href="index.html">Axom<span>Prep</span></a><div class="nav-actions"><a class="btn light" href="admin.html">Admin</a><a class="btn light" href="current-affairs.html">Current Affairs</a><button class="btn primary" id="logout">Logout</button></div></header>
+<main class="shell">
+<div class="head"><div><div class="eyebrow">CONTENT MANAGEMENT</div><h1>Current Affairs Bulk Import</h1><div class="muted">Import the researched last-six-months starter set into <code>current_affairs_v1</code>.</div></div></div>
+<section class="panel"><h2>1. Upload CSV</h2>
+<div class="drop" id="drop"><strong>Drop the current-affairs CSV here</strong><div class="small">or choose the prepared file</div><input type="file" id="file" accept=".csv"></div>
+<div id="notice" class="notice"></div>
+<div class="stats"><div class="stat"><span>Total articles</span><b id="total">0</b></div><div class="stat"><span>Assam</span><b id="assam">0</b></div><div class="stat"><span>India / other</span><b id="other">0</b></div><div class="stat"><span>Featured</span><b id="featured">0</b></div></div>
+</section>
+<section class="panel" id="importPanel" style="display:none"><h2>2. Import</h2>
+<div class="actions"><div class="field"><label>Initial status</label><select id="status"><option value="review">Review (recommended)</option><option value="published">Published</option><option value="draft">Draft</option></select></div>
+<button class="btn light" id="selectAll">Select all</button><button class="btn light" id="clear">Clear</button><button class="btn primary" id="import">Import selected</button></div>
+<div class="progress"><i id="prog"></i></div><div class="small" id="count">0 selected</div>
+<div class="table-wrap"><table class="table"><thead><tr><th></th><th>Date</th><th>Category</th><th>Title</th><th>Source</th><th>CSV Status</th></tr></thead><tbody id="rows"></tbody></table></div>
+</section></main>
+<script src="current-affairs-import.js"></script></body></html>
