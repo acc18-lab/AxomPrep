@@ -57,14 +57,14 @@
 <section class="section alt colorful-subjects" id="practice">
   <div class="section-head"><div><div class="eyebrow">PRACTICE SMARTER</div><h2>Choose a category</h2><p>Build your preparation from the basics to full exam practice.</p></div><a href="practice.html">View all →</a></div>
   <div class="subject-grid colorful-grid" id="subjectGrid">
-    <button class="subject-card cat-blue" style="background:linear-gradient(135deg,#1553a0,#2875c7);color:#fff!important;" onclick="location.href='practice.html?subject=Assam%20GK'"><span class="subject-icon" style="color:#fff!important;background:rgba(255,255,255,.18)!important;">⌁</span><span class="subject-name" style="color:#fff!important;">Assam GK</span><small style="color:rgba(255,255,255,.9)!important;">History • Geography • Culture</small></button>
-    <button class="subject-card cat-purple" style="background:linear-gradient(135deg,#6a35c9,#9249e8);color:#fff!important;" onclick="location.href='practice.html?subject=Mathematics'"><span class="subject-icon" style="color:#fff!important;background:rgba(255,255,255,.18)!important;">∑</span><span class="subject-name" style="color:#fff!important;">Mathematics</span><small style="color:rgba(255,255,255,.9)!important;">Arithmetic • Algebra • DI</small></button>
-    <button class="subject-card cat-orange" style="background:linear-gradient(135deg,#db6d0b,#f28c28);color:#fff!important;" onclick="location.href='practice.html?subject=Reasoning'"><span class="subject-icon" style="color:#fff!important;background:rgba(255,255,255,.18)!important;">◎</span><span class="subject-name" style="color:#fff!important;">Reasoning</span><small style="color:rgba(255,255,255,.9)!important;">Verbal • Non-verbal • Logic</small></button>
-    <button class="subject-card cat-gold" style="background:linear-gradient(135deg,#b37a05,#d9a21a);color:#fff!important;" onclick="location.href='practice.html?subject=English'"><span class="subject-icon" style="color:#fff!important;background:rgba(255,255,255,.18)!important;">Aa</span><span class="subject-name" style="color:#fff!important;">English</span><small style="color:rgba(255,255,255,.9)!important;">Grammar • Vocabulary</small></button>
-    <button class="subject-card cat-teal" style="background:linear-gradient(135deg,#087f7a,#11aaa2);color:#fff!important;" onclick="location.href='practice.html?subject=General%20Knowledge'"><span class="subject-icon" style="color:#fff!important;background:rgba(255,255,255,.18)!important;">◈</span><span class="subject-name" style="color:#fff!important;">General Knowledge</span><small style="color:rgba(255,255,255,.9)!important;">India • World • Static GK</small></button>
-    <button class="subject-card cat-red" style="background:linear-gradient(135deg,#c62b39,#e94b58);color:#fff!important;" onclick="location.href='practice.html?subject=General%20Science'"><span class="subject-icon" style="color:#fff!important;background:rgba(255,255,255,.18)!important;">⚗</span><span class="subject-name" style="color:#fff!important;">General Science</span><small style="color:rgba(255,255,255,.9)!important;">Physics • Chemistry • Biology</small></button>
-    <button class="subject-card cat-cyan" style="background:linear-gradient(135deg,#0a7ca8,#1cb3d8);color:#fff!important;" onclick="location.href='practice.html?subject=Computer'"><span class="subject-icon" style="color:#fff!important;background:rgba(255,255,255,.18)!important;">▣</span><span class="subject-name" style="color:#fff!important;">Computer</span><small style="color:rgba(255,255,255,.9)!important;">Basics • Internet • Office</small></button>
-    <button class="subject-card cat-pink" style="background:linear-gradient(135deg,#c33d7b,#e45b9a);color:#fff!important;" onclick="location.href='practice.html?subject=Current%20Affairs'"><span class="subject-icon" style="color:#fff!important;background:rgba(255,255,255,.18)!important;">◉</span><span class="subject-name" style="color:#fff!important;">Current Affairs</span><small style="color:rgba(255,255,255,.9)!important;">National • Assam • World</small></button>
+    <button class="subject-card cat-blue" onclick="location.href='practice.html?subject=Assam%20GK'"><span class="subject-icon">⌁</span><span class="subject-name">Assam GK</span><small>History • Geography • Culture</small></button>
+    <button class="subject-card cat-purple" onclick="location.href='practice.html?subject=Mathematics'"><span class="subject-icon">∑</span><span class="subject-name">Mathematics</span><small>Arithmetic • Algebra • DI</small></button>
+    <button class="subject-card cat-orange" onclick="location.href='practice.html?subject=Reasoning'"><span class="subject-icon">◎</span><span class="subject-name">Reasoning</span><small>Verbal • Non-verbal • Logic</small></button>
+    <button class="subject-card cat-gold" onclick="location.href='practice.html?subject=English'"><span class="subject-icon">Aa</span><span class="subject-name">English</span><small>Grammar • Vocabulary</small></button>
+    <button class="subject-card cat-teal" onclick="location.href='practice.html?subject=General%20Knowledge'"><span class="subject-icon">◈</span><span class="subject-name">General Knowledge</span><small>India • World • Static GK</small></button>
+    <button class="subject-card cat-red" onclick="location.href='practice.html?subject=General%20Science'"><span class="subject-icon">⚗</span><span class="subject-name">General Science</span><small>Physics • Chemistry • Biology</small></button>
+    <button class="subject-card cat-cyan" onclick="location.href='practice.html?subject=Computer'"><span class="subject-icon">▣</span><span class="subject-name">Computer</span><small>Basics • Internet • Office</small></button>
+    <button class="subject-card cat-pink" onclick="location.href='practice.html?subject=Current%20Affairs'"><span class="subject-icon">◉</span><span class="subject-name">Current Affairs</span><small>National • Assam • World</small></button>
   </div>
   <div id="practicePanel" class="question-panel hidden"></div>
 </section>
@@ -100,4 +100,31 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="app.js"></script>
+<script>
+(async function loadHomepageCurrentAffairs(){
+  const grid=document.getElementById('currentGrid');
+  if(!grid || typeof supabase==='undefined' || typeof AXOMPREP_CONFIG==='undefined') return;
+  try{
+    const client=supabase.createClient(AXOMPREP_CONFIG.supabaseUrl,AXOMPREP_CONFIG.supabasePublishableKey);
+    const {data,error}=await client.from('current_affairs_v1')
+      .select('id,title,summary,category,published_date,source_name,source_url,featured')
+      .eq('status','published')
+      .order('featured',{ascending:false})
+      .order('published_date',{ascending:false})
+      .limit(6);
+    if(error) throw error;
+    if(!data || !data.length){
+      grid.innerHTML='<div class="news-empty"><strong>No current affairs published yet.</strong><br><span>Publish the imported articles from Admin → Current Affairs.</span></div>';
+      return;
+    }
+    const bands={Assam:'#10815a',India:'#1553a0',International:'#7a3fb0','International Relations':'#7a3fb0',Economy:'#d86f10',Environment:'#16886b',Health:'#c33d5f','Science & Technology':'#0a7ca8',Sports:'#c56a14',Defence:'#8d3a8c',Infrastructure:'#1553a0','Government Schemes':'#a05a0a',Governance:'#1f6b8f'};
+    const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    const more='<div class="news-more"><a class="btn light" href="current-affairs.html">See all current affairs →</a></div>';
+    grid.innerHTML=data.map(x=>`<article class="news-card"><div class="news-band" style="background:${bands[x.category]||'#1553a0'}"></div><div class="news-body"><div class="news-meta"><span class="news-cat">${esc(x.category||'Current Affairs')}</span><span>•</span><span>${esc(x.published_date||'')}</span>${x.featured?'<span>• Featured</span>':''}</div><h3>${esc(x.title)}</h3><p>${esc((x.summary||'').slice(0,170))}${(x.summary||'').length>170?'…':''}</p>${x.source_url?`<a href="${esc(x.source_url)}" target="_blank" rel="noopener">Read source →</a>`:''}</div></article>`).join('')+more;
+  }catch(err){
+    console.error('Homepage current affairs:',err);
+    grid.innerHTML='<div class="news-empty">Unable to load current affairs right now. Please try again.</div>';
+  }
+})();
+</script>
 </body></html>
