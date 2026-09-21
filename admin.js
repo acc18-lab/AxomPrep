@@ -71,7 +71,7 @@ async function loadStats(){
   ]=await Promise.all([
     client.from('questions').select('*',{count:'exact',head:true}).eq('status','published'),
     client.from('questions').select('*',{count:'exact',head:true}).in('status',['draft','review']),
-    client.from('current_affairs_v1').select('*',{count:'exact',head:true})
+    client.from('current_affairs').select('*',{count:'exact',head:true})
   ]);
 
   if(qError) throw qError;
@@ -202,27 +202,97 @@ function parseCSV(text){
   return rows
 }
 
-$('importCsv').onclick=async()=>{
+let csvPreviewObjects=[];
+let csvPayload=[];
+
+function normalizeTags(value){
+  const s=String(value||'').trim();
+  if(!s) return [];
+  // Accept both PostgreSQL array-literal format: {PRACTICE,GENERATED}
+  // and normal comma-separated CSV format: PRACTICE,GENERATED
+  if(s.startsWith('{')&&s.endsWith('}')){
+    return s.slice(1,-1).split(',').map(v=>v.trim().replace(/^"|"$/g,'')).filter(Boolean);
+  }
+  return s.split(',').map(v=>v.trim()).filter(Boolean);
+}
+
+function showCsvPreview(objects){
+  const wrap=$('csvPreview');
+  if(!objects.length){
+    wrap.innerHTML='<div class="notice">No question rows found.</div>';
+    return;
+  }
+
+  const sample=objects.slice(0,50);
+  const bad=[];
+  sample.forEach((x,i)=>{
+    const row=i+2;
+    if(!x.question) bad.push(`Row ${row}: question is empty`);
+    if(!x.option_a||!x.option_b||!x.option_c||!x.option_d) bad.push(`Row ${row}: one or more options are empty`);
+    if(!['A','B','C','D'].includes((x.answer||'').toUpperCase())) bad.push(`Row ${row}: answer must be A, B, C or D`);
+    if(x.difficulty && !['easy','medium','hard'].includes(x.difficulty.toLowerCase())) bad.push(`Row ${row}: invalid difficulty "${x.difficulty}"`);
+  });
+
+  const html = `
+    <div class="notice"><b>Preview:</b> showing ${sample.length} of ${objects.length} rows. ${
+      bad.length ? `<span class="danger">${bad.length} validation issue(s) found in preview.</span>` :
+      '<span>Preview looks valid.</span>'
+    }</div>
+    ${bad.length ? `<div class="notice"><div class="danger">${bad.slice(0,15).map(escapeHtml).join('<br>')}</div></div>` : ''}
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>#</th><th>Question</th><th>A</th><th>B</th><th>C</th><th>D</th><th>Answer</th><th>Subject</th><th>Topic</th><th>Difficulty</th></tr></thead>
+        <tbody>
+          ${sample.map((x,i)=>`
+            <tr>
+              <td>${i+1}</td>
+              <td>${escapeHtml(x.question||'')}</td>
+              <td>${escapeHtml(x.option_a||'')}</td>
+              <td>${escapeHtml(x.option_b||'')}</td>
+              <td>${escapeHtml(x.option_c||'')}</td>
+              <td>${escapeHtml(x.option_d||'')}</td>
+              <td><span class="badge">${escapeHtml((x.answer||'').toUpperCase())}</span></td>
+              <td>${escapeHtml(x.subject||'')}</td>
+              <td>${escapeHtml(x.topic||'')}</td>
+              <td>${escapeHtml((x.difficulty||'medium').toLowerCase())}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  wrap.innerHTML=html;
+}
+
+function escapeHtml(value){
+  return String(value??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+
+async function buildCsvPayload(){
   const f=$('csvFile').files[0];
-  if(!f){msg('csvMsg','Choose a CSV file first.');return}
+  if(!f) throw new Error('Choose a CSV file first.');
   const rows=parseCSV(await f.text());
-  if(rows.length<2){msg('csvMsg','CSV has no data rows.');return}
+  if(rows.length<2) throw new Error('CSV has no data rows.');
 
   const headers=rows[0].map(x=>x.trim().toLowerCase());
-  const objects=rows.slice(1).map(r=>Object.fromEntries(headers.map((h,i)=>[h,(r[i]||'').trim()])));
+  const required=['question','option_a','option_b','option_c','option_d','answer'];
+  const missing=required.filter(h=>!headers.includes(h));
+  if(missing.length) throw new Error('Missing required columns: '+missing.join(', '));
+
+  csvPreviewObjects=rows.slice(1)
+    .map(r=>Object.fromEntries(headers.map((h,i)=>[h,(r[i]||'').trim()])))
+    .filter(x=>x.question);
 
   const [er,sr]=await Promise.all([
     client.from('exams').select('id,name'),
     client.from('subjects').select('id,name')
   ]);
-
-  if(er.error) return msg('csvMsg',er.error.message);
-  if(sr.error) return msg('csvMsg',sr.error.message);
+  if(er.error) throw er.error;
+  if(sr.error) throw sr.error;
 
   const exams=Object.fromEntries((er.data||[]).map(x=>[x.name.toLowerCase(),x.id]));
   const subjects=Object.fromEntries((sr.data||[]).map(x=>[x.name.toLowerCase(),x.id]));
 
-  const payload=objects.filter(x=>x.question).map(x=>({
+  csvPayload=csvPreviewObjects.map(x=>({
     question:x.question,
     option_a:x.option_a,
     option_b:x.option_b,
@@ -235,72 +305,101 @@ $('importCsv').onclick=async()=>{
     topic_id:null,
     difficulty:(x.difficulty||'medium').toLowerCase(),
     year:x.year?Number(x.year):null,
-    tags:(x.tags||'').split(',').map(v=>v.trim()).filter(Boolean),
+    tags:normalizeTags(x.tags),
     status:x.status||'draft'
   }));
 
-  const {error}=await client.from('questions').insert(payload);
-  msg('csvMsg',error?error.message:`Imported ${payload.length} questions.`);
-  if(!error){await loadQuestions();await loadStats()}
+  return {rows,payload:csvPayload};
+}
+
+$('previewCsv').onclick=async()=>{
+  const button=$('previewCsv');
+  const old=button.textContent;
+  button.disabled=true;
+  button.textContent='Previewing...';
+  $('importCsv').disabled=true;
+  try{
+    const {payload}=await buildCsvPayload();
+    showCsvPreview(csvPreviewObjects);
+    const invalid=payload.filter(x=>
+      !x.question||!x.option_a||!x.option_b||!x.option_c||!x.option_d||
+      !['A','B','C','D'].includes(x.answer)||
+      !['easy','medium','hard'].includes(x.difficulty)
+    );
+    if(invalid.length){
+      msg('csvMsg',`Preview found ${invalid.length} invalid row(s). Fix the CSV before importing.`);
+    }else{
+      msg('csvMsg',`Preview ready: ${payload.length} valid question rows. Import is now enabled.`);
+      $('importCsv').disabled=false;
+    }
+  }catch(error){
+    console.error(error);
+    $('csvPreview').innerHTML='';
+    msg('csvMsg',error?.message||String(error));
+  }finally{
+    button.disabled=false;
+    button.textContent=old;
+  }
+};
+
+$('csvFile').onchange=()=>{
+  $('importCsv').disabled=true;
+  $('csvPreview').innerHTML='';
+  $('csvMsg').classList.add('hidden');
+};
+
+$('importCsv').onclick=async()=>{
+  const button=$('importCsv');
+  if(!csvPayload.length){
+    msg('csvMsg','Please click Preview CSV first.');
+    return;
+  }
+
+  button.disabled=true;
+  const old=button.textContent;
+  button.textContent='Importing...';
+
+  try{
+    const {error}=await client.from('questions').insert(csvPayload);
+    if(error) throw error;
+    msg('csvMsg',`Imported ${csvPayload.length} questions successfully.`);
+    await loadQuestions();
+    await loadStats();
+    $('csvPreview').insertAdjacentHTML('afterbegin','<div class="notice">Import complete.</div>');
+    csvPayload=[];
+  }catch(error){
+    console.error(error);
+    msg('csvMsg',error?.message||String(error));
+  }finally{
+    button.disabled=false;
+    button.textContent=old;
+  }
 };
 
 $('caForm').onsubmit=async e=>{
   e.preventDefault();
-  const btn=$('caSaveBtn'); const old=btn.textContent; btn.disabled=true; btn.textContent='Saving...';
-  try{
-    const {data:{user},error:userError}=await client.auth.getUser();
-    if(userError) throw userError;
-    if(!user) throw new Error('Your login session has expired. Please log in again.');
-
-    const status=$('caStatus').value||'draft';
-    const row={
-      title:$('caTitle').value.trim(),
-      title_assamese:$('caTitleAs').value.trim()||null,
-      summary:$('caSummary').value.trim()||null,
-      summary_assamese:$('caSummaryAs').value.trim()||null,
-      content:$('caContent').value.trim(),
-      content_assamese:$('caContentAs').value.trim()||null,
-      category:$('caCategory').value,
-      published_date:$('caDate').value,
-      source_name:$('caSource').value.trim()||null,
-      source_url:$('caSourceUrl').value.trim()||null,
-      image_url:$('caImage').value.trim()||null,
-      status,
-      featured:$('caFeatured').value==='true',
-      created_by:user.id
-    };
-
-    const existingId=$('caId').value;
-    const result=existingId
-      ? await client.from('current_affairs_v1').update({
-          title:row.title,title_assamese:row.title_assamese,summary:row.summary,summary_assamese:row.summary_assamese,
-          content:row.content,content_assamese:row.content_assamese,category:row.category,published_date:row.published_date,
-          source_name:row.source_name,source_url:row.source_url,image_url:row.image_url,status:row.status,
-          featured:row.featured,updated_at:new Date().toISOString(),
-          published_at:status==='published'?new Date().toISOString():null
-        }).eq('id',existingId)
-      : await client.from('current_affairs_v1').insert(row);
-
-    if(result.error) throw result.error;
-    msg('caMsg',existingId?'Current affair updated successfully.':'Current affair saved successfully.',false);
-    $('caForm').reset(); $('caId').value='';
-    $('caSaveBtn').textContent='Save Article';
-    await loadCurrent(); await loadStats();
-  }catch(err){
-    console.error(err);
-    msg('caMsg','Could not save current affair: '+(err?.message||err),false);
-    alert('Could not save current affair:\n\n'+(err?.message||err));
-  }finally{
-    btn.disabled=false; btn.textContent=old;
+  const row={
+    title:$('caTitle').value,
+    content:$('caContent').value,
+    category:$('caCategory').value,
+    published_date:$('caDate').value,
+    is_published:$('caPublish').value==='true'
+  };
+  const {error}=await client.from('current_affairs').insert(row);
+  msg('caMsg',error?error.message:'Current affair saved.');
+  if(!error){
+    $('caForm').reset();
+    await loadCurrent();
+    await loadStats();
   }
 };
 
 async function loadCurrent(){
   const {data,error}=await client
-    .from('current_affairs_v1')
-    .select('id,title,category,published_date,status,featured,source_name')
+    .from('current_affairs')
+    .select('title,category,published_date,is_published')
     .order('published_date',{ascending:false})
-    .limit(200);
+    .limit(30);
 
   if(error) throw error;
 
@@ -309,71 +408,10 @@ async function loadCurrent(){
       <td>${esc(x.title)}</td>
       <td>${esc(x.category||'')}</td>
       <td>${x.published_date||''}</td>
-      <td><span class="badge">${esc(x.status||'')}</span></td>
-      <td>${x.featured?'Yes':'No'}</td>
-      <td>
-        ${x.status!=='published'?`<button class="btn light ca-publish" data-id="${x.id}">Publish</button>`:''}
-        <button class="btn light ca-edit" data-id="${x.id}">Edit</button>
-      </td>
+      <td>${x.is_published?'Yes':'No'}</td>
     </tr>
-  `).join('')||'<tr><td colspan="6">No current affairs yet.</td></tr>';
-
-  document.querySelectorAll('.ca-publish').forEach(b=>b.onclick=()=>publishCurrent(b.dataset.id));
-  document.querySelectorAll('.ca-edit').forEach(b=>b.onclick=()=>editCurrent(b.dataset.id));
+  `).join('')||'<tr><td colspan="4">No current affairs yet.</td></tr>';
 }
-
-window.publishCurrent=async id=>{
-  const {error}=await client.from('current_affairs_v1').update({
-    status:'published',
-    published_at:new Date().toISOString(),
-    updated_at:new Date().toISOString()
-  }).eq('id',id);
-  if(error) return alert(error.message);
-  await loadCurrent(); await loadStats();
-};
-
-window.editCurrent=async id=>{
-  const {data,error}=await client.from('current_affairs_v1').select('*').eq('id',id).maybeSingle();
-  if(error) return alert(error.message);
-  if(!data) return;
-  $('caId').value=data.id||'';
-  $('caTitle').value=data.title||'';
-  $('caTitleAs').value=data.title_assamese||'';
-  $('caSummary').value=data.summary||'';
-  $('caSummaryAs').value=data.summary_assamese||'';
-  $('caContent').value=data.content||'';
-  $('caContentAs').value=data.content_assamese||'';
-  $('caCategory').value=data.category||'Assam';
-  $('caDate').value=data.published_date||'';
-  $('caSource').value=data.source_name||'';
-  $('caSourceUrl').value=data.source_url||'';
-  $('caImage').value=data.image_url||'';
-  $('caStatus').value=data.status||'draft';
-  $('caFeatured').value=String(!!data.featured);
-  $('caSaveBtn').textContent='Update Article';
-  window.scrollTo({top:$('caForm').offsetTop-20,behavior:'smooth'});
-};
-
-$('caRefreshBtn').onclick=async()=>{
-  try{await loadCurrent();await loadStats()}catch(e){alert(e.message)}
-};
-
-$('caPublishReviewBtn').onclick=async()=>{
-  const ok=confirm('Publish all current-affairs articles currently in Review status?');
-  if(!ok)return;
-  const {error}=await client.from('current_affairs_v1').update({
-    status:'published',
-    published_at:new Date().toISOString(),
-    updated_at:new Date().toISOString()
-  }).eq('status','review');
-  if(error) return alert(error.message);
-  await loadCurrent(); await loadStats();
-  alert('All Review current-affairs articles are now Published.');
-};
-
-$('caClearBtn').onclick=()=>{
-  $('caForm').reset(); $('caId').value=''; $('caSaveBtn').textContent='Save Article';
-};
 
 function esc(s){
   return String(s??'').replace(/[&<>"']/g,m=>({
