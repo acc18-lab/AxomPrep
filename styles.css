@@ -108,3 +108,32 @@
 .cat-blue{background:linear-gradient(135deg,#1553a0,#2875c7)}.cat-purple{background:linear-gradient(135deg,#6a35c9,#9249e8)}.cat-orange{background:linear-gradient(135deg,#db6d0b,#f28c28)}.cat-gold{background:linear-gradient(135deg,#b37a05,#d9a21a)}.cat-teal{background:linear-gradient(135deg,#087f7a,#11aaa2)}.cat-red{background:linear-gradient(135deg,#c62b39,#e94b58)}.cat-cyan{background:linear-gradient(135deg,#0a7ca8,#1cb3d8)}.cat-pink{background:linear-gradient(135deg,#c33d7b,#e45b9a)}
 @media(max-width:1050px){.hero-colorful{grid-template-columns:1fr}.hero-visual{order:-1}.hero-colorful .hero-copy{max-width:860px}.exam-ribbon{grid-template-columns:1fr 1fr}.ribbon-intro{grid-column:1/-1}}
 @media(max-width:650px){.hero-colorful{padding:24px 16px 20px}.hero-visual img{border-radius:18px}.hero-colorful .hero-copy h1{font-size:39px}.exam-ribbon{padding:12px 16px 20px;grid-template-columns:1fr}.colorful-grid{grid-template-columns:1fr!important}.colorful-grid .subject-card{min-height:96px}}
+
+/* FINAL OVERRIDE: colorful subject cards must remain visible */
+.colorful-grid .subject-card.cat-blue,
+.colorful-grid .subject-card.cat-purple,
+.colorful-grid .subject-card.cat-orange,
+.colorful-grid .subject-card.cat-gold,
+.colorful-grid .subject-card.cat-teal,
+.colorful-grid .subject-card.cat-red,
+.colorful-grid .subject-card.cat-cyan,
+.colorful-grid .subject-card.cat-pink {
+  color:#fff !important;
+  border:0 !important;
+}
+.colorful-grid .subject-card.cat-blue{background:linear-gradient(135deg,#1553a0,#2875c7) !important}
+.colorful-grid .subject-card.cat-purple{background:linear-gradient(135deg,#6a35c9,#9249e8) !important}
+.colorful-grid .subject-card.cat-orange{background:linear-gradient(135deg,#db6d0b,#f28c28) !important}
+.colorful-grid .subject-card.cat-gold{background:linear-gradient(135deg,#b37a05,#d9a21a) !important}
+.colorful-grid .subject-card.cat-teal{background:linear-gradient(135deg,#087f7a,#11aaa2) !important}
+.colorful-grid .subject-card.cat-red{background:linear-gradient(135deg,#c62b39,#e94b58) !important}
+.colorful-grid .subject-card.cat-cyan{background:linear-gradient(135deg,#0a7ca8,#1cb3d8) !important}
+.colorful-grid .subject-card.cat-pink{background:linear-gradient(135deg,#c33d7b,#e45b9a) !important}
+.colorful-grid .subject-card .subject-icon,
+.colorful-grid .subject-card .subject-name,
+.colorful-grid .subject-card small {
+  color:#fff !important;
+}
+.colorful-grid .subject-card .subject-icon {
+  background:rgba(255,255,255,.18) !important;
+}
