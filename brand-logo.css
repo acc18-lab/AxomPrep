@@ -1,0 +1,6 @@
+/* AxomPrep brand logo */
+.brand-logo-img{display:block;width:150px;height:auto;max-height:44px;object-fit:contain}
+.site-logo-img{display:block;width:150px;height:auto;max-height:44px;object-fit:contain}
+footer .brand-logo-img{width:128px;max-height:38px}
+.brand:focus-visible,.logo:focus-visible{outline:2px solid #f28a21;outline-offset:4px;border-radius:8px}
+@media(max-width:700px){.brand-logo-img,.site-logo-img{width:138px;max-height:40px}footer .brand-logo-img{width:120px}}
