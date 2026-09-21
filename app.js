@@ -1,144 +1,243 @@
 const cfg=window.AXOMPREP_CONFIG;
 const client=supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
-let quizQuestions=[],quizIndex=0,quizScore=0,quizAnswers=[],quizTimer=null,quizSeconds=600,quizStartedAt=null,quizSubmitted=false,isSignup=false;
+let quizQuestions=[],quizIndex=0,quizScore=0,isSignup=false;
 
+const AXOMPREP_PRODUCTION_URL='https://www.axomprep.online/';
 const $=id=>document.getElementById(id);
-function openAuth(signup=false){isSignup=signup;$('authModal').classList.remove('hidden');$('tabLogin').classList.toggle('active',!signup);$('tabSignup').classList.toggle('active',signup);$('nameWrap').classList.toggle('hidden',!signup);$('authSubmit').textContent=signup?'Create account':'Login';$('authMsg').textContent=''}
-function closeModal(){$('authModal').classList.add('hidden')}
-function requireLogin(){openAuth(false)}
-$('loginBtn').onclick=()=>openAuth(false);$('signupBtn').onclick=()=>openAuth(true);
-$('tabLogin').onclick=()=>openAuth(false);$('tabSignup').onclick=()=>openAuth(true);
-$('authForm').onsubmit=async e=>{e.preventDefault();const email=$('email').value,password=$('password').value,name=$('fullName').value;let r=isSignup?await client.auth.signUp({email,password,options:{data:{full_name:name}}}):await client.auth.signInWithPassword({email,password});if(r.error){$('authMsg').textContent=r.error.message;return}$('authMsg').textContent=isSignup?'Account created. Check your email if confirmation is enabled.':'Logged in.';const returnTo=sessionStorage.getItem('axomprep_admin_return');if(!isSignup&&returnTo){sessionStorage.removeItem('axomprep_admin_return');setTimeout(()=>location.href=returnTo,400);return}setTimeout(closeModal,900);updateAuthUI()};
-async function updateAuthUI(){const {data}=await client.auth.getUser();if(data.user){$('loginBtn').textContent='Dashboard';$('loginBtn').onclick=()=>location.hash='dashboard';$('signupBtn').textContent='Logout';$('signupBtn').onclick=async()=>{await client.auth.signOut();location.reload()}}}
 
-async function loadPractice(subject){location.hash='practice';const panel=$('practicePanel');panel.classList.remove('hidden');panel.innerHTML='<div class="loading">Loading questions…</div>';const {data,error}=await client.from('questions').select('id,question,option_a,option_b,option_c,option_d,answer,explanation').eq('status','published').eq('subject_id',(await getSubjectId(subject))).limit(10);if(error||!data?.length){panel.innerHTML='<div class="loading">No published questions are available for this subject yet. Add questions from the admin workflow.</div>';return}panel.innerHTML='<h3>'+subject+' Practice</h3>'+data.map((q,i)=>questionHtml(q,i)).join('')}
+function ensureAuthEnhancements(){
+  if(document.getElementById('axomprep-auth-enhancements')) return;
+  const style=document.createElement('style');
+  style.id='axomprep-auth-enhancements';
+  style.textContent=`
+    #authMsg{margin:12px 0 0;line-height:1.45;white-space:pre-line}
+    .auth-success{color:#147a4b}
+    .auth-error{color:#c7462e}
+    .auth-info{color:#315f93}
+    .auth-resend{display:none;margin-top:10px;padding:0;border:0;background:transparent;color:#1553a0;font:600 13px/1.4 inherit;text-decoration:underline;cursor:pointer}
+    .auth-resend.show{display:inline-block}
+    .auth-resend:disabled{opacity:.55;cursor:wait}
+    .auth-confirm-note{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:#eef6ff;color:#315f93;font-size:12px;line-height:1.45}
+    .auth-confirm-note.show{display:block}
+  `;
+  document.head.appendChild(style);
+
+  const form=$('authForm');
+  const msg=$('authMsg');
+  if(!form||!msg) return;
+
+  const forgot=document.createElement('a');
+  forgot.href='forgot-password.html';
+  forgot.id='forgotPasswordLink';
+  forgot.textContent='Forgot password?';
+  forgot.style.cssText='display:block;margin:9px 0 0;text-align:right;color:#1553a0;text-decoration:none;font-size:13px;font-weight:600;';
+  forgot.addEventListener('click',()=>{ sessionStorage.setItem('axomprep_reset_return','1'); });
+  form.insertBefore(forgot,msg);
+
+  const resend=document.createElement('button');
+  resend.type='button';
+  resend.id='resendConfirmationBtn';
+  resend.className='auth-resend';
+  resend.textContent='Resend confirmation email';
+  resend.onclick=resendConfirmation;
+  form.insertBefore(resend,msg.nextSibling);
+
+  const note=document.createElement('div');
+  note.id='authConfirmNote';
+  note.className='auth-confirm-note';
+  note.textContent='New accounts require email confirmation before you can log in.';
+  form.insertBefore(note,msg);
+}
+
+function setAuthMessage(message,type=''){
+  ensureAuthEnhancements();
+  const el=$('authMsg');
+  if(!el) return;
+  el.textContent=message||'';
+  el.className=type?('auth-'+type):'';
+}
+
+function setResendVisible(show){
+  ensureAuthEnhancements();
+  const btn=$('resendConfirmationBtn');
+  if(btn) btn.classList.toggle('show',Boolean(show));
+}
+
+function setSignupNote(show){
+  ensureAuthEnhancements();
+  const note=$('authConfirmNote');
+  if(note) note.classList.toggle('show',Boolean(show));
+}
+
+function getAuthRedirectUrl(){
+  return AXOMPREP_PRODUCTION_URL;
+}
+
+function getPasswordResetRedirectUrl(){
+  return 'https://www.axomprep.online/reset-password.html';
+}
+
+async function resendConfirmation(){
+  const email=($('email')?.value||'').trim().toLowerCase();
+  if(!email){setAuthMessage('Enter your email address first.','error');return}
+  const btn=$('resendConfirmationBtn');
+  if(btn){btn.disabled=true;btn.textContent='Sending…'}
+  try{
+    const {error}=await client.auth.resend({
+      type:'signup',
+      email,
+      options:{emailRedirectTo:getAuthRedirectUrl()}
+    });
+    if(error) throw error;
+    setAuthMessage('A fresh confirmation email has been sent. Please check your inbox and spam folder.','success');
+  }catch(error){
+    setAuthMessage(error?.message||'Could not resend the confirmation email right now.','error');
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='Resend confirmation email'}
+  }
+}
+
+function openAuth(signup=false){
+  ensureAuthEnhancements();
+  isSignup=signup;
+  $('authModal').classList.remove('hidden');
+  $('tabLogin').classList.toggle('active',!signup);
+  $('tabSignup').classList.toggle('active',signup);
+  $('nameWrap').classList.toggle('hidden',!signup);
+  $('authSubmit').textContent=signup?'Create account':'Login';
+  const forgot=$('forgotPasswordLink');
+  if(forgot) forgot.style.display=signup?'none':'block';
+  setSignupNote(Boolean(signup));
+  setResendVisible(false);
+  setAuthMessage('');
+}
+
+function closeModal(){$('authModal').classList.add('hidden');setResendVisible(false);setAuthMessage('')}
+function requireLogin(){openAuth(false)}
+
+$('loginBtn').onclick=()=>openAuth(false);
+$('signupBtn').onclick=()=>openAuth(true);
+$('tabLogin').onclick=()=>openAuth(false);
+$('tabSignup').onclick=()=>openAuth(true);
+
+window.requestPasswordReset=async function(email){
+  const cleanEmail=String(email||'').trim().toLowerCase();
+  if(!cleanEmail) throw new Error('Enter your email address.');
+  const {error}=await client.auth.resetPasswordForEmail(cleanEmail,{
+    redirectTo:getPasswordResetRedirectUrl()
+  });
+  if(error) throw error;
+};
+
+$('authForm').onsubmit=async e=>{
+  e.preventDefault();
+  ensureAuthEnhancements();
+  const email=$('email').value.trim().toLowerCase();
+  const password=$('password').value;
+  const name=$('fullName').value.trim();
+  const button=$('authSubmit');
+
+  if(!email||!password){setAuthMessage('Enter your email and password.','error');return}
+  if(isSignup&&password.length<6){setAuthMessage('Password must be at least 6 characters.','error');return}
+
+  button.disabled=true;
+  button.textContent=isSignup?'Creating…':'Logging in…';
+  setResendVisible(false);
+  setAuthMessage(isSignup?'Creating your AxomPrep account…':'Checking your account…','info');
+
+  try{
+    if(isSignup){
+      const {data,error}=await client.auth.signUp({
+        email,
+        password,
+        options:{
+          data:{full_name:name},
+          emailRedirectTo:getAuthRedirectUrl()
+        }
+      });
+      if(error) throw error;
+
+      // Confirm Email ON: account exists, but no active session yet.
+      if(data?.user&&!data?.session){
+        $('password').value='';
+        setSignupNote(true);
+        setAuthMessage('Account created successfully. Check your email and click “Confirm your email” before logging in.','success');
+        setResendVisible(true);
+        return;
+      }
+
+      // Safety guard if the project setting is accidentally changed.
+      const confirmed=Boolean(data?.user?.email_confirmed_at||data?.user?.confirmed_at);
+      if(data?.user&&!confirmed){
+        await client.auth.signOut();
+        $('password').value='';
+        setSignupNote(true);
+        setAuthMessage('Account created, but the email is not confirmed yet. Please confirm it from your inbox.','error');
+        setResendVisible(true);
+        return;
+      }
+
+      setAuthMessage('Account created successfully.','success');
+      await updateAuthUI();
+      setTimeout(closeModal,700);
+      return;
+    }
+
+    const {data,error}=await client.auth.signInWithPassword({email,password});
+    if(error) throw error;
+
+    const user=data?.user;
+    const confirmed=Boolean(user?.email_confirmed_at||user?.confirmed_at);
+    if(!confirmed){
+      await client.auth.signOut();
+      setAuthMessage('Your email is not confirmed yet. Check your inbox or request a new confirmation email below.','error');
+      setResendVisible(true);
+      return;
+    }
+
+    setAuthMessage('Logged in successfully.','success');
+    await updateAuthUI();
+    setTimeout(closeModal,500);
+  }catch(error){
+    const raw=String(error?.message||'');
+    const lower=raw.toLowerCase();
+    if(lower.includes('email not confirmed')||lower.includes('not confirmed')){
+      setAuthMessage('Your email is not confirmed yet. Check your inbox or request a new confirmation email below.','error');
+      setResendVisible(true);
+    }else{
+      setAuthMessage(raw||'Authentication failed. Please try again.','error');
+    }
+  }finally{
+    button.disabled=false;
+    button.textContent=isSignup?'Create account':'Login';
+  }
+};
+
+async function updateAuthUI(){
+  const {data}=await client.auth.getUser();
+  if(data.user){
+    $('loginBtn').textContent='Dashboard';
+    $('loginBtn').onclick=()=>location.hash='dashboard';
+    $('signupBtn').textContent='Logout';
+    $('signupBtn').onclick=async()=>{await client.auth.signOut();location.reload()};
+  }
+}
+window.updateAuthUI=updateAuthUI;
+
+ensureAuthEnhancements();
+async function loadPractice(subject){location.hash='practice';const panel=$('practicePanel');panel.classList.remove('hidden');panel.innerHTML='<div class="loading">Loading questions…</div>';
+const {data,error}=await client.from('questions').select('id,question,option_a,option_b,option_c,option_d,answer,explanation').eq('status','published').eq('subject_id',(await getSubjectId(subject))).limit(10);
+if(error||!data?.length){panel.innerHTML='<div class="loading">No published questions are available for this subject yet. Add questions from the admin workflow.</div>';return}
+panel.innerHTML='<h3>'+subject+' Practice</h3>'+data.map((q,i)=>questionHtml(q,i)).join('');
+}
 async function getSubjectId(name){const {data}=await client.from('subjects').select('id').eq('name',name).maybeSingle();return data?.id||''}
 function questionHtml(q,i){return `<div class="question"><h3>${i+1}. ${escapeHtml(q.question)}</h3><div class="options">${[['A',q.option_a],['B',q.option_b],['C',q.option_c],['D',q.option_d]].map(([l,t])=>`<button class="option" onclick="checkOption(this,'${q.answer}','${l}')"><b>${l}.</b> ${escapeHtml(t)}</button>`).join('')}</div><div class="explanation hidden"><b>Explanation:</b> ${escapeHtml(q.explanation||'No explanation added yet.')}</div></div>`}
 function checkOption(el,correct,chosen){const box=el.parentElement;[...box.children].forEach(x=>x.disabled=true);el.classList.add(chosen===correct?'correct':'wrong');if(chosen!==correct)[...box.children].find(x=>x.textContent.trim().startsWith(correct+'.'))?.classList.add('correct');el.parentElement.nextElementSibling?.classList.remove('hidden')}
-
-/* =========================
-   DAILY QUIZ ENGINE
-========================= */
-
-async function startQuiz(){
-  location.hash='quiz';
-  const p=$('quizPanel');
-  p.classList.remove('hidden');
-  p.innerHTML='<div class="loading">Loading today’s quiz…</div>';
-  const {data,error}=await client.from('questions').select('id,question,option_a,option_b,option_c,option_d,answer,explanation').eq('status','published').limit(100);
-  if(error||!data?.length){p.innerHTML='<div class="loading">No published questions yet. Add questions from the admin panel.</div>';return}
-  if(data.length<10){p.innerHTML=`<div class="loading">Daily Quiz needs at least 10 published questions. There are currently ${data.length}. Add more questions from Admin.</div>`;return}
-  quizQuestions=data.sort(()=>Math.random()-.5).slice(0,10);
-  quizIndex=0;
-  quizScore=0;
-  quizAnswers=new Array(quizQuestions.length).fill(null);
-  quizSeconds=600;
-  quizStartedAt=Date.now();
-  quizSubmitted=false;
-  clearInterval(quizTimer);
-  renderQuiz();
-  quizTimer=setInterval(()=>{quizSeconds--;updateQuizTimer();if(quizSeconds<=0){clearInterval(quizTimer);submitQuiz(true)}},1000);
-}
-
-function updateQuizTimer(){
-  const e=$('quizTimer');
-  if(!e)return;
-  const m=Math.floor(Math.max(quizSeconds,0)/60);
-  const s=Math.max(quizSeconds,0)%60;
-  e.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  e.classList.toggle('timer-warning',quizSeconds<=60);
-}
-
-function renderQuiz(){
-  const q=quizQuestions[quizIndex],p=$('quizPanel');
-  const selected=quizAnswers[quizIndex];
-  const answered=quizAnswers.filter(Boolean).length;
-  p.innerHTML=`
-    <div class="quiz-topbar">
-      <div><strong>Daily Quiz</strong><span>${answered}/${quizQuestions.length} answered</span></div>
-      <div class="quiz-timer" id="quizTimer">10:00</div>
-    </div>
-    <div class="quiz-progress"><i style="width:${((quizIndex+1)/quizQuestions.length)*100}%"></i></div>
-    <div class="quiz-question-head"><span>QUESTION ${quizIndex+1} OF ${quizQuestions.length}</span><b>${selected?'Answered':'Not answered'}</b></div>
-    <div class="question quiz-question">
-      <h3>${escapeHtml(q.question)}</h3>
-      <div class="options quiz-options">
-        ${[['A',q.option_a],['B',q.option_b],['C',q.option_c],['D',q.option_d]].map(([l,t])=>`
-          <button class="option ${selected===l?'selected':''}" onclick="selectQuizAnswer('${l}')" ${quizSubmitted?'disabled':''}>
-            <b>${l}.</b> ${escapeHtml(t)}
-          </button>`).join('')}
-      </div>
-    </div>
-    <div class="quiz-controls">
-      <button class="btn light" onclick="quizPrev()" ${quizIndex===0?'disabled':''}>← Previous</button>
-      <div class="quiz-dots">${quizQuestions.map((_,i)=>`<button class="quiz-dot ${i===quizIndex?'current':''} ${quizAnswers[i]?'done':''}" onclick="goQuizQuestion(${i})">${i+1}</button>`).join('')}</div>
-      ${quizIndex<quizQuestions.length-1
-        ? `<button class="btn primary" onclick="quizNext()">Next →</button>`
-        : `<button class="btn primary" onclick="submitQuiz(false)">Submit Quiz</button>`}
-    </div>`;
-  updateQuizTimer();
-}
-
-window.selectQuizAnswer=chosen=>{if(quizSubmitted)return;quizAnswers[quizIndex]=chosen;renderQuiz()};
-window.quizNext=()=>{if(quizIndex<quizQuestions.length-1){quizIndex++;renderQuiz()}};
-window.quizPrev=()=>{if(quizIndex>0){quizIndex--;renderQuiz()}};
-window.goQuizQuestion=i=>{if(i>=0&&i<quizQuestions.length){quizIndex=i;renderQuiz()}};
-
-async function submitQuiz(auto=false){
-  if(quizSubmitted)return;
-  quizSubmitted=true;
-  clearInterval(quizTimer);
-  quizScore=quizQuestions.reduce((score,q,i)=>score+(quizAnswers[i]===q.answer?1:0),0);
-  const timeTaken=Math.min(600,Math.max(0,Math.round((Date.now()-quizStartedAt)/1000)));
-  const attempted=quizAnswers.filter(Boolean).length;
-  const percentage=Math.round((quizScore/quizQuestions.length)*100);
-  const today=new Date().toISOString().slice(0,10);
-  const previous=localStorage.getItem('axomprep_last_quiz_date');
-  let streak=Number(localStorage.getItem('axomprep_quiz_streak')||0);
-  const yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);
-  if(previous===today){streak=Math.max(streak,1)}else if(previous===yesterday){streak+=1}else{streak=1}
-  localStorage.setItem('axomprep_last_quiz_date',today);
-  localStorage.setItem('axomprep_quiz_streak',String(streak));
-  localStorage.setItem('axomprep_last_quiz_result',JSON.stringify({score:quizScore,total:quizQuestions.length,percentage,streak,date:today}));
-
-  let saved=false;
-  const {data:{user}}=await client.auth.getUser();
-  if(user){
-    try{
-      const {data:attempt,error:attemptError}=await client.from('daily_quiz_attempts').insert({user_id:user.id,quiz_date:today,score:quizScore,total_questions:quizQuestions.length,time_taken_seconds:timeTaken}).select('id').single();
-      if(!attemptError&&attempt){
-        const rows=quizQuestions.map((q,i)=>({attempt_id:attempt.id,question_id:q.id,selected_answer:quizAnswers[i],correct_answer:q.answer,is_correct:quizAnswers[i]===q.answer}));
-        const {error:answerError}=await client.from('daily_quiz_answers').insert(rows);
-        saved=!answerError;
-      }
-    }catch(e){console.warn('Daily quiz result save skipped:',e)}
-  }
-  renderQuizResult(auto,attempted,timeTaken,percentage,streak,saved);
-}
-
-function renderQuizResult(auto,attempted,timeTaken,percentage,streak,saved){
-  const p=$('quizPanel');
-  const mins=Math.floor(timeTaken/60),secs=timeTaken%60;
-  p.innerHTML=`
-    <div class="quiz-result">
-      <div class="eyebrow">${auto?'TIME UP':'QUIZ COMPLETE'}</div>
-      <h2>${quizScore}/${quizQuestions.length}</h2>
-      <p class="result-percent">${percentage}% score • ${attempted}/${quizQuestions.length} attempted</p>
-      <div class="result-stats"><div><b>${quizScore}</b><span>Correct</span></div><div><b>${quizQuestions.length-quizScore}</b><span>Incorrect / skipped</span></div><div><b>${streak}</b><span>Day streak</span></div><div><b>${mins}:${String(secs).padStart(2,'0')}</b><span>Time</span></div></div>
-      <p>${saved?'Result saved to your account.':'Result saved on this device. Log in to sync results across devices.'}</p>
-      <div class="result-actions"><button class="btn primary" onclick="startQuiz()">Try Again</button><button class="btn light" onclick="showQuizReview()">Review Answers</button></div>
-    </div>`;
-  $('quizScore').textContent=quizScore;
-}
-
-window.showQuizReview=()=>{
-  const p=$('quizPanel');
-  p.innerHTML=`<div class="quiz-review"><div class="quiz-review-head"><div><div class="eyebrow">ANSWER REVIEW</div><h2>Your Daily Quiz</h2></div><button class="btn light" onclick="renderQuizResult(false,quizAnswers.filter(Boolean).length,Math.min(600,Math.max(0,Math.round((Date.now()-quizStartedAt)/1000))),Math.round((quizScore/quizQuestions.length)*100),Number(localStorage.getItem('axomprep_quiz_streak')||1),true)">Back to Result</button></div>${quizQuestions.map((q,i)=>{const chosen=quizAnswers[i];const ok=chosen===q.answer;return `<article class="review-item"><div class="review-number">${i+1}</div><div><h3>${escapeHtml(q.question)}</h3><p class="review-answer ${ok?'review-correct':'review-wrong'}">Your answer: <b>${chosen||'Not answered'}</b> • Correct: <b>${q.answer}</b></p><p><b>Explanation:</b> ${escapeHtml(q.explanation||'No explanation added yet.')}</p></div></article>`}).join('')}</div>`;
-};
-
+async function startQuiz(){const p=$('quizPanel');p.classList.remove('hidden');p.innerHTML='<div class="loading">Loading today’s quiz…</div>';const {data,error}=await client.from('questions').select('id,question,option_a,option_b,option_c,option_d,answer,explanation').eq('status','published').limit(50);if(error||!data?.length){p.innerHTML='<div class="loading">No published questions yet. Your admin panel will populate this.</div>';return}quizQuestions=data.sort(()=>Math.random()-.5).slice(0,10);quizIndex=0;quizScore=0;$('quizScore').textContent='0';renderQuiz()}
+function renderQuiz(){const q=quizQuestions[quizIndex],p=$('quizPanel');p.innerHTML=`<div class="question"><small>QUESTION ${quizIndex+1} OF ${quizQuestions.length}</small><h3>${escapeHtml(q.question)}</h3><div class="options">${[['A',q.option_a],['B',q.option_b],['C',q.option_c],['D',q.option_d]].map(([l,t])=>`<button class="option" onclick="answerQuiz('${l}')"><b>${l}.</b> ${escapeHtml(t)}</button>`).join('')}</div></div>`}
+window.answerQuiz=async chosen=>{const q=quizQuestions[quizIndex];if(chosen===q.answer){quizScore++;$('quizScore').textContent=quizScore}quizIndex++;if(quizIndex<quizQuestions.length)renderQuiz();else $('quizPanel').innerHTML=`<div class="center"><h2>Quiz complete</h2><p>Your score: <b>${quizScore}/${quizQuestions.length}</b></p><button class="btn primary" onclick="startQuiz()">Try again</button></div>`}
 window.loadPractice=loadPractice;window.filterExam=()=>location.hash='practice';window.requireLogin=requireLogin;window.closeModal=closeModal;
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 async function loadCurrent(){const g=$('currentGrid');const {data}=await client.from('current_affairs').select('title,content,category,published_date').eq('is_published',true).order('published_date',{ascending:false}).limit(3);if(!data?.length){g.innerHTML='<div class="loading">Current affairs will appear here after publication from the admin panel.</div>';return}g.innerHTML=data.map(n=>`<article class="news-card"><small>${escapeHtml(n.category||'CURRENT AFFAIRS')} • ${n.published_date}</small><h3>${escapeHtml(n.title)}</h3><p>${escapeHtml((n.content||'').slice(0,150))}</p></article>`).join('')}
 $('startQuiz').onclick=startQuiz;
-if(location.hash==='#login')openAuth(false);
 loadCurrent();updateAuthUI();
