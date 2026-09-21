@@ -9,23 +9,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Assamese:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .premium-page{padding:72px 8% 90px;min-height:calc(100vh - 72px);background:linear-gradient(180deg,#f7f9fc 0%,#fff 65%)}
-    .premium-heading{text-align:center;max-width:720px;margin:0 auto 36px}
+    .premium-page{padding:68px 6% 90px;min-height:calc(100vh - 72px);background:linear-gradient(180deg,#f7f9fc 0%,#fff 72%)}
+    .premium-heading{text-align:center;max-width:760px;margin:0 auto 34px}
     .premium-heading h1{font-size:clamp(34px,5vw,52px);line-height:1.08;margin:10px 0 14px}
     .premium-heading h1 span{color:#f28c28}
-    .premium-heading p{color:#617089;font-size:16px}
-    .premium-card{max-width:470px;margin:0 auto;background:#fff;border:1px solid #e5eaf1;border-radius:20px;padding:34px;box-shadow:0 18px 50px rgba(16,46,89,.10)}
+    .premium-heading p{color:#617089;font-size:16px;margin:0}
+    .premium-plans{max-width:940px;margin:0 auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:stretch}
+    .premium-card{position:relative;background:#fff;border:1px solid #e1e8f0;border-radius:20px;padding:30px;box-shadow:0 18px 50px rgba(16,46,89,.10)}
+    .premium-card.featured{border:2px solid #f28c28;box-shadow:0 22px 60px rgba(242,140,40,.14);transform:translateY(-6px)}
+    .plan-ribbon{position:absolute;top:-13px;right:22px;background:#f28c28;color:#fff;border-radius:999px;padding:6px 12px;font-size:11px;font-weight:800;letter-spacing:.06em}
     .premium-card-top{text-align:center}
     .premium-badge{display:inline-block;background:#fff1e3;color:#d66f0b;border-radius:999px;padding:6px 12px;font-size:11px;font-weight:800;letter-spacing:.08em}
-    .premium-card h2{margin:16px 0 4px;font-size:25px}
-    .premium-price{font-size:50px;font-weight:800;color:#102e59;margin:8px 0}
+    .premium-card h2{margin:16px 0 5px;font-size:25px;color:#102e59}
+    .premium-price{font-size:50px;font-weight:800;color:#102e59;margin:8px 0 2px}
     .premium-price small{font-size:15px;font-weight:600;color:#718096}
-    .premium-features{list-style:none;padding:0;margin:24px 0}
+    .plan-description{text-align:center;color:#6a7890;font-size:13px;min-height:38px}
+    .premium-features{list-style:none;padding:0;margin:22px 0}
     .premium-features li{padding:9px 0;color:#40516a;border-bottom:1px solid #eef1f5}
     .premium-features li:last-child{border-bottom:0}
     .premium-features li::before{content:"✓";font-weight:800;color:#f28c28;margin-right:10px}
-    .premium-message{margin-top:16px;padding:12px;border-radius:10px;background:#f1f5f9;color:#52627a;text-align:center;font-size:13px}
-    .premium-note{text-align:center;color:#7b8799;font-size:12px;margin-top:14px}
+    .plan-pay-btn{width:100%}
+    .premium-message{max-width:940px;margin:24px auto 0;padding:12px;border-radius:10px;background:#f1f5f9;color:#52627a;text-align:center;font-size:13px}
+    .premium-note{text-align:center;color:#7b8799;font-size:12px;margin:14px auto 0;max-width:700px}
+    @media(max-width:720px){.premium-page{padding:50px 18px 70px}.premium-plans{grid-template-columns:1fr}.premium-card.featured{transform:none}}
   </style>
 </head>
 <body>
@@ -53,25 +59,45 @@
     <p>More practice, deeper preparation and premium study resources built for competitive-exam aspirants.</p>
   </section>
 
-  <section class="premium-card">
-    <div class="premium-card-top">
-      <span class="premium-badge">MONTHLY PLAN</span>
-      <h2>AxomPrep Premium</h2>
-      <div class="premium-price">₹249 <small>/ month</small></div>
-    </div>
+  <section class="premium-plans">
+    <article class="premium-card">
+      <div class="premium-card-top">
+        <span class="premium-badge">1 MONTH</span>
+        <h2>Monthly Plan</h2>
+        <div class="premium-price">₹49 <small>/ 1 month</small></div>
+        <div class="plan-description">Full Premium access for 30 days.</div>
+      </div>
+      <ul class="premium-features">
+        <li>Premium question sets</li>
+        <li>Premium mock tests</li>
+        <li>Premium study content</li>
+        <li>Performance-focused preparation</li>
+        <li>Premium status in your dashboard</li>
+      </ul>
+      <button class="btn primary large plan-pay-btn" data-plan="premium_monthly" data-price="49">Get Premium — ₹49</button>
+    </article>
 
-    <ul class="premium-features">
-      <li>Premium question sets</li>
-      <li>Premium mock tests</li>
-      <li>Premium study content</li>
-      <li>Performance-focused preparation</li>
-      <li>Premium status in your dashboard</li>
-    </ul>
-
-    <button id="payBtn" class="btn primary large full">Upgrade for ₹249</button>
-    <div id="status" class="premium-message">Checking your subscription...</div>
-    <div class="premium-note">Secure payment via Razorpay. Test Mode can be used before launch.</div>
+    <article class="premium-card featured">
+      <div class="plan-ribbon">3 MONTHS</div>
+      <div class="premium-card-top">
+        <span class="premium-badge">3 MONTHS</span>
+        <h2>Quarterly Plan</h2>
+        <div class="premium-price">₹129 <small>/ 3 months</small></div>
+        <div class="plan-description">Full Premium access for 90 days.</div>
+      </div>
+      <ul class="premium-features">
+        <li>Premium question sets</li>
+        <li>Premium mock tests</li>
+        <li>Premium study content</li>
+        <li>Performance-focused preparation</li>
+        <li>Premium status in your dashboard</li>
+      </ul>
+      <button class="btn primary large plan-pay-btn" data-plan="premium_quarterly" data-price="129">Get Premium — ₹129</button>
+    </article>
   </section>
+
+  <div id="status" class="premium-message">Checking your subscription...</div>
+  <div class="premium-note">Secure payment via Razorpay. Test Mode can be used before launch.</div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
