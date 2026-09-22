@@ -176,16 +176,22 @@
       const r=await client.from('current_affairs_v1')
         .select('id,title,summary,category,published_date,source_name,source_url,featured')
         .eq('status','published')
-        .order('featured',{ascending:false})
         .order('published_date',{ascending:false})
-        .limit(6);
+        .limit(30);
       if(r.error) throw r.error;
       if(!r.data?.length){
         grid.innerHTML='<div class="news-empty"><strong>No current affairs are published yet.</strong><span>Open Current Affairs to browse the latest entries.</span><a class="btn light" href="current-affairs.html">Open Current Affairs →</a></div>';
         return;
       }
       const bands={Assam:'#10815a',India:'#1553a0',International:'#7a3fb0','International Relations':'#7a3fb0',Economy:'#d86f10',Environment:'#16886b',Health:'#c33d5f','Science & Technology':'#0a7ca8',Sports:'#c56a14',Defence:'#8d3a8c',Infrastructure:'#1553a0','Government Schemes':'#a05a0a',Governance:'#1f6b8f'};
-      grid.innerHTML=r.data.map(x=>{
+      const pool=[...r.data];
+      for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+      const featured=pool.filter(x=>x.featured).slice(0,2);
+      const regular=pool.filter(x=>!x.featured);
+      const picked=[...featured,...regular];
+      for(let i=picked.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[picked[i],picked[j]]=[picked[j],picked[i]];}
+      const visible=picked.slice(0,6);
+      grid.innerHTML=visible.map(x=>{
         const title=esc(x.title||'Current affair');
         const summary=esc(String(x.summary||'').slice(0,170))+(String(x.summary||'').length>170?'…':'');
         const src=x.source_url?safeUrl(x.source_url):'';
