@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Current Jobs & Recruitments | AxomPrep</title>
+<meta name="description" content="Latest government jobs, Assam recruitment, railway, banking and other competitive-exam job updates on AxomPrep.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Assamese:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="brand-logo.css"><link rel="stylesheet" href="current-jobs.css">
+<style>.job-nav{display:flex;gap:18px;align-items:center}.job-nav a{text-decoration:none;color:#21456f;font-weight:700;font-size:14px}.job-head{max-width:1180px;margin:0 auto;padding:18px 14px 0}.job-brand img{width:142px;max-height:40px}.job-head-inner{display:flex;align-items:center;justify-content:space-between}.job-menu{display:none}@media(max-width:760px){.job-nav{display:none}.job-menu{display:block;border:1px solid #d8e1ec;background:#fff;border-radius:10px;padding:8px 10px}}</style>
+</head>
+<body>
+<header class="job-head"><div class="job-head-inner"><a class="job-brand" href="index.html"><img src="axomprep-logo.png" alt="AxomPrep"></a><nav class="job-nav"><a href="index.html">Home</a><a href="practice.html">Practice</a><a href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="books.html">Books</a><a href="premium.html">Premium</a></nav><button class="job-menu" onclick="location.href='index.html'">Home</button></div></header>
+<main class="cj-page">
+<section class="cj-hero"><div><div class="cj-eyebrow">CAREER ALERTS</div><h1>Current Jobs & Recruitments</h1><p>Find active recruitment updates, important deadlines and official application links for Assam, railways, banking and other government-exam opportunities.</p><div class="cj-hero-actions"><a class="cj-btn-orange" href="#jobs">Browse active jobs ↓</a><a class="cj-btn-white" href="index.html">Back to AxomPrep</a></div></div><div class="cj-hero-side"><strong>Built for job seekers</strong><div class="cj-stat"><b>Assam + India</b><span>Recruitment coverage</span></div><div class="cj-stat"><b>Daily</b><span>Automatic refresh</span></div><div class="cj-stat"><b>Official links</b><span>When available</span></div></div></section>
+<section class="cj-container" id="jobs"><div class="cj-toolbar"><input id="jobSearch" type="search" placeholder="Search jobs, post, organization or qualification…"><select id="jobCategory"><option value="all">All categories</option></select><select id="jobQualification"><option value="all">All qualifications</option><option value="10th">10th</option><option value="10+2">10+2</option><option value="graduate">Graduate</option><option value="diploma">Diploma</option><option value="iti">ITI</option><option value="mbbs">MBBS</option></select><label class="cj-toggle"><input id="closingSoon" type="checkbox"> <span>Closing ≤ 7 days</span></label></div><div class="cj-meta"><strong id="jobResultCount">Loading…</strong><span id="jobUpdateTime">Auto-updated daily</span></div><div id="jobsGrid" class="cj-grid"></div><div class="cj-disclaimer"><strong>Important:</strong> AxomPrep aggregates job information to make opportunities easier to discover. Always open the official notification/official recruitment portal and verify eligibility, dates, fees and instructions before applying.</div></section><div class="cj-footer">AxomPrep • Prepare Today. Rank Tomorrow.</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="current-jobs.js"></script>
+</body></html>
