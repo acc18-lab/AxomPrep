@@ -158,32 +158,90 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="app.js"></script>
-<script src="homepage-books.js"></script>
 <script>
-(async function loadHomepageCurrentAffairs(){
-  const grid=document.getElementById('currentGrid');
-  if(!grid || typeof supabase==='undefined' || typeof AXOMPREP_CONFIG==='undefined') return;
-  try{
-    const client=supabase.createClient(AXOMPREP_CONFIG.supabaseUrl,AXOMPREP_CONFIG.supabasePublishableKey);
-    const {data,error}=await client.from('current_affairs_v1')
-      .select('id,title,summary,category,published_date,source_name,source_url,featured')
-      .eq('status','published')
-      .order('featured',{ascending:false})
-      .order('published_date',{ascending:false})
-      .limit(6);
-    if(error) throw error;
-    if(!data || !data.length){
-      grid.innerHTML='<div class="news-empty"><strong>No current affairs published yet.</strong><br><span>Publish the imported articles from Admin → Current Affairs.</span></div>';
-      return;
+/* AxomPrep homepage live-data loader v6
+   Reads the dedicated v1 tables directly so Current Affairs and Books
+   do not depend on any other homepage script. */
+(function(){
+  const cfg=window.AXOMPREP_CONFIG;
+  if(!cfg || !window.supabase) return;
+  const client=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const safeUrl=value=>{try{const u=new URL(String(value||''),location.href);return /^https?:$/.test(u.protocol)?u.href:''}catch(e){return ''}};
+
+  async function loadCurrentAffairs(){
+    const grid=document.getElementById('currentGrid');
+    if(!grid) return;
+    try{
+      const r=await client.from('current_affairs_v1')
+        .select('id,title,summary,category,published_date,source_name,source_url,featured')
+        .eq('status','published')
+        .order('featured',{ascending:false})
+        .order('published_date',{ascending:false})
+        .limit(6);
+      if(r.error) throw r.error;
+      if(!r.data?.length){
+        grid.innerHTML='<div class="news-empty"><strong>No current affairs are published yet.</strong><span>Open Current Affairs to browse the latest entries.</span><a class="btn light" href="current-affairs.html">Open Current Affairs →</a></div>';
+        return;
+      }
+      const bands={Assam:'#10815a',India:'#1553a0',International:'#7a3fb0','International Relations':'#7a3fb0',Economy:'#d86f10',Environment:'#16886b',Health:'#c33d5f','Science & Technology':'#0a7ca8',Sports:'#c56a14',Defence:'#8d3a8c',Infrastructure:'#1553a0','Government Schemes':'#a05a0a',Governance:'#1f6b8f'};
+      grid.innerHTML=r.data.map(x=>{
+        const title=esc(x.title||'Current affair');
+        const summary=esc(String(x.summary||'').slice(0,170))+(String(x.summary||'').length>170?'…':'');
+        const src=x.source_url?safeUrl(x.source_url):'';
+        return `<article class="news-card"><div class="news-band" style="background:${bands[x.category]||'#1553a0'}"></div><div class="news-body"><div class="news-meta"><span class="news-cat">${esc(x.category||'Current Affairs')}</span><span>•</span><span>${esc(x.published_date||'')}</span>${x.featured?'<span class="news-featured">Featured</span>':''}</div><h3>${title}</h3><p>${summary}</p><div class="news-footer">${x.source_name?`<span class="news-source">${esc(x.source_name)}</span>`:'<span class="news-source">AxomPrep</span>'}${src?`<a href="${esc(src)}" target="_blank" rel="noopener noreferrer">Read source ↗</a>`:''}</div></div></article>`;
+      }).join('')+`<div class="news-more"><a class="btn light" href="current-affairs.html">Read all current affairs →</a></div>`;
+    }catch(err){
+      console.error('AxomPrep Current Affairs:',err);
+      grid.innerHTML='<div class="news-empty"><strong>Current Affairs could not be loaded.</strong><span>Please try again or open the full Current Affairs page.</span><a class="btn light" href="current-affairs.html">Open Current Affairs →</a></div>';
     }
-    const bands={Assam:'#10815a',India:'#1553a0',International:'#7a3fb0','International Relations':'#7a3fb0',Economy:'#d86f10',Environment:'#16886b',Health:'#c33d5f','Science & Technology':'#0a7ca8',Sports:'#c56a14',Defence:'#8d3a8c',Infrastructure:'#1553a0','Government Schemes':'#a05a0a',Governance:'#1f6b8f'};
-    const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    const more='<div class="news-more"><a class="btn light" href="current-affairs.html">Read all current affairs →</a></div>';
-    grid.innerHTML=data.map(x=>`<article class="news-card"><div class="news-band" style="background:${bands[x.category]||'#1553a0'}"></div><div class="news-body"><div class="news-meta"><span class="news-cat">${esc(x.category||'Current Affairs')}</span><span>•</span><span>${esc(x.published_date||'')}</span>${x.featured?'<span class="news-featured">Featured</span>':''}</div><h3>${esc(x.title)}</h3><p>${esc((x.summary||'').slice(0,170))}${(x.summary||'').length>170?'…':''}</p><div class="news-footer">${x.source_name?`<span class="news-source">${esc(x.source_name)}</span>`:''}${x.source_url?`<a href="${esc(x.source_url)}" target="_blank" rel="noopener noreferrer">Read source ↗</a>`:''}</div></div></article>`).join('')+more;
-  }catch(err){
-    console.error('Homepage current affairs:',err);
-    grid.innerHTML='<div class="news-empty">Unable to load current affairs right now. Please try again.</div>';
   }
+
+  function coverHtml(b){
+    const title=esc(b.title||'Recommended book');
+    const url=safeUrl(b.cover_url);
+    const fallback=`<div class="home-cover-fallback"><small>${esc(b.category||'Competitive exams')}</small><strong>${title}</strong></div>`;
+    return url?`<img src="${esc(url)}" alt="${title} book cover" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="home-cover-fallback" style="display:none">${fallback.replace('><strong', '><strong')}</div>`:fallback;
+  }
+
+  function renderBook(b){
+    const title=esc(b.title||'Recommended book');
+    const author=esc(b.author||'');
+    const desc=esc(String(b.description||'').slice(0,120))+(String(b.description||'').length>120?'…':'');
+    const exams=String(b.exam_name||'').split(/[•|]/).map(x=>x.trim()).filter(Boolean).slice(0,3).map(x=>`<span>${esc(x)}</span>`).join('');
+    const amazon=safeUrl(b.amazon_url), flipkart=safeUrl(b.flipkart_url);
+    return `<article class="home-book-card"><div class="home-book-cover">${coverHtml(b)}</div><div class="home-book-body">${b.featured?'<span class="home-book-badge">Featured</span>':''}<h3>${title}</h3>${author?`<div class="home-book-author">${author}</div>`:''}<div class="home-book-exams">${exams}</div><p>${desc}</p><div class="home-book-actions">${amazon?`<a class="home-affiliate amazon" href="${esc(amazon)}" target="_blank" rel="sponsored noopener" data-book="${esc(b.id||'')}" data-store="amazon">Amazon ↗</a>`:''}${flipkart?`<a class="home-affiliate flipkart" href="${esc(flipkart)}" target="_blank" rel="sponsored noopener" data-book="${esc(b.id||'')}" data-store="flipkart">Flipkart ↗</a>`:''}</div></div></article>`;
+  }
+
+  async function loadBooks(){
+    const grid=document.getElementById('homeBooksGrid');
+    if(!grid) return;
+    try{
+      let r=await client.from('books_v1').select('id,title,author,description,exam_name,category,cover_url,amazon_url,flipkart_url,featured,status,created_at').eq('status','published').eq('featured',true).order('created_at',{ascending:false}).limit(6);
+      if(r.error) throw r.error;
+      let data=r.data||[];
+      if(data.length<6){
+        const more=await client.from('books_v1').select('id,title,author,description,exam_name,category,cover_url,amazon_url,flipkart_url,featured,status,created_at').eq('status','published').order('featured',{ascending:false}).order('created_at',{ascending:false}).limit(6);
+        if(!more.error) data=more.data||data;
+      }
+      if(!data.length){
+        grid.innerHTML='<div class="home-books-empty"><strong>No books are published yet.</strong><span>Open Books to browse the study catalogue.</span><a href="books.html">Open Books →</a></div>';
+        return;
+      }
+      grid.innerHTML=data.slice(0,6).map(renderBook).join('');
+    }catch(err){
+      console.error('AxomPrep Books:',err);
+      grid.innerHTML='<div class="home-books-empty"><strong>Books could not be loaded.</strong><span>Please try again or open the full Books page.</span><a href="books.html">Open Books →</a></div>';
+    }
+  }
+
+  document.addEventListener('click',async e=>{
+    const a=e.target.closest('a[data-book][data-store]');
+    if(!a) return;
+    try{await client.from('book_clicks_v1').insert({book_id:a.dataset.book,store:a.dataset.store});}catch(_){ }
+  });
+
+  document.addEventListener('DOMContentLoaded',()=>{loadCurrentAffairs();loadBooks();});
 })();
 </script>
 <script>
