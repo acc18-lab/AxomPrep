@@ -1,7 +1,8 @@
 {
-  "name": "axomprep-premium-payments",
+  "name": "axomprep-auto-current-affairs",
   "private": true,
   "dependencies": {
-    "@supabase/supabase-js": "^2.57.0"
+    "@supabase/supabase-js": "^2.57.4",
+    "fast-xml-parser": "^5.3.1"
   }
 }
