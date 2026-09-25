@@ -74,3 +74,42 @@
 @media (max-width:600px){
   .ax-hero h1{font-size:40px}.ax-hero-art img{height:225px}.ax-statbar{grid-template-columns:1fr 1fr}.ax-focus-goals{grid-template-columns:1fr}.ax-panel-summary{grid-template-columns:1fr 1fr}.ax-panel-summary span:last-child{grid-column:1/-1}.ax-quick-grid{grid-template-columns:1fr 1fr}.ax-lower-grid{grid-template-columns:1fr}.ax-books-panel{grid-column:auto}.ax-books-shelf{grid-template-columns:repeat(2,1fr)}.ax-book-cover{height:170px}.ax-subject-grid{grid-template-columns:1fr 1fr}.ax-exam-grid{grid-template-columns:1fr}.ax-footer-main{grid-template-columns:1fr}.ax-footer-bottom{flex-direction:column}.ax-news-item{grid-template-columns:62px 1fr}.ax-news-img{width:62px;height:50px}
 }
+
+/* V7: place the lower resource panels inside the main content column,
+   using the otherwise-unused vertical space beside Current Affairs. */
+@media (min-width:900px){
+  .ax-center-stack > .ax-lower-grid{
+    width:100%;
+    max-width:none;
+    margin:0;
+    padding:0;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+  }
+  .ax-center-stack > .ax-lower-grid .ax-lower-card{min-width:0}
+  .ax-center-stack > .ax-lower-grid .ax-card-head{padding:12px 12px 8px}
+  .ax-center-stack > .ax-lower-grid .ax-card-title h2{font-size:13px}
+  .ax-center-stack > .ax-lower-grid .ax-exam-grid{gap:6px;padding:2px 10px 10px}
+  .ax-center-stack > .ax-lower-grid .ax-exam-card{min-height:58px;padding:8px;gap:7px}
+  .ax-center-stack > .ax-lower-grid .ax-exam-card>span{width:27px;height:27px}
+  .ax-center-stack > .ax-lower-grid .ax-subject-grid{gap:5px;padding:2px 10px 10px}
+  .ax-center-stack > .ax-lower-grid .ax-subject-card{min-height:52px;padding:8px}
+  .ax-center-stack > .ax-lower-grid .ax-books-shelf{gap:6px;padding:2px 10px 6px}
+  .ax-center-stack > .ax-lower-grid .ax-book-cover{height:118px}
+  .ax-center-stack > .ax-lower-grid .ax-disclosure{padding-left:10px;padding-right:10px;font-size:5.5px}
+}
+@media (min-width:1081px){
+  .ax-dashboard-grid{grid-template-columns:minmax(330px,.78fr) minmax(0,1.78fr);}
+  .ax-center-stack > .ax-lower-grid{gap:12px}
+  .ax-center-stack > .ax-lower-grid .ax-exam-card{min-height:64px}
+  .ax-center-stack > .ax-lower-grid .ax-subject-card{min-height:58px}
+  .ax-center-stack > .ax-lower-grid .ax-book-cover{height:132px}
+}
+@media (max-width:899px){
+  .ax-center-stack > .ax-lower-grid{
+    width:auto;
+    max-width:none;
+    margin:0;
+    padding:0;
+  }
+}
