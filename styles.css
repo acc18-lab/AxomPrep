@@ -231,3 +231,835 @@
 .home-books-disclosure{margin-top:14px;color:#78879b;font-size:10px;line-height:1.5}
 @media(max-width:1000px){.home-book-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:680px){.home-book-grid{grid-template-columns:1fr}.home-book-card{padding:14px}.home-book-cover{width:96px;min-width:96px;height:140px}}
+/* ============================================================
+   AXOMPREP — EXACT COMPACT LANDING PAGE FORMAT
+   Target: desktop screenshot 1312 × 1199
+   IMPORTANT:
+   - Do NOT change HTML
+   - Do NOT change JavaScript
+   - Do NOT change Supabase
+   - Do NOT change existing data/functions
+   - This only changes layout, sizing and typography
+   ============================================================ */
+
+:root {
+  --ax-navy: #082f63;
+  --ax-blue: #0b4f9c;
+  --ax-orange: #ff7414;
+  --ax-bg: #f5f8fc;
+  --ax-line: #dfe7f0;
+  --ax-text: #173b67;
+}
+
+/* ------------------------------------------------------------
+   GLOBAL
+   ------------------------------------------------------------ */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #f5f8fc;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ax-text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------
+   HEADER
+   ------------------------------------------------------------ */
+
+.ax-header {
+  background: #fff;
+}
+
+.ax-header-inner {
+  width: 100%;
+  max-width: 1240px;
+  min-height: 50px;
+  padding: 0 0;
+  margin: 0 auto;
+}
+
+.ax-logo {
+  transform: scale(.92);
+  transform-origin: left center;
+}
+
+.ax-nav {
+  gap: 20px;
+}
+
+.ax-nav a {
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ax-actions {
+  gap: 10px;
+}
+
+.ax-search {
+  width: 235px;
+  height: 32px;
+  font-size: 10px;
+}
+
+.ax-actions button,
+.ax-login,
+.ax-get-started {
+  height: 32px;
+  font-size: 10px;
+  padding: 0 15px;
+  border-radius: 8px;
+}
+
+/* ------------------------------------------------------------
+   HERO
+   ------------------------------------------------------------ */
+
+.ax-hero {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0;
+  gap: 12px;
+
+  grid-template-columns: 1.05fr .95fr;
+
+  min-height: 202px;
+}
+
+.ax-hero-copy {
+  padding: 10px 0 8px 27px;
+}
+
+.ax-hero-copy > span,
+.ax-hero-copy small {
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.ax-hero h1 {
+  font-size: 43px;
+  line-height: .98;
+  letter-spacing: -1.8px;
+  margin: 8px 0 9px;
+}
+
+.ax-hero p {
+  font-size: 11.5px;
+  line-height: 1.48;
+  max-width: 600px;
+  margin-bottom: 10px;
+}
+
+.ax-hero-pills {
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.ax-hero-pills span {
+  font-size: 8px;
+  padding: 6px 8px;
+}
+
+.ax-hero-actions {
+  gap: 7px;
+  margin-top: 7px;
+}
+
+.ax-hero-actions a {
+  min-height: 34px;
+  padding: 8px 14px;
+  font-size: 10px;
+}
+
+.ax-trust-row {
+  gap: 13px;
+  margin-top: 9px;
+}
+
+.ax-trust-row span {
+  font-size: 8px;
+}
+
+.ax-hero-art {
+  min-height: 202px;
+}
+
+.ax-hero-art img {
+  width: 100%;
+  height: 202px;
+  object-fit: cover;
+  border-radius: 0 0 0 18px;
+}
+
+/* ------------------------------------------------------------
+   STATS BAR
+   ------------------------------------------------------------ */
+
+.ax-statbar {
+  width: calc(100% - 78px);
+  max-width: none;
+  margin: 0 auto 13px;
+
+  height: 49px;
+  padding: 0 10px;
+
+  display: grid;
+  grid-template-columns:
+    1.05fr
+    1fr
+    1fr
+    1fr
+    1fr
+    1fr;
+
+  background: #06366d;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.ax-statbar > div {
+  min-width: 0;
+  padding: 7px 14px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  border-right: 1px solid rgba(255,255,255,.16);
+}
+
+.ax-statbar > div:last-child {
+  border-right: 0;
+}
+
+.ax-statbar strong {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.05;
+  font-weight: 800;
+}
+
+.ax-statbar span {
+  display: block;
+  color: #dceaff;
+  font-size: 8px;
+  line-height: 1.15;
+  margin-top: 2px;
+}
+
+.ax-statbar svg,
+.ax-statbar i {
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
+}
+
+/* ------------------------------------------------------------
+   MAIN DASHBOARD
+   ------------------------------------------------------------ */
+
+.ax-section-pad {
+  width: calc(100% - 78px);
+  max-width: none;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.ax-dashboard-grid {
+  display: grid;
+
+  grid-template-columns:
+    31% minmax(0, 1fr);
+
+  grid-template-areas:
+    "rail center";
+
+  gap: 14px;
+
+  align-items: start;
+}
+
+.ax-left-rail {
+  grid-area: rail;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.ax-center-stack {
+  grid-area: center;
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------
+   COMMON CARD
+   ------------------------------------------------------------ */
+
+.ax-card,
+.ax-job-panel,
+.ax-news-panel,
+.ax-focus-panel,
+.ax-panel {
+  background: #fff;
+  border: 1px solid #dce5ef;
+  border-radius: 12px;
+  box-shadow: 0 2px 9px rgba(26,64,100,.05);
+}
+
+/* ------------------------------------------------------------
+   CARD HEADERS
+   ------------------------------------------------------------ */
+
+.ax-card-title {
+  min-height: 43px;
+  padding: 10px 12px 6px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ax-card-title h2 {
+  font-size: 16px;
+  line-height: 1;
+  margin: 0;
+  font-weight: 800;
+}
+
+.ax-card-title a {
+  font-size: 9px;
+  font-weight: 800;
+}
+
+/* ------------------------------------------------------------
+   JOB ALERTS
+   ------------------------------------------------------------ */
+
+.ax-job-panel {
+  width: 100%;
+  min-height: 288px;
+}
+
+.ax-job-panel .ax-card-title {
+  padding-bottom: 5px;
+}
+
+.ax-job-panel .ax-filter-row,
+.ax-job-panel .ax-tabs {
+  padding: 0 12px 7px;
+  gap: 5px;
+}
+
+.ax-job-panel .ax-filter-row span,
+.ax-job-panel .ax-tabs span,
+.ax-job-panel button {
+  font-size: 9px;
+}
+
+.ax-job-item {
+  padding: 8px 12px;
+  min-height: 66px;
+  border-top: 1px solid #edf1f5;
+}
+
+.ax-job-item h3,
+.ax-job-item strong {
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.ax-job-item p {
+  font-size: 8px;
+  line-height: 1.3;
+}
+
+.ax-job-item small {
+  font-size: 7px;
+}
+
+.ax-job-item .ax-apply,
+.ax-job-item a {
+  font-size: 9px;
+}
+
+/* ------------------------------------------------------------
+   CURRENT AFFAIRS
+   ------------------------------------------------------------ */
+
+.ax-news-panel {
+  width: 100%;
+  min-height: 270px;
+}
+
+.ax-news-panel .ax-card-title {
+  padding-bottom: 5px;
+}
+
+.ax-news-item {
+  grid-template-columns: 74px 1fr;
+  gap: 8px;
+
+  padding: 7px 12px;
+}
+
+.ax-news-img {
+  width: 74px;
+  height: 50px;
+  border-radius: 7px;
+  object-fit: cover;
+}
+
+.ax-news-item h3 {
+  font-size: 9px;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.ax-news-item p {
+  font-size: 7px;
+  line-height: 1.25;
+}
+
+.ax-news-item small {
+  font-size: 7px;
+}
+
+/* ------------------------------------------------------------
+   TODAY'S FOCUS
+   ------------------------------------------------------------ */
+
+.ax-focus-panel {
+  width: 100%;
+  min-height: 365px;
+}
+
+.ax-focus-panel .ax-card-title {
+  min-height: 47px;
+  padding: 12px 15px 7px;
+}
+
+.ax-focus-panel .ax-card-title h2 {
+  font-size: 17px;
+}
+
+.ax-focus-panel .ax-card-title a {
+  font-size: 9px;
+}
+
+.ax-focus-chip-row {
+  padding: 0 15px 8px;
+  gap: 5px;
+}
+
+.ax-focus-chip-row span {
+  font-size: 8px;
+  padding: 5px 8px;
+  border-radius: 999px;
+}
+
+.ax-question-area {
+  padding: 0 15px;
+}
+
+.ax-question-area h3,
+.ax-focus-question {
+  font-size: 16px;
+  line-height: 1.25;
+  margin: 5px 0 10px;
+}
+
+.ax-question-option {
+  min-height: 32px;
+  margin-bottom: 5px;
+  padding: 5px 8px;
+
+  border-radius: 7px;
+
+  font-size: 11px;
+}
+
+.ax-question-option span:first-child {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+}
+
+.ax-answer-actions {
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ax-answer-actions button {
+  min-height: 34px;
+  padding: 7px 13px;
+  font-size: 9px;
+}
+
+.ax-explanation {
+  margin-top: 7px;
+  padding: 9px 11px;
+  border-radius: 9px;
+}
+
+.ax-explanation strong {
+  font-size: 9px;
+}
+
+.ax-explanation p {
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+/* ------------------------------------------------------------
+   QUICK ACTIONS
+   ------------------------------------------------------------ */
+
+.ax-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 8px;
+
+  margin-top: 9px;
+}
+
+.ax-quick-card {
+  min-height: 59px;
+  padding: 8px 9px;
+
+  border: 1px solid #e0e7ef;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.ax-quick-card strong {
+  font-size: 10px;
+}
+
+.ax-quick-card span {
+  font-size: 7px;
+}
+
+/* ------------------------------------------------------------
+   PREMIUM
+   ------------------------------------------------------------ */
+
+.ax-premium-banner {
+  min-height: 78px;
+
+  margin-top: 9px;
+
+  padding: 10px 14px;
+
+  display: grid;
+  grid-template-columns: 1.5fr 1fr auto;
+  align-items: center;
+
+  border-radius: 12px;
+}
+
+.ax-premium-banner h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.ax-premium-banner p {
+  font-size: 8px;
+  margin: 3px 0;
+}
+
+.ax-premium-banner li,
+.ax-premium-banner span {
+  font-size: 7px;
+}
+
+.ax-price-pair {
+  gap: 7px;
+}
+
+.ax-price-box {
+  min-width: 84px;
+  min-height: 51px;
+  padding: 6px 9px;
+}
+
+.ax-price-box strong {
+  font-size: 19px;
+}
+
+.ax-price-box span {
+  font-size: 8px;
+}
+
+.ax-premium-banner button {
+  height: 39px;
+  padding: 0 16px;
+  font-size: 10px;
+}
+
+/* ------------------------------------------------------------
+   STREAK
+   ------------------------------------------------------------ */
+
+.ax-streak-card {
+  min-height: 51px;
+  margin-top: 8px;
+  padding: 7px 13px;
+
+  border-radius: 10px;
+}
+
+.ax-streak-card strong {
+  font-size: 10px;
+}
+
+.ax-streak-card p {
+  font-size: 8px;
+}
+
+.ax-streak-number {
+  font-size: 19px;
+}
+
+/* ------------------------------------------------------------
+   LOWER GRID
+   ------------------------------------------------------------ */
+
+.ax-lower-grid {
+  width: calc(100% - 78px);
+  max-width: none;
+  margin: 10px auto 0;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.22fr;
+  gap: 10px;
+}
+
+.ax-exam-panel,
+.ax-subject-panel,
+.ax-books-panel {
+  min-height: 175px;
+  border-radius: 12px;
+}
+
+/* LOWER CARD HEADINGS */
+
+.ax-exam-panel h2,
+.ax-subject-panel h2,
+.ax-books-panel h2 {
+  font-size: 15px;
+}
+
+/* EXAMS */
+
+.ax-exam-grid {
+  padding: 0 10px 10px;
+  gap: 5px;
+}
+
+.ax-exam-card {
+  min-height: 55px;
+  padding: 7px;
+
+  border-radius: 8px;
+}
+
+.ax-exam-card span {
+  font-size: 16px;
+}
+
+.ax-exam-card strong {
+  font-size: 8px;
+}
+
+.ax-exam-card small {
+  font-size: 7px;
+}
+
+/* SUBJECTS */
+
+.ax-subject-grid {
+  padding: 0 10px 10px;
+  gap: 5px;
+}
+
+.ax-subject-card {
+  min-height: 48px;
+  padding: 6px;
+
+  border-radius: 8px;
+}
+
+.ax-subject-card span {
+  font-size: 16px;
+}
+
+.ax-subject-card strong {
+  font-size: 8px;
+}
+
+/* BOOKS */
+
+.ax-books-shelf {
+  grid-template-columns: repeat(4,1fr);
+  gap: 7px;
+
+  padding: 0 10px 9px;
+}
+
+.ax-book-cover {
+  height: 90px;
+  border-radius: 6px;
+}
+
+.ax-book-mini h3 {
+  font-size: 7px;
+  line-height: 1.2;
+}
+
+.ax-book-buttons {
+  gap: 3px;
+}
+
+.ax-book-buttons a {
+  font-size: 6px;
+  padding: 4px 5px;
+}
+
+/* ------------------------------------------------------------
+   FOOTER
+   ------------------------------------------------------------ */
+
+.ax-footer {
+  margin-top: 8px;
+}
+
+.ax-footer-main {
+  min-height: 75px;
+  padding-top: 10px;
+  padding-bottom: 8px;
+}
+
+.ax-footer-main h3 {
+  font-size: 8px;
+}
+
+.ax-footer-main a,
+.ax-footer-main p {
+  font-size: 7px;
+}
+
+.ax-footer-bottom {
+  min-height: 25px;
+}
+
+.ax-footer-bottom span {
+  font-size: 7px;
+}
+
+/* ------------------------------------------------------------
+   DESKTOP 1280–1500
+   ------------------------------------------------------------ */
+
+@media (min-width: 1181px) {
+
+  .ax-header-inner,
+  .ax-hero {
+    max-width: 1240px;
+  }
+
+  .ax-section-pad,
+  .ax-lower-grid {
+    width: calc(100% - 78px);
+  }
+
+  .ax-hero h1 {
+    font-size: 43px;
+  }
+}
+
+/* ------------------------------------------------------------
+   LAPTOP
+   ------------------------------------------------------------ */
+
+@media (min-width: 881px) and (max-width: 1180px) {
+
+  .ax-header-inner,
+  .ax-hero {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .ax-statbar,
+  .ax-section-pad,
+  .ax-lower-grid {
+    width: calc(100% - 40px);
+  }
+
+  .ax-dashboard-grid {
+    grid-template-columns: 30% 1fr;
+  }
+
+  .ax-nav {
+    gap: 12px;
+  }
+
+  .ax-nav a {
+    font-size: 10px;
+  }
+
+  .ax-search {
+    width: 170px;
+  }
+
+  .ax-hero h1 {
+    font-size: 36px;
+  }
+}
+
+/* ------------------------------------------------------------
+   MOBILE — preserve existing responsive behaviour
+   ------------------------------------------------------------ */
+
+@media (max-width: 880px) {
+
+  .ax-statbar {
+    width: calc(100% - 28px);
+  }
+
+  .ax-section-pad,
+  .ax-lower-grid {
+    width: calc(100% - 28px);
+  }
+
+  .ax-dashboard-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "rail"
+      "center";
+  }
+
+  .ax-left-rail {
+    grid-template-columns: 1fr;
+  }
+
+  .ax-quick-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ax-lower-grid {
+    grid-template-columns: 1fr;
+  }
+}
