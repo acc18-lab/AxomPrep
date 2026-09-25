@@ -84,3 +84,83 @@
 @media(max-width:1180px){.ax-nav{gap:14px}.ax-dashboard-grid{grid-template-columns:1fr 1fr}.ax-news-panel{grid-column:1/-1}.ax-lower-grid{grid-template-columns:1fr 1fr}.ax-books-panel{grid-column:1/-1}.ax-books-shelf{grid-template-columns:repeat(6,1fr)}}
 @media(max-width:880px){.ax-nav,.ax-actions{display:none}.ax-menu{display:block;margin-left:auto}.ax-mobile-nav.open{display:grid;padding:8px 18px;border-top:1px solid #e7edf5;background:#fff}.ax-mobile-nav a{padding:9px 4px;font-size:11px;font-weight:800;color:#254869}.ax-hero{grid-template-columns:1fr;padding-top:8px}.ax-hero-art{order:-1}.ax-dashboard-grid{grid-template-columns:1fr}.ax-news-panel{grid-column:auto}.ax-lower-grid{grid-template-columns:1fr}.ax-books-panel{grid-column:auto}.ax-books-shelf{grid-template-columns:repeat(4,1fr)}.ax-statbar{margin-left:14px;margin-right:14px}}
 @media(max-width:600px){.ax-header-inner{min-height:58px}.ax-logo{width:134px}.ax-section-pad{padding-left:14px;padding-right:14px}.ax-hero{padding:10px 14px}.ax-hero-copy{padding:14px 2px}.ax-hero h1{font-size:40px;letter-spacing:-1.8px}.ax-hero p{font-size:13px}.ax-hero-actions{flex-direction:column}.ax-hero-art img{height:235px;border-radius:16px}.ax-hero-badge{display:none}.ax-statbar{grid-template-columns:1fr 1fr}.ax-statbar>div{border-right:0}.ax-quick-grid{grid-template-columns:1fr 1fr}.ax-premium-banner{grid-template-columns:1fr}.ax-price-pair{justify-content:flex-start}.ax-streak-card{grid-template-columns:1fr auto}.ax-week{grid-column:1/-1}.ax-exam-grid{grid-template-columns:1fr}.ax-subject-grid{grid-template-columns:1fr 1fr}.ax-books-shelf{grid-template-columns:repeat(2,1fr)}.ax-footer-main{grid-template-columns:1fr}.ax-footer-bottom{flex-direction:column}.ax-trust-row{gap:9px}.ax-news-item{grid-template-columns:62px 1fr}.ax-news-img{width:62px;height:50px}}
+
+
+/* ==========================================================
+   AxomPrep Homepage Desktop Readability + Column Balance Fix
+   ========================================================== */
+
+@media (min-width:1181px){
+  /* Make the two side panels narrower and give Today's Focus more room. */
+  .ax-dashboard-grid{grid-template-columns:.90fr 1.20fr .90fr;gap:14px}
+
+  /* Larger, easier-to-read desktop typography. */
+  .ax-nav a{font-size:13px}
+  .ax-card-head{padding:15px 15px 9px}
+  .ax-card-title h2{font-size:18px}
+  .ax-card-head>a{font-size:10px}
+  .ax-chip-row button{font-size:8px;padding:6px 9px}
+
+  .ax-job-item{padding:10px;margin:6px 0;border-radius:11px}
+  .ax-job-top strong{font-size:11px;line-height:1.35}
+  .ax-job-pill{font-size:7px;padding:4px 6px}
+  .ax-job-org{font-size:8px}
+  .ax-job-meta{gap:6px;margin-top:7px}
+  .ax-job-meta div{padding:6px}
+  .ax-job-meta span{font-size:7px}
+  .ax-job-meta b{font-size:8px}
+  .ax-job-actions{gap:6px;margin-top:7px}
+  .ax-job-apply,.ax-job-official{font-size:8px;padding:6px 8px}
+  .ax-panel-foot span{font-size:8px}
+  .ax-panel-foot a{font-size:9px}
+
+  .ax-focus-inner{padding:0 15px 14px}
+  .ax-focus-meta{margin-bottom:8px}
+  .ax-focus-tag{font-size:8px;padding:5px 8px}
+  .ax-focus-count{font-size:8px}
+  .ax-focus-question{font-size:16px;line-height:1.4;margin-bottom:9px}
+  .ax-focus-option{gap:8px;padding:9px 10px;margin:6px 0;font-size:11px}
+  .ax-focus-option span{width:22px;height:22px;font-size:10px}
+  .ax-focus-submit{width:155px;font-size:12px}
+  .ax-focus-result{font-size:10px;padding:8px}
+
+  .ax-quick-grid{gap:7px}
+  .ax-quick-card{padding:10px 9px;min-height:82px}
+  .ax-quick-card .qicon{width:24px;height:24px;margin-bottom:9px}
+  .ax-quick-card strong{font-size:9px}
+  .ax-quick-card small{font-size:8px}
+  .ax-quick-card b{font-size:11px}
+
+  .ax-premium-banner{padding:11px}
+  .ax-premium-copy strong{font-size:11px}
+  .ax-premium-copy small{font-size:8px}
+  .ax-price-pair>div{min-width:68px;padding:6px 9px}
+  .ax-price-pair strong{font-size:13px}
+  .ax-price-pair span{font-size:7px}
+
+  .ax-streak-card{padding:10px 12px}
+  .ax-streak-left strong{font-size:10px}
+  .ax-streak-left small{font-size:8px}
+  .ax-streak-days strong{font-size:18px}
+  .ax-streak-days span{font-size:7px}
+  .ax-week span{font-size:7px}
+  .ax-week i{width:20px;height:20px;line-height:20px}
+
+  .ax-news-list{padding:0 9px 9px}
+  .ax-news-item{grid-template-columns:76px 1fr;gap:9px;padding:8px 5px}
+  .ax-news-img{width:76px;height:62px}
+  .ax-news-meta{font-size:7px}
+  .ax-news-cat{padding:4px 7px}
+  .ax-news-item h3{font-size:11px;line-height:1.3;margin:4px 0}
+  .ax-news-item p{font-size:8px;line-height:1.42}
+  .ax-news-more a{font-size:9px}
+
+  /* Keep the lower three-column area balanced. */
+  .ax-lower-grid{grid-template-columns:1fr 1fr 1.05fr;gap:14px}
+  .ax-exam-card strong{font-size:10px}
+  .ax-exam-card small{font-size:8px}
+  .ax-subject-card strong{font-size:8px}
+  .ax-book-cover{height:155px}
+  .ax-book-mini h3{font-size:8px}
+  .ax-book-buttons a{font-size:7px}
+}
