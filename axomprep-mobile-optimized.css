@@ -1,0 +1,583 @@
+/*
+ AXOMPREP MOBILE OPTIMIZATION
+ Append this file after styles.css or load it after styles.css.
+ Desktop layout is intentionally untouched.
+*/
+
+@media (max-width: 900px) {
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .topbar {
+    height: 62px;
+    padding: 0 16px;
+  }
+
+  .brand {
+    font-size: 19px;
+    gap: 7px;
+  }
+
+  .brand-mark {
+    width: 31px;
+    height: 31px;
+    border-radius: 8px;
+  }
+
+  .menu {
+    display: block;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    color: #102e59;
+    font-size: 25px;
+    line-height: 1;
+  }
+
+  .mobile-nav {
+    display: none;
+    padding: 8px 16px 12px;
+    background: #fff;
+    border-top: 1px solid #edf1f5;
+    box-shadow: 0 8px 20px rgba(20,50,85,.08);
+  }
+
+  .mobile-nav.open {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 8px;
+  }
+
+  .mobile-nav a {
+    display: block;
+    padding: 11px 8px;
+    border-radius: 8px;
+    color: #173b69;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .mobile-nav a:active {
+    background: #eef4fb;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 34px 18px 28px;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    text-align: left;
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 10vw, 46px);
+    line-height: 1.02;
+    letter-spacing: -1.8px;
+    margin-bottom: 14px;
+  }
+
+  .hero p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-top: 0;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin: 20px 0;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 10px;
+    font-size: 12px;
+  }
+
+  .trust {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 14px;
+    font-size: 10px;
+  }
+
+  .hero-card {
+    width: 100%;
+    padding: 18px;
+    border-radius: 18px;
+    transform: none;
+  }
+
+  .quiz-visual {
+    margin: 26px 0;
+    gap: 12px;
+  }
+
+  .quiz-visual h3 {
+    font-size: 17px;
+  }
+
+  .qbadge {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    font-size: 20px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 14px;
+  }
+
+  .stats div {
+    min-height: 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8px 12px !important;
+    border-right: 1px solid #ffffff22;
+    border-bottom: 1px solid #ffffff22;
+  }
+
+  .stats div:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .stats div:nth-last-child(-n+2) {
+    border-bottom: 0;
+  }
+
+  .stats b {
+    font-size: 17px;
+  }
+
+  .stats span {
+    font-size: 10px;
+    margin-top: 3px;
+  }
+
+  .section {
+    padding: 42px 16px;
+  }
+
+  .section-head {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .section h2,
+  .center h2 {
+    font-size: 27px;
+    line-height: 1.15;
+  }
+
+  .section-head p,
+  .center p {
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .section-head > a {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 11px;
+  }
+
+  .exam-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .exam-card,
+  .mock-card,
+  .book-card,
+  .price-grid article {
+    padding: 16px;
+    border-radius: 13px;
+  }
+
+  .exam-card h3 {
+    margin: 13px 0 5px;
+    font-size: 14px;
+    line-height: 1.25;
+  }
+
+  .exam-card p,
+  .mock-card p,
+  .book-card p {
+    font-size: 10px;
+    line-height: 1.45;
+  }
+
+  .subject-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+
+  .subject-grid button,
+  .subject-grid .subject-card {
+    min-height: 82px;
+    padding: 13px;
+  }
+
+  .subject-grid .subject-card {
+    padding-left: 50px;
+  }
+
+  .subject-icon {
+    left: 12px;
+    top: 13px;
+    width: 29px;
+    height: 29px;
+    font-size: 14px;
+  }
+
+  .daily {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 25px 20px;
+    border-radius: 17px;
+  }
+
+  .daily-copy {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .daily h2 {
+    font-size: 25px;
+    line-height: 1.15;
+  }
+
+  .daily p {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .quiz-perks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    font-size: 9px;
+  }
+
+  .daily-visual {
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .daily-badge {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    font-size: 19px;
+  }
+
+  .score-ring {
+    width: 78px;
+    height: 78px;
+    border-width: 6px;
+  }
+
+  .score-ring b {
+    font-size: 22px;
+  }
+
+  .score-ring span {
+    font-size: 9px;
+  }
+
+  .mock-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .mock-card h3 {
+    font-size: 14px;
+    line-height: 1.25;
+  }
+
+  .mock-card .btn {
+    width: 100%;
+    padding: 9px 8px;
+    font-size: 10px;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .news-card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .news-card h3 {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .news-card p {
+    font-size: 10px;
+    line-height: 1.45;
+  }
+
+  .book-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .book-cover {
+    height: 125px;
+    min-height: 125px;
+    border-radius: 9px;
+    font-size: 18px;
+  }
+
+  .book-card h3 {
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .affiliate {
+    padding: 7px 8px;
+    font-size: 9px;
+    margin-right: 3px;
+  }
+
+  .price-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .price-grid article {
+    padding: 18px 14px;
+  }
+
+  .price-grid h3 {
+    font-size: 30px;
+  }
+
+  .price-grid ul {
+    font-size: 10px;
+    line-height: 1.7;
+    padding-left: 17px;
+  }
+
+  .cta {
+    margin: 38px 16px;
+    padding: 28px 22px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .cta h2 {
+    font-size: 25px;
+    line-height: 1.15;
+  }
+
+  .cta p {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .cta .btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  footer {
+    padding: 30px 18px 20px;
+    gap: 20px;
+  }
+
+  footer .brand {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    height: 58px;
+  }
+
+  .brand {
+    font-size: 18px;
+  }
+
+  .hero {
+    padding: 28px 15px 24px;
+    gap: 20px;
+  }
+
+  .eyebrow {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .hero h1 {
+    font-size: 35px;
+  }
+
+  .hero p {
+    font-size: 13px;
+  }
+
+  .hero-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .trust {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .hero-card {
+    padding: 15px;
+  }
+
+  .stats {
+    padding: 0 10px;
+  }
+
+  .stats div {
+    min-height: 66px;
+    padding: 7px 9px !important;
+  }
+
+  .stats b {
+    font-size: 15px;
+  }
+
+  .stats span {
+    font-size: 9px;
+  }
+
+  .section {
+    padding: 34px 14px;
+  }
+
+  .section h2,
+  .center h2 {
+    font-size: 24px;
+  }
+
+  .exam-grid,
+  .subject-grid,
+  .mock-grid,
+  .news-grid,
+  .book-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .exam-card,
+  .mock-card {
+    padding: 13px;
+  }
+
+  .exam-card h3,
+  .mock-card h3 {
+    font-size: 12px;
+  }
+
+  .exam-card p,
+  .mock-card p {
+    font-size: 9px;
+  }
+
+  .subject-grid .subject-card {
+    min-height: 76px;
+    padding: 11px 8px 10px 45px;
+  }
+
+  .subject-icon {
+    left: 9px;
+    top: 11px;
+  }
+
+  .subject-name {
+    font-size: 11px;
+  }
+
+  .subject-grid small {
+    font-size: 8px;
+  }
+
+  .subject-grid .subject-card b {
+    font-size: 9px;
+  }
+
+  .daily {
+    display: block;
+    padding: 22px 17px;
+  }
+
+  .daily-visual {
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: 18px;
+  }
+
+  .score-ring {
+    width: 68px;
+    height: 68px;
+  }
+
+  .mock-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .price-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .price-grid h3 {
+    font-size: 27px;
+  }
+
+  .cta {
+    display: block;
+    margin: 32px 14px;
+  }
+
+  .cta .btn {
+    margin-top: 14px;
+    width: 100%;
+  }
+
+  .modal-box {
+    width: calc(100vw - 28px);
+    padding: 22px;
+  }
+}
+
+@media (max-width: 380px) {
+  .exam-grid,
+  .subject-grid,
+  .mock-grid,
+  .price-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+}
