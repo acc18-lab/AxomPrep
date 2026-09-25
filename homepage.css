@@ -1,443 +1,295 @@
-/* AxomPrep Homepage v5 — Information-dense desktop layout
-   Goal: match the approved visual reference while eliminating empty-looking cards.
-   Desktop: Job Alerts 25% | Today's Focus 50% | Current Affairs 25%.
-   Append this file's contents to the BOTTOM of your existing homepage.css.
-*/
+:root{
+  --ax-navy:#0a2f5f;
+  --ax-blue:#1b67c9;
+  --ax-blue2:#347fd9;
+  --ax-orange:#ff8a1f;
+  --ax-red:#e5475c;
+  --ax-green:#14936d;
+  --ax-text:#11365f;
+  --ax-muted:#657c98;
+  --ax-line:#dce7f3;
+  --ax-bg:#f4f8fd;
+  --ax-shadow:0 12px 30px rgba(15,48,87,.08);
+}
+*{box-sizing:border-box}
+.ax-home{margin:0;background:var(--ax-bg);color:var(--ax-text);font-family:Inter,Arial,sans-serif}
+.ax-home a{text-decoration:none;color:inherit}
+.ax-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid #e5edf5}
+.ax-header-inner{max-width:1480px;margin:auto;min-height:64px;padding:0 22px;display:flex;align-items:center;gap:18px}
+.ax-brand{display:flex;align-items:center;flex:0 0 auto}
+.ax-logo{width:152px;max-height:40px;object-fit:contain}
+.ax-nav{display:flex;align-items:center;justify-content:center;gap:22px;flex:1}
+.ax-nav a{font-size:12px;font-weight:800;color:#365373}
+.ax-nav a:hover{color:var(--ax-blue)}
+.ax-actions{display:flex;align-items:center;gap:7px}
+.ax-search{width:35px;height:35px;border:0;background:transparent;color:#5d7694;font-size:21px;cursor:pointer}
+.ax-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:11px;padding:10px 16px;font:800 12px Inter;cursor:pointer;transition:.18s}
+.ax-btn:hover{transform:translateY(-1px)}
+.ax-btn-primary{background:var(--ax-orange);color:#fff}
+.ax-btn-light{background:#edf3fa;color:#173b65}
+.ax-btn-white{background:#fff;color:#153b66}
+.ax-btn-lg{padding:13px 18px;font-size:13px}
+.ax-menu{display:none;border:0;background:transparent;font-size:22px;color:var(--ax-navy)}
+.ax-mobile-nav{display:none}
+
+.ax-hero{max-width:1480px;margin:0 auto;padding:10px 22px 12px;display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:24px;align-items:center}
+.ax-hero-copy{padding:22px 18px 18px 24px}
+.ax-eyebrow{font-size:10px;letter-spacing:.15em;color:var(--ax-orange);font-weight:900}
+.ax-hero h1{font-size:clamp(44px,5vw,70px);line-height:.98;letter-spacing:-2.8px;margin:12px 0 14px;color:var(--ax-navy)}
+.ax-hero h1 span{color:var(--ax-orange)}
+.ax-hero p{font-size:14px;line-height:1.62;color:var(--ax-muted);max-width:660px;margin:0}
+.ax-hero-pills{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0}
+.ax-hero-pills span{background:#eef4fb;border:1px solid var(--ax-line);border-radius:999px;padding:7px 9px;font-size:9px;font-weight:800;color:#496983}
+.ax-hero-actions{display:flex;gap:9px}
+.ax-trust-row{display:flex;gap:15px;flex-wrap:wrap;margin-top:16px}
+.ax-trust-row span{font-size:9px;color:#7e8fa4}
+.ax-trust-row b{color:#173f6d}
+.ax-hero-art{position:relative;display:flex;align-items:center}
+.ax-hero-art img{width:100%;height:330px;object-fit:cover;border-radius:22px;box-shadow:0 18px 42px rgba(13,48,91,.14)}
+.ax-hero-badge{position:absolute;background:rgba(255,255,255,.96);padding:9px 12px;border:1px solid var(--ax-line);box-shadow:0 8px 20px rgba(12,43,80,.13);border-radius:12px}
+.ax-hero-badge strong,.ax-hero-badge small{display:block}
+.ax-hero-badge strong{font-size:9px}.ax-hero-badge small{font-size:8px;color:#7b8da3;margin-top:2px}
+.ax-badge-top{left:-8px;top:16px}.ax-badge-bottom{right:-8px;bottom:16px}
+
+.ax-statbar{max-width:1240px;margin:0 auto 12px;background:var(--ax-navy);border-radius:15px;color:#fff;display:grid;grid-template-columns:repeat(4,1fr);padding:11px 8px;box-shadow:0 12px 26px rgba(8,40,76,.14)}
+.ax-statbar>div{padding:7px 17px;border-right:1px solid rgba(255,255,255,.14)}.ax-statbar>div:last-child{border-right:0}
+.ax-statbar strong,.ax-statbar span{display:block}.ax-statbar strong{font-size:13px}.ax-statbar span{font-size:8px;color:#bcd0e7;margin-top:2px}
+
+.ax-section-pad{max-width:1480px;margin:auto;padding-left:22px;padding-right:22px}
+.ax-dashboard-grid{display:grid;grid-template-columns:1.04fr 1fr 1.04fr;gap:12px;align-items:stretch}
+.ax-card{background:#fff;border:1px solid var(--ax-line);border-radius:16px;box-shadow:var(--ax-shadow);overflow:hidden}
+.ax-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 14px 8px}
+.ax-card-head>a{font-size:9px;font-weight:900;color:var(--ax-blue)}
+.ax-card-title{display:flex;align-items:center;gap:8px}.ax-card-title h2{font-size:15px;margin:0;color:var(--ax-navy)}
+.ax-title-icon{width:27px;height:27px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:900}
+.ax-title-icon.orange{background:#fff0e3;color:#e47a12}.ax-title-icon.red{background:#ffedf0;color:#d23f55}.ax-title-icon.green{background:#e8f8f1;color:#14845f}.ax-title-icon.blue{background:#eaf3ff;color:#2c69af}
+.ax-chip-row{display:flex;gap:5px;flex-wrap:wrap;padding:0 13px 9px}.ax-chip-row button{border:0;background:#f2f6fb;color:#657b95;border-radius:999px;padding:5px 8px;font:800 7px Inter;cursor:pointer}.ax-chip-row button.active{background:var(--ax-orange);color:#fff}
+.ax-list-stack{padding:0 10px}.ax-job-item{border:1px solid #e8eef5;background:#fbfdff;border-radius:10px;padding:8px;margin:5px 0}.ax-job-top{display:flex;justify-content:space-between;gap:6px;align-items:flex-start}.ax-job-top strong{font-size:9px;line-height:1.3;color:#173e6a}.ax-job-pill{font-size:6px;font-weight:900;color:#2b6eac;background:#eaf3ff;padding:4px 5px;border-radius:999px;white-space:nowrap}.ax-job-pill.close{color:#b84b52;background:#fff0f1}.ax-job-org{font-size:7px;color:#7c8da3;margin-top:3px}.ax-job-meta{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}.ax-job-meta div{background:#f4f7fb;border-radius:7px;padding:5px}.ax-job-meta span,.ax-job-meta b{display:block}.ax-job-meta span{font-size:6px;color:#8b9aae}.ax-job-meta b{font-size:7px;color:#3d5f81;margin-top:2px}.ax-job-actions{display:flex;gap:5px;margin-top:6px}.ax-job-apply,.ax-job-official{font-size:7px;font-weight:900;border-radius:6px;padding:5px 7px}.ax-job-apply{background:var(--ax-orange);color:#fff}.ax-job-official{background:#edf3fa;color:#235487}
+.ax-panel-foot{border-top:1px solid #edf2f7;margin:2px 10px 0;padding:8px 5px;display:flex;justify-content:space-between;gap:7px}.ax-panel-foot span{font-size:7px;color:#8594a6}.ax-panel-foot a{font-size:8px;font-weight:900;color:var(--ax-blue)}
+
+.ax-center-stack{display:grid;gap:9px}.ax-focus-card{min-height:0}.ax-focus-inner{padding:0 13px 12px}.ax-focus-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}.ax-focus-tag{font-size:7px;font-weight:900;color:#2e70bf;background:#eaf3ff;padding:4px 7px;border-radius:999px}.ax-focus-count{font-size:7px;color:#8695a8}.ax-focus-question{font-size:12px;font-weight:800;line-height:1.42;color:#153b68;margin-bottom:8px}.ax-focus-option{width:100%;display:flex;align-items:center;gap:7px;border:1px solid #e4eaf2;background:#f5f8fb;border-radius:7px;padding:7px 8px;margin:5px 0;font-size:9px;text-align:left;cursor:pointer}.ax-focus-option.selected{border-color:#8fb7ec;background:#eaf3ff}.ax-focus-option span{width:20px;height:20px;border-radius:5px;background:#fff;border:1px solid #d9e2ee;display:grid;place-items:center;font-weight:900;font-size:9px;flex:0 0 auto}.ax-focus-submit{margin-top:7px;width:145px}.ax-focus-result{font-size:9px;font-weight:800;margin-top:7px;padding:7px;border-radius:8px;background:#eef8f3;color:#16764e}.ax-focus-result.bad{background:#fff0f2;color:#a73a50}
+.ax-quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.ax-quick-card{position:relative;background:#fff;border:1px solid var(--ax-line);border-radius:12px;padding:9px 8px;min-height:76px}.ax-quick-card .qicon{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;color:#fff;font-size:8px;font-weight:900;margin-bottom:8px}.qicon.purple{background:#6e43c6}.qicon.blue{background:#3177d3}.qicon.green{background:#179265}.qicon.orange{background:#f28b24}.ax-quick-card strong,.ax-quick-card small{display:block}.ax-quick-card strong{font-size:8px;color:#163b67}.ax-quick-card small{font-size:7px;color:#8190a2;margin-top:2px}.ax-quick-card b{position:absolute;right:8px;bottom:7px;color:var(--ax-orange);font-size:10px}
+.ax-premium-banner{background:linear-gradient(90deg,#fff1e4,#fff8f2);border:1px solid #ffd1a7;border-radius:13px;padding:10px;display:grid;grid-template-columns:1.18fr auto auto;gap:8px;align-items:center}.ax-premium-copy{display:flex;align-items:center;gap:7px}.ax-premium-icon{font-size:20px;color:#f09a2a}.ax-premium-copy strong,.ax-premium-copy small{display:block}.ax-premium-copy strong{font-size:10px}.ax-premium-copy small{font-size:7px;color:#7e8fa2;margin-top:2px}.ax-price-pair{display:flex;gap:5px}.ax-price-pair>div{position:relative;border:1px solid #f5bd87;border-radius:8px;padding:5px 8px;text-align:center;background:#fff;min-width:62px}.ax-price-pair>div.popular:before{content:'Popular';position:absolute;top:-8px;right:4px;font-size:5px;font-weight:900;color:#fff;background:var(--ax-orange);padding:2px 4px;border-radius:999px}.ax-price-pair strong,.ax-price-pair span{display:block}.ax-price-pair strong{font-size:12px;color:#ce6c12}.ax-price-pair span{font-size:6px;color:#8c9aab;margin-top:1px}
+.ax-streak-card{background:#fff;border:1px solid var(--ax-line);border-radius:13px;padding:9px 11px;display:grid;grid-template-columns:1.15fr auto 1.45fr;align-items:center;gap:8px}.ax-streak-left{display:flex;align-items:center;gap:7px}.ax-streak-icon{font-size:18px}.ax-streak-left strong,.ax-streak-left small{display:block}.ax-streak-left strong{font-size:9px}.ax-streak-left small{font-size:7px;color:#8494a8;margin-top:2px}.ax-streak-days{text-align:center}.ax-streak-days strong{font-size:17px;display:block}.ax-streak-days span{font-size:6px;color:#7e8fa5}.ax-week{display:flex;justify-content:space-between;gap:3px}.ax-week span{font-size:6px;text-align:center;color:#78899e}.ax-week i{display:block;width:19px;height:19px;border-radius:50%;border:1px solid #dce6f0;margin-bottom:3px;line-height:19px;font-style:normal}.ax-week i.done{background:var(--ax-orange);color:#fff;border-color:var(--ax-orange)}
+
+.ax-news-panel .ax-live-dot{font-size:6px;font-weight:900;color:#18825d;background:#e9f8f1;padding:4px 6px;border-radius:999px;margin-left:1px}.ax-news-list{padding:0 8px 8px}.ax-news-item{display:grid;grid-template-columns:68px 1fr;gap:8px;padding:7px 5px;border-bottom:1px solid #edf2f7}.ax-news-item:last-child{border-bottom:0}.ax-news-img{width:68px;height:55px;border-radius:8px;overflow:hidden;background:linear-gradient(135deg,#dceafb,#f7ede1);display:block}.ax-news-img img{width:100%;height:100%;object-fit:cover}.ax-news-meta{display:flex;gap:5px;align-items:center;font-size:6px;color:#8a99aa}.ax-news-cat{padding:4px 6px;border-radius:999px;background:#eef4fb;color:#2b67aa;font-weight:900}.ax-news-item h3{font-size:9px;line-height:1.28;margin:4px 0;color:#163b67}.ax-news-item p{font-size:7px;line-height:1.4;margin:0;color:#73869e}.ax-news-more{padding:8px 5px}.ax-news-more a{font-size:8px}
+
+.ax-lower-grid{display:grid;grid-template-columns:1fr 1fr 1.05fr;gap:12px;padding-top:12px}.ax-lower-card{padding-bottom:8px}.ax-exam-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:2px 11px 11px}.ax-exam-card{display:flex;align-items:center;gap:8px;border-radius:10px;padding:9px;border:1px solid transparent}.ax-exam-card>span{width:29px;height:29px;border-radius:8px;display:grid;place-items:center;font-size:7px;font-weight:900;color:#fff}.ax-exam-card strong,.ax-exam-card small{display:block}.ax-exam-card strong{font-size:9px}.ax-exam-card small{font-size:7px;line-height:1.25;color:#6f8095;margin-top:2px}.ax-exam-card.adre{background:#fff1ee;border-color:#ffd9d1}.ax-exam-card.adre>span{background:#ff7b47}.ax-exam-card.apsc{background:#edf4ff;border-color:#d8e6fb}.ax-exam-card.apsc>span{background:#3278d4}.ax-exam-card.ssc{background:#f2edff;border-color:#e4d8fb}.ax-exam-card.ssc>span{background:#7140c4}.ax-exam-card.police{background:#edf9f3;border-color:#d7f1e5}.ax-exam-card.police>span{background:#198b68}
+.ax-subject-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:2px 11px 11px}.ax-subject-card{padding:8px;border-radius:10px;min-height:62px;display:flex;flex-direction:column;justify-content:space-between}.ax-subject-card span{font-size:14px;font-weight:900}.ax-subject-card strong{font-size:7px;line-height:1.25}.s-assam{background:#fff6df;color:#bf790d}.s-math{background:#edf4ff;color:#2c69ae}.s-reason{background:#fff0f3;color:#ca5268}.s-english{background:#e9f9f2;color:#148565}.s-gk{background:#f0ebff;color:#6940b5}.s-science{background:#edf8ff;color:#1b78a3}.s-computer{background:#eef9f1;color:#287849}.s-ca{background:#fff0e7;color:#ca6c18}
+.ax-books-shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:2px 11px 7px}.ax-book-mini{min-width:0}.ax-book-cover{height:145px;border-radius:8px;overflow:hidden;border:1px solid #d9e3ee;background:linear-gradient(135deg,#1c4575,#f08a23);display:grid;place-items:end start}.ax-book-cover img{width:100%;height:100%;object-fit:cover}.ax-book-fallback{width:100%;height:100%;padding:8px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff}.ax-book-fallback small{font-size:6px;text-transform:uppercase;letter-spacing:.08em;opacity:.75}.ax-book-fallback strong{font-size:8px;line-height:1.2;margin-top:4px}.ax-book-mini h3{font-size:7px;line-height:1.28;margin:5px 1px 4px;color:#163b67}.ax-book-buttons{display:flex;gap:3px}.ax-book-buttons a{font-size:6px;font-weight:900;padding:4px 5px;border-radius:5px;color:#fff}.ax-amz{background:#ff8b1f}.ax-flip{background:#2878c7}.ax-disclosure{font-size:6px;color:#8292a6;padding:0 11px 2px}
+.ax-exam-banner{margin-top:12px;margin-bottom:12px;background:linear-gradient(100deg,#0b2d57,#174f91);border-radius:17px;color:#fff;padding-top:21px;padding-bottom:21px;display:flex;align-items:center;justify-content:space-between;gap:16px}.ax-exam-banner h2{font-size:22px;margin:6px 0}.ax-exam-banner p{font-size:9px;color:#c5d5e8;margin:0}
+.ax-footer{background:#071e3c;color:#a9bdd4;padding:26px 22px 16px}.ax-footer-main{max-width:1480px;margin:auto;display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:30px}.ax-footer-brand img{width:145px}.ax-footer-brand p{font-size:8px;color:#93abc4;margin-top:5px}.ax-footer h4{margin:0 0 7px;color:#fff;font-size:9px}.ax-footer-links{display:flex;flex-wrap:wrap;gap:6px 12px}.ax-footer-links a{font-size:7px;color:#bfd0e3}.ax-footer-bottom{max-width:1480px;margin:16px auto 0;padding-top:11px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:10px;font-size:6px;color:#86a0bb}
+.ax-skeleton{padding:20px;text-align:center;font-size:8px;color:#8090a4;border:1px dashed #cad7e6;border-radius:10px;margin:6px}.ax-empty{padding:18px 10px;text-align:center;color:#8191a4;font-size:8px}.ax-empty strong{display:block;color:#3f5f80;margin-bottom:3px}
+
+@media(max-width:1180px){.ax-nav{gap:14px}.ax-dashboard-grid{grid-template-columns:1fr 1fr}.ax-news-panel{grid-column:1/-1}.ax-lower-grid{grid-template-columns:1fr 1fr}.ax-books-panel{grid-column:1/-1}.ax-books-shelf{grid-template-columns:repeat(6,1fr)}}
+@media(max-width:880px){.ax-nav,.ax-actions{display:none}.ax-menu{display:block;margin-left:auto}.ax-mobile-nav.open{display:grid;padding:8px 18px;border-top:1px solid #e7edf5;background:#fff}.ax-mobile-nav a{padding:9px 4px;font-size:11px;font-weight:800;color:#254869}.ax-hero{grid-template-columns:1fr;padding-top:8px}.ax-hero-art{order:-1}.ax-dashboard-grid{grid-template-columns:1fr}.ax-news-panel{grid-column:auto}.ax-lower-grid{grid-template-columns:1fr}.ax-books-panel{grid-column:auto}.ax-books-shelf{grid-template-columns:repeat(4,1fr)}.ax-statbar{margin-left:14px;margin-right:14px}}
+@media(max-width:600px){.ax-header-inner{min-height:58px}.ax-logo{width:134px}.ax-section-pad{padding-left:14px;padding-right:14px}.ax-hero{padding:10px 14px}.ax-hero-copy{padding:14px 2px}.ax-hero h1{font-size:40px;letter-spacing:-1.8px}.ax-hero p{font-size:13px}.ax-hero-actions{flex-direction:column}.ax-hero-art img{height:235px;border-radius:16px}.ax-hero-badge{display:none}.ax-statbar{grid-template-columns:1fr 1fr}.ax-statbar>div{border-right:0}.ax-quick-grid{grid-template-columns:1fr 1fr}.ax-premium-banner{grid-template-columns:1fr}.ax-price-pair{justify-content:flex-start}.ax-streak-card{grid-template-columns:1fr auto}.ax-week{grid-column:1/-1}.ax-exam-grid{grid-template-columns:1fr}.ax-subject-grid{grid-template-columns:1fr 1fr}.ax-books-shelf{grid-template-columns:repeat(2,1fr)}.ax-footer-main{grid-template-columns:1fr}.ax-footer-bottom{flex-direction:column}.ax-trust-row{gap:9px}.ax-news-item{grid-template-columns:62px 1fr}.ax-news-img{width:62px;height:50px}}
+
+/* =========================================================
+   AxomPrep Homepage v3 — Spacious desktop composition
+   Sidebar: Job Alerts + Current Affairs
+   Main: Today's Focus + study actions + premium + streak
+   This intentionally increases overall page height and text size.
+   ========================================================= */
 
 @media (min-width: 1181px) {
-  /* ---------------------------
-     GLOBAL DESKTOP COMPOSITION
-  ---------------------------- */
   .ax-header-inner,
   .ax-hero,
   .ax-section-pad,
   .ax-footer-main,
   .ax-footer-bottom {
-    max-width: 1440px;
+    max-width: 1540px;
   }
 
+  .ax-hero {
+    padding-top: 18px;
+    padding-bottom: 24px;
+    gap: 30px;
+  }
+
+  .ax-hero-copy { padding: 34px 18px 24px 30px; }
+  .ax-hero h1 { font-size: clamp(52px, 5.3vw, 76px); margin-top: 16px; }
+  .ax-hero p { font-size: 16px; max-width: 700px; }
+  .ax-hero-pills { gap: 9px; margin: 20px 0; }
+  .ax-hero-pills span { font-size: 10px; padding: 8px 11px; }
+  .ax-trust-row { gap: 20px; margin-top: 18px; }
+  .ax-trust-row span { font-size: 10px; }
+  .ax-hero-art img { height: 380px; }
+
+  .ax-statbar { max-width: 1320px; margin-bottom: 18px; padding: 14px 10px; border-radius: 18px; }
+  .ax-statbar>div { padding: 9px 21px; }
+  .ax-statbar strong { font-size: 15px; }
+  .ax-statbar span { font-size: 9px; }
+
   .ax-dashboard-grid {
-    grid-template-columns: 1fr 2fr 1fr !important;
-    grid-template-areas: "jobs center news" !important;
-    gap: 14px;
+    grid-template-columns: minmax(280px, .72fr) minmax(0, 1.72fr);
+    grid-template-areas:
+      "jobs center"
+      "news center";
+    gap: 16px;
     align-items: stretch;
   }
 
-  .ax-job-panel { grid-area: jobs !important; min-width: 0; }
-  .ax-center-stack { grid-area: center !important; min-width: 0; align-content: start; }
-  .ax-news-panel { grid-area: news !important; min-width: 0; }
-
-  /* The three main panels should visually feel like one complete dashboard row. */
-  .ax-job-panel,
-  .ax-news-panel {
-    height: 518px;
-  }
-
-  /* ---------------------------
-     CARD HEADERS / TEXT
-  ---------------------------- */
-  .ax-card {
-    border-radius: 16px;
-  }
-
-  .ax-card-head {
-    padding: 14px 15px 9px;
-  }
-
-  .ax-card-title h2 {
-    font-size: 17px;
-  }
-
-  .ax-card-head > a {
-    font-size: 9px;
-  }
-
-  .ax-title-icon {
-    width: 29px;
-    height: 29px;
-    font-size: 12px;
-  }
-
-  .ax-chip-row {
-    padding: 0 14px 10px;
-    gap: 6px;
-  }
-
-  .ax-chip-row button {
-    padding: 6px 9px;
-    font-size: 8px;
-  }
-
-  /* ---------------------------
-     JOB ALERTS — COMPACT + READABLE
-  ---------------------------- */
-  .ax-list-stack {
-    padding: 0 10px 6px;
-    max-height: 418px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-  }
-
-  .ax-job-item {
-    padding: 9px 10px;
-    margin: 5px 0;
-    border-radius: 10px;
-  }
-
-  .ax-job-top strong {
-    font-size: 10.5px;
-    line-height: 1.34;
-  }
-
-  .ax-job-pill {
-    font-size: 6.5px;
-    padding: 4px 6px;
-  }
-
-  .ax-job-org {
-    font-size: 7.5px;
-    margin-top: 3px;
-  }
-
-  .ax-job-meta {
-    gap: 5px;
-    margin-top: 6px;
-  }
-
-  .ax-job-meta div {
-    padding: 5px 6px;
-  }
-
-  .ax-job-meta span {
-    font-size: 6.5px;
-  }
-
-  .ax-job-meta b {
-    font-size: 7.5px;
-  }
-
-  .ax-job-actions {
-    margin-top: 6px;
-    gap: 5px;
-  }
-
-  .ax-job-apply,
-  .ax-job-official {
-    font-size: 7.5px;
-    padding: 5px 7px;
-  }
-
-  .ax-panel-foot {
-    margin: 0 10px;
-    padding: 8px 4px;
-  }
-
-  .ax-panel-foot span {
-    font-size: 7px;
-  }
-
-  .ax-panel-foot a {
-    font-size: 8px;
-  }
-
-  /* ---------------------------
-     TODAY'S FOCUS — LARGE + FILLED
-  ---------------------------- */
-  .ax-focus-card {
-    min-height: 0 !important;
-    height: auto;
-  }
-
-  .ax-focus-inner {
-    padding: 0 15px 13px;
-  }
-
-  .ax-focus-meta {
-    margin-bottom: 7px;
-  }
-
-  .ax-focus-tag {
-    font-size: 7.5px;
-    padding: 4px 7px;
-  }
-
-  .ax-focus-count {
-    font-size: 7.5px;
-  }
-
-  .ax-focus-question {
-    font-size: 15px;
-    line-height: 1.42;
-    margin-bottom: 9px;
-  }
-
-  .ax-focus-option {
-    padding: 8px 9px;
-    margin: 5px 0;
-    font-size: 10px;
-    border-radius: 7px;
-    min-height: 38px;
-  }
-
-  .ax-focus-option span {
-    width: 21px;
-    height: 21px;
-    font-size: 9px;
-  }
-
-  .ax-focus-submit {
-    width: 148px;
-    font-size: 11px;
-    padding: 9px 13px;
-  }
-
-  .ax-focus-result {
-    font-size: 8.5px;
-    padding: 7px 8px;
-  }
-
-  /* ---------------------------
-     QUICK ACTIONS — USE THE SPACE
-  ---------------------------- */
-  .ax-quick-grid {
-    gap: 7px;
-  }
-
-  .ax-quick-card {
-    min-height: 82px;
-    padding: 9px 9px;
-    border-radius: 12px;
-  }
-
-  .ax-quick-card .qicon {
-    width: 24px;
-    height: 24px;
-    font-size: 8px;
-    margin-bottom: 7px;
-  }
-
-  .ax-quick-card strong {
-    font-size: 9px;
-  }
-
-  .ax-quick-card small {
-    font-size: 7.5px;
-    line-height: 1.3;
-  }
-
-  .ax-quick-card b {
-    font-size: 10px;
-    right: 8px;
-    bottom: 7px;
-  }
-
-  /* ---------------------------
-     PREMIUM — MORE INFORMATION, LESS EMPTY SPACE
-  ---------------------------- */
-  .ax-premium-banner {
-    min-height: 82px;
-    padding: 10px 11px;
-    gap: 9px;
-  }
-
-  .ax-premium-copy {
-    gap: 8px;
-  }
-
-  .ax-premium-icon {
-    font-size: 22px;
-  }
-
-  .ax-premium-copy strong {
-    font-size: 10.5px;
-  }
-
-  .ax-premium-copy small {
-    font-size: 7.5px;
-    line-height: 1.3;
-  }
-
-  .ax-price-pair {
-    gap: 5px;
-  }
-
-  .ax-price-pair > div {
-    min-width: 62px;
-    padding: 6px 8px;
-  }
-
-  .ax-price-pair strong {
-    font-size: 13px;
-  }
-
-  .ax-price-pair span {
-    font-size: 6.5px;
-  }
-
-  .ax-premium-banner .ax-btn {
-    min-width: 108px;
-    padding: 9px 10px;
-    font-size: 9px;
-  }
-
-  /* ---------------------------
-     STREAK — COMPACT
-  ---------------------------- */
-  .ax-streak-card {
-    min-height: 62px;
-    padding: 9px 11px;
-  }
-
-  .ax-streak-left strong {
-    font-size: 9px;
-  }
-
-  .ax-streak-left small {
-    font-size: 7px;
-  }
-
-  .ax-streak-days strong {
-    font-size: 18px;
-  }
-
-  .ax-streak-days span,
-  .ax-week span {
-    font-size: 6px;
-  }
-
-  .ax-week i {
-    width: 19px;
-    height: 19px;
-    line-height: 19px;
-  }
-
-  /* ---------------------------
-     CURRENT AFFAIRS — THUMBNAILS + READABLE HEADLINES
-  ---------------------------- */
-  .ax-news-list {
-    padding: 0 8px 7px;
-    max-height: 418px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-  }
-
-  .ax-news-item {
-    grid-template-columns: 74px 1fr;
-    gap: 8px;
-    padding: 8px 4px;
-  }
-
-  .ax-news-img {
-    width: 74px;
-    height: 58px;
-    border-radius: 8px;
-  }
-
-  .ax-news-meta {
-    font-size: 6px;
-  }
-
-  .ax-news-cat {
-    padding: 3px 5px;
-  }
-
-  .ax-news-item h3 {
-    font-size: 9.5px;
-    line-height: 1.3;
-    margin: 4px 0;
-  }
-
-  .ax-news-item p {
-    font-size: 7px;
-    line-height: 1.38;
-  }
-
-  .ax-news-more {
-    padding: 7px 4px;
-  }
-
-  .ax-news-more a {
-    font-size: 8px;
-  }
-
-  /* ---------------------------
-     LOWER AREA — VISUALLY WEIGHTY
-  ---------------------------- */
-  .ax-lower-grid {
-    gap: 14px;
-    padding-top: 14px;
-  }
-
-  .ax-exam-card {
-    min-height: 74px;
-    padding: 11px;
-  }
-
-  .ax-exam-card > span {
-    width: 36px;
-    height: 36px;
-    font-size: 8px;
-  }
-
-  .ax-exam-card strong {
-    font-size: 10px;
-  }
-
-  .ax-exam-card small {
-    font-size: 7.5px;
-  }
-
-  .ax-subject-card {
-    min-height: 76px;
-    padding: 9px;
-  }
-
-  .ax-subject-card span {
-    font-size: 15px;
-  }
-
-  .ax-subject-card strong {
-    font-size: 7.5px;
-  }
-
-  .ax-books-shelf {
-    gap: 8px;
-  }
-
-  .ax-book-cover {
-    height: 150px;
-  }
-
-  .ax-book-mini h3 {
-    font-size: 7.5px;
-  }
-
-  .ax-book-buttons a {
-    font-size: 6px;
-    padding: 4px 5px;
-  }
-
-  /* Stronger CTA at the bottom. */
-  .ax-exam-banner {
-    padding-top: 25px;
-    padding-bottom: 25px;
-  }
-
-  .ax-exam-banner h2 {
-    font-size: 24px;
-  }
-
-  .ax-exam-banner p {
-    font-size: 10px;
-  }
+  .ax-job-panel { grid-area: jobs; }
+  .ax-center-stack { grid-area: center; }
+  .ax-news-panel { grid-area: news; }
+
+  .ax-card { border-radius: 18px; }
+  .ax-card-head { padding: 16px 18px 10px; }
+  .ax-card-head>a { font-size: 10px; }
+  .ax-card-title { gap: 10px; }
+  .ax-card-title h2 { font-size: 19px; }
+  .ax-title-icon { width: 31px; height: 31px; font-size: 13px; border-radius: 9px; }
+  .ax-chip-row { gap: 6px; padding: 0 17px 12px; }
+  .ax-chip-row button { padding: 6px 10px; font-size: 8px; }
+
+  /* Job Alerts becomes a compact but readable side column. */
+  .ax-list-stack { padding: 0 13px 8px; }
+  .ax-job-item { padding: 11px; margin: 7px 0; border-radius: 12px; }
+  .ax-job-top strong { font-size: 11px; line-height: 1.38; }
+  .ax-job-pill { font-size: 7px; padding: 4px 6px; }
+  .ax-job-org { font-size: 8px; margin-top: 4px; }
+  .ax-job-meta { gap: 6px; margin-top: 8px; }
+  .ax-job-meta div { padding: 6px; border-radius: 8px; }
+  .ax-job-meta span { font-size: 7px; }
+  .ax-job-meta b { font-size: 8px; }
+  .ax-job-actions { gap: 6px; margin-top: 8px; }
+  .ax-job-apply, .ax-job-official { font-size: 8px; padding: 6px 8px; }
+  .ax-panel-foot { margin: 4px 13px 0; padding: 10px 5px; }
+  .ax-panel-foot span { font-size: 8px; }
+  .ax-panel-foot a { font-size: 9px; }
+
+  /* Main focus panel is deliberately tall and readable. */
+  .ax-focus-card { min-height: 390px; }
+  .ax-focus-inner { padding: 0 19px 19px; }
+  .ax-focus-meta { margin-bottom: 10px; }
+  .ax-focus-tag { font-size: 8px; padding: 5px 8px; }
+  .ax-focus-count { font-size: 8px; }
+  .ax-focus-question { font-size: 17px; line-height: 1.48; margin-bottom: 12px; }
+  .ax-focus-option { padding: 11px 12px; margin: 7px 0; font-size: 11px; border-radius: 9px; gap: 9px; }
+  .ax-focus-option span { width: 24px; height: 24px; font-size: 10px; border-radius: 6px; }
+  .ax-focus-submit { margin-top: 10px; width: 170px; font-size: 12px; padding: 11px 16px; }
+  .ax-focus-result { font-size: 10px; margin-top: 9px; padding: 9px; }
+
+  .ax-quick-grid { gap: 8px; }
+  .ax-quick-card { min-height: 98px; padding: 12px 11px; border-radius: 14px; }
+  .ax-quick-card .qicon { width: 27px; height: 27px; font-size: 9px; margin-bottom: 10px; border-radius: 8px; }
+  .ax-quick-card strong { font-size: 10px; }
+  .ax-quick-card small { font-size: 8px; }
+  .ax-quick-card b { font-size: 12px; right: 10px; bottom: 9px; }
+
+  .ax-premium-banner { padding: 13px; border-radius: 15px; gap: 11px; }
+  .ax-premium-copy { gap: 9px; }
+  .ax-premium-icon { font-size: 24px; }
+  .ax-premium-copy strong { font-size: 12px; }
+  .ax-premium-copy small { font-size: 8px; }
+  .ax-price-pair { gap: 6px; }
+  .ax-price-pair>div { min-width: 70px; padding: 7px 10px; }
+  .ax-price-pair strong { font-size: 14px; }
+  .ax-price-pair span { font-size: 7px; }
+
+  .ax-streak-card { padding: 12px 14px; border-radius: 15px; }
+  .ax-streak-icon { font-size: 21px; }
+  .ax-streak-left { gap: 9px; }
+  .ax-streak-left strong { font-size: 10px; }
+  .ax-streak-left small { font-size: 8px; }
+  .ax-streak-days strong { font-size: 20px; }
+  .ax-streak-days span { font-size: 7px; }
+  .ax-week i { width: 22px; height: 22px; line-height: 22px; }
+  .ax-week span { font-size: 7px; }
+
+  /* Current Affairs stacked in the left rail. */
+  .ax-news-list { padding: 0 11px 11px; }
+  .ax-news-item { grid-template-columns: 84px 1fr; gap: 10px; padding: 10px 5px; }
+  .ax-news-img { width: 84px; height: 66px; border-radius: 9px; }
+  .ax-news-meta { font-size: 7px; }
+  .ax-news-cat { padding: 4px 6px; }
+  .ax-news-item h3 { font-size: 10.5px; line-height: 1.34; margin: 5px 0; }
+  .ax-news-item p { font-size: 8px; line-height: 1.42; }
+  .ax-news-more { padding: 10px 5px; }
+  .ax-news-more a { font-size: 9px; }
+
+  /* Lower content gets more breathing room and larger exam tiles. */
+  .ax-lower-grid { gap: 16px; padding-top: 16px; }
+  .ax-exam-grid { gap: 10px; padding: 4px 14px 14px; }
+  .ax-exam-card { min-height: 76px; padding: 12px; gap: 10px; border-radius: 13px; }
+  .ax-exam-card>span { width: 38px; height: 38px; font-size: 9px; border-radius: 10px; }
+  .ax-exam-card strong { font-size: 11px; }
+  .ax-exam-card small { font-size: 8px; }
+  .ax-subject-grid { gap: 8px; padding: 4px 14px 14px; }
+  .ax-subject-card { min-height: 82px; padding: 10px; border-radius: 12px; }
+  .ax-subject-card span { font-size: 17px; }
+  .ax-subject-card strong { font-size: 8px; }
+  .ax-books-shelf { gap: 9px; padding: 4px 14px 9px; }
+  .ax-book-cover { height: 180px; border-radius: 10px; }
+  .ax-book-mini h3 { font-size: 8px; }
+  .ax-book-buttons a { font-size: 7px; padding: 5px 6px; }
+  .ax-disclosure { font-size: 7px; padding: 0 14px 3px; }
+
+  /* New TET / Railway card colors. */
+  .ax-exam-card.tet { background:#fff7e8; border-color:#ffe2ae; }
+  .ax-exam-card.tet>span { background:#e99b17; }
+  .ax-exam-card.railway { background:#eaf5ff; border-color:#d5e8fb; }
+  .ax-exam-card.railway>span { background:#2f78c4; }
+
+  .ax-exam-banner { margin-top: 16px; margin-bottom: 16px; padding-top: 28px; padding-bottom: 28px; }
+  .ax-exam-banner h2 { font-size: 28px; }
+  .ax-exam-banner p { font-size: 11px; }
 }
 
-@media (max-width: 1180px) and (min-width: 881px) {
-  /* Keep tablet composition practical. */
-  .ax-dashboard-grid {
-    grid-template-columns: 1fr 1fr !important;
-  }
-  .ax-news-panel {
-    grid-column: 1 / -1 !important;
-  }
+@media (min-width: 1181px) and (max-width: 1320px) {
+  .ax-dashboard-grid { grid-template-columns: minmax(260px, .78fr) minmax(0, 1.7fr); }
+  .ax-nav { gap: 17px; }
+}
+
+@media (max-width: 1180px) {
+  .ax-exam-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* AxomPrep Homepage v4 — information-dense, student-friendly desktop layout */
+.ax-head-note{display:block;font-size:8px;font-weight:600;color:#7a8fa8;margin-top:1px}
+.ax-left-rail{display:grid;gap:12px;align-content:start}
+.ax-dashboard-grid{align-items:start}
+.ax-job-panel,.ax-news-panel{height:auto;align-self:start}
+.ax-panel-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 13px 10px}
+.ax-panel-summary span{background:#f6f9fc;border:1px solid #e4ecf4;border-radius:9px;padding:7px 8px}
+.ax-panel-summary b,.ax-panel-summary small{display:block}
+.ax-panel-summary b{font-size:10px;color:#173f6d}
+.ax-panel-summary small{font-size:7px;color:#8293a7;margin-top:2px}
+.news-summary{padding-bottom:8px}
+.ax-focus-chip-row{display:flex;flex-wrap:wrap;gap:6px;padding:0 19px 9px}
+.ax-focus-chip-row span{background:#f0f5fb;border:1px solid #dde7f2;color:#496883;border-radius:999px;padding:5px 8px;font-size:8px;font-weight:800}
+.ax-focus-goals{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 19px 10px}
+.ax-focus-goals span{background:#f7fafd;border:1px solid #e3ebf4;border-radius:9px;padding:8px 9px;font-size:8px;color:#72879d}
+.ax-focus-goals b{color:#173f6d}
+.ax-focus-tip{display:flex;gap:9px;align-items:center;background:#f0f7ff;border:1px solid #d9e9fb;border-radius:12px;padding:10px 12px}
+.ax-focus-tip>span{font-size:18px}
+.ax-focus-tip strong{font-size:9px;color:#17416f}
+.ax-focus-tip p{margin:2px 0 0;font-size:8px;color:#72879e;line-height:1.4}
+.ax-center-snapshot{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;background:#fff;border:1px solid var(--ax-line);border-radius:13px;padding:10px 12px}
+.ax-center-snapshot span{text-align:center}
+.ax-center-snapshot b,.ax-center-snapshot small{display:block}
+.ax-center-snapshot b{font-size:11px;color:#173f6d}
+.ax-center-snapshot small{font-size:7px;color:#8192a5;margin-top:2px}
+@media (min-width:1181px){
+  .ax-dashboard-grid{grid-template-columns:minmax(285px,.72fr) minmax(0,1.7fr);grid-template-areas:"rail center";}
+  .ax-left-rail{grid-area:rail}
+  .ax-center-stack{grid-area:center}
+  .ax-card-title h2{font-size:18px}
+  .ax-job-top strong{font-size:10.5px}
+  .ax-job-org{font-size:8px}
+  .ax-job-meta span{font-size:7px}
+  .ax-job-meta b{font-size:8px}
+  .ax-job-apply,.ax-job-official{font-size:8px}
+  .ax-news-item{grid-template-columns:74px 1fr;gap:9px;padding:8px 5px}
+  .ax-news-img{width:74px;height:58px}
+  .ax-news-item h3{font-size:10.5px;line-height:1.32}
+  .ax-news-item p{font-size:8px;line-height:1.4}
+  .ax-news-more{padding-top:8px}
+}
+@media (max-width:600px){
+  .ax-focus-goals{grid-template-columns:1fr}
+  .ax-panel-summary{grid-template-columns:1fr 1fr}
+  .ax-panel-summary span:last-child{grid-column:1/-1}
+  .ax-center-snapshot{grid-template-columns:1fr 1fr}
 }
