@@ -1,318 +1,133 @@
+/* AxomPrep Student-first homepage redesign v1
+   Scoped to the homepage so other pages keep the existing global design. */
+
 :root{
-  --ax-navy:#0a2f5f;
-  --ax-blue:#1b67c9;
-  --ax-blue2:#347fd9;
-  --ax-orange:#ff8a1f;
-  --ax-red:#e5475c;
-  --ax-green:#14936d;
-  --ax-text:#11365f;
-  --ax-muted:#657c98;
-  --ax-line:#dce7f3;
-  --ax-bg:#f4f8fd;
-  --ax-shadow:0 12px 30px rgba(15,48,87,.08);
-}
-*{box-sizing:border-box}
-.ax-home{margin:0;background:var(--ax-bg);color:var(--ax-text);font-family:Inter,Arial,sans-serif}
-.ax-home a{text-decoration:none;color:inherit}
-.ax-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid #e5edf5}
-.ax-header-inner{max-width:1480px;margin:auto;min-height:64px;padding:0 22px;display:flex;align-items:center;gap:18px}
-.ax-brand{display:flex;align-items:center;flex:0 0 auto}
-.ax-logo{width:152px;max-height:40px;object-fit:contain}
-.ax-nav{display:flex;align-items:center;justify-content:center;gap:22px;flex:1}
-.ax-nav a{font-size:12px;font-weight:800;color:#365373}
-.ax-nav a:hover{color:var(--ax-blue)}
-.ax-actions{display:flex;align-items:center;gap:7px}
-.ax-search{width:35px;height:35px;border:0;background:transparent;color:#5d7694;font-size:21px;cursor:pointer}
-.ax-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:11px;padding:10px 16px;font:800 12px Inter;cursor:pointer;transition:.18s}
-.ax-btn:hover{transform:translateY(-1px)}
-.ax-btn-primary{background:var(--ax-orange);color:#fff}
-.ax-btn-light{background:#edf3fa;color:#173b65}
-.ax-btn-white{background:#fff;color:#153b66}
-.ax-btn-lg{padding:13px 18px;font-size:13px}
-.ax-menu{display:none;border:0;background:transparent;font-size:22px;color:var(--ax-navy)}
-.ax-mobile-nav{display:none}
-
-.ax-hero{max-width:1480px;margin:0 auto;padding:10px 22px 12px;display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:24px;align-items:center}
-.ax-hero-copy{padding:22px 18px 18px 24px}
-.ax-eyebrow{font-size:10px;letter-spacing:.15em;color:var(--ax-orange);font-weight:900}
-.ax-hero h1{font-size:clamp(44px,5vw,70px);line-height:.98;letter-spacing:-2.8px;margin:12px 0 14px;color:var(--ax-navy)}
-.ax-hero h1 span{color:var(--ax-orange)}
-.ax-hero p{font-size:14px;line-height:1.62;color:var(--ax-muted);max-width:660px;margin:0}
-.ax-hero-pills{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0}
-.ax-hero-pills span{background:#eef4fb;border:1px solid var(--ax-line);border-radius:999px;padding:7px 9px;font-size:9px;font-weight:800;color:#496983}
-.ax-hero-actions{display:flex;gap:9px}
-.ax-trust-row{display:flex;gap:15px;flex-wrap:wrap;margin-top:16px}
-.ax-trust-row span{font-size:9px;color:#7e8fa4}
-.ax-trust-row b{color:#173f6d}
-.ax-hero-art{position:relative;display:flex;align-items:center}
-.ax-hero-art img{width:100%;height:330px;object-fit:cover;border-radius:22px;box-shadow:0 18px 42px rgba(13,48,91,.14)}
-.ax-hero-badge{position:absolute;background:rgba(255,255,255,.96);padding:9px 12px;border:1px solid var(--ax-line);box-shadow:0 8px 20px rgba(12,43,80,.13);border-radius:12px}
-.ax-hero-badge strong,.ax-hero-badge small{display:block}
-.ax-hero-badge strong{font-size:9px}.ax-hero-badge small{font-size:8px;color:#7b8da3;margin-top:2px}
-.ax-badge-top{left:-8px;top:16px}.ax-badge-bottom{right:-8px;bottom:16px}
-
-.ax-statbar{max-width:1240px;margin:0 auto 12px;background:var(--ax-navy);border-radius:15px;color:#fff;display:grid;grid-template-columns:repeat(4,1fr);padding:11px 8px;box-shadow:0 12px 26px rgba(8,40,76,.14)}
-.ax-statbar>div{padding:7px 17px;border-right:1px solid rgba(255,255,255,.14)}.ax-statbar>div:last-child{border-right:0}
-.ax-statbar strong,.ax-statbar span{display:block}.ax-statbar strong{font-size:13px}.ax-statbar span{font-size:8px;color:#bcd0e7;margin-top:2px}
-
-.ax-section-pad{max-width:1480px;margin:auto;padding-left:22px;padding-right:22px}
-.ax-dashboard-grid{display:grid;grid-template-columns:1.04fr 1fr 1.04fr;gap:12px;align-items:stretch}
-.ax-card{background:#fff;border:1px solid var(--ax-line);border-radius:16px;box-shadow:var(--ax-shadow);overflow:hidden}
-.ax-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 14px 8px}
-.ax-card-head>a{font-size:9px;font-weight:900;color:var(--ax-blue)}
-.ax-card-title{display:flex;align-items:center;gap:8px}.ax-card-title h2{font-size:15px;margin:0;color:var(--ax-navy)}
-.ax-title-icon{width:27px;height:27px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:900}
-.ax-title-icon.orange{background:#fff0e3;color:#e47a12}.ax-title-icon.red{background:#ffedf0;color:#d23f55}.ax-title-icon.green{background:#e8f8f1;color:#14845f}.ax-title-icon.blue{background:#eaf3ff;color:#2c69af}
-.ax-chip-row{display:flex;gap:5px;flex-wrap:wrap;padding:0 13px 9px}.ax-chip-row button{border:0;background:#f2f6fb;color:#657b95;border-radius:999px;padding:5px 8px;font:800 7px Inter;cursor:pointer}.ax-chip-row button.active{background:var(--ax-orange);color:#fff}
-.ax-list-stack{padding:0 10px}.ax-job-item{border:1px solid #e8eef5;background:#fbfdff;border-radius:10px;padding:8px;margin:5px 0}.ax-job-top{display:flex;justify-content:space-between;gap:6px;align-items:flex-start}.ax-job-top strong{font-size:9px;line-height:1.3;color:#173e6a}.ax-job-pill{font-size:6px;font-weight:900;color:#2b6eac;background:#eaf3ff;padding:4px 5px;border-radius:999px;white-space:nowrap}.ax-job-pill.close{color:#b84b52;background:#fff0f1}.ax-job-org{font-size:7px;color:#7c8da3;margin-top:3px}.ax-job-meta{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}.ax-job-meta div{background:#f4f7fb;border-radius:7px;padding:5px}.ax-job-meta span,.ax-job-meta b{display:block}.ax-job-meta span{font-size:6px;color:#8b9aae}.ax-job-meta b{font-size:7px;color:#3d5f81;margin-top:2px}.ax-job-actions{display:flex;gap:5px;margin-top:6px}.ax-job-apply,.ax-job-official{font-size:7px;font-weight:900;border-radius:6px;padding:5px 7px}.ax-job-apply{background:var(--ax-orange);color:#fff}.ax-job-official{background:#edf3fa;color:#235487}
-.ax-panel-foot{border-top:1px solid #edf2f7;margin:2px 10px 0;padding:8px 5px;display:flex;justify-content:space-between;gap:7px}.ax-panel-foot span{font-size:7px;color:#8594a6}.ax-panel-foot a{font-size:8px;font-weight:900;color:var(--ax-blue)}
-
-.ax-center-stack{display:grid;gap:9px}.ax-focus-card{min-height:0}.ax-focus-inner{padding:0 13px 12px}.ax-focus-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}.ax-focus-tag{font-size:7px;font-weight:900;color:#2e70bf;background:#eaf3ff;padding:4px 7px;border-radius:999px}.ax-focus-count{font-size:7px;color:#8695a8}.ax-focus-question{font-size:12px;font-weight:800;line-height:1.42;color:#153b68;margin-bottom:8px}.ax-focus-option{width:100%;display:flex;align-items:center;gap:7px;border:1px solid #e4eaf2;background:#f5f8fb;border-radius:7px;padding:7px 8px;margin:5px 0;font-size:9px;text-align:left;cursor:pointer}.ax-focus-option.selected{border-color:#8fb7ec;background:#eaf3ff}.ax-focus-option span{width:20px;height:20px;border-radius:5px;background:#fff;border:1px solid #d9e2ee;display:grid;place-items:center;font-weight:900;font-size:9px;flex:0 0 auto}.ax-focus-submit{margin-top:7px;width:145px}.ax-focus-result{font-size:9px;font-weight:800;margin-top:7px;padding:7px;border-radius:8px;background:#eef8f3;color:#16764e}.ax-focus-result.bad{background:#fff0f2;color:#a73a50}
-.ax-quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.ax-quick-card{position:relative;background:#fff;border:1px solid var(--ax-line);border-radius:12px;padding:9px 8px;min-height:76px}.ax-quick-card .qicon{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;color:#fff;font-size:8px;font-weight:900;margin-bottom:8px}.qicon.purple{background:#6e43c6}.qicon.blue{background:#3177d3}.qicon.green{background:#179265}.qicon.orange{background:#f28b24}.ax-quick-card strong,.ax-quick-card small{display:block}.ax-quick-card strong{font-size:8px;color:#163b67}.ax-quick-card small{font-size:7px;color:#8190a2;margin-top:2px}.ax-quick-card b{position:absolute;right:8px;bottom:7px;color:var(--ax-orange);font-size:10px}
-.ax-premium-banner{background:linear-gradient(90deg,#fff1e4,#fff8f2);border:1px solid #ffd1a7;border-radius:13px;padding:10px;display:grid;grid-template-columns:1.18fr auto auto;gap:8px;align-items:center}.ax-premium-copy{display:flex;align-items:center;gap:7px}.ax-premium-icon{font-size:20px;color:#f09a2a}.ax-premium-copy strong,.ax-premium-copy small{display:block}.ax-premium-copy strong{font-size:10px}.ax-premium-copy small{font-size:7px;color:#7e8fa2;margin-top:2px}.ax-price-pair{display:flex;gap:5px}.ax-price-pair>div{position:relative;border:1px solid #f5bd87;border-radius:8px;padding:5px 8px;text-align:center;background:#fff;min-width:62px}.ax-price-pair>div.popular:before{content:'Popular';position:absolute;top:-8px;right:4px;font-size:5px;font-weight:900;color:#fff;background:var(--ax-orange);padding:2px 4px;border-radius:999px}.ax-price-pair strong,.ax-price-pair span{display:block}.ax-price-pair strong{font-size:12px;color:#ce6c12}.ax-price-pair span{font-size:6px;color:#8c9aab;margin-top:1px}
-.ax-streak-card{background:#fff;border:1px solid var(--ax-line);border-radius:13px;padding:9px 11px;display:grid;grid-template-columns:1.15fr auto 1.45fr;align-items:center;gap:8px}.ax-streak-left{display:flex;align-items:center;gap:7px}.ax-streak-icon{font-size:18px}.ax-streak-left strong,.ax-streak-left small{display:block}.ax-streak-left strong{font-size:9px}.ax-streak-left small{font-size:7px;color:#8494a8;margin-top:2px}.ax-streak-days{text-align:center}.ax-streak-days strong{font-size:17px;display:block}.ax-streak-days span{font-size:6px;color:#7e8fa5}.ax-week{display:flex;justify-content:space-between;gap:3px}.ax-week span{font-size:6px;text-align:center;color:#78899e}.ax-week i{display:block;width:19px;height:19px;border-radius:50%;border:1px solid #dce6f0;margin-bottom:3px;line-height:19px;font-style:normal}.ax-week i.done{background:var(--ax-orange);color:#fff;border-color:var(--ax-orange)}
-
-.ax-news-panel .ax-live-dot{font-size:6px;font-weight:900;color:#18825d;background:#e9f8f1;padding:4px 6px;border-radius:999px;margin-left:1px}.ax-news-list{padding:0 8px 8px}.ax-news-item{display:grid;grid-template-columns:68px 1fr;gap:8px;padding:7px 5px;border-bottom:1px solid #edf2f7}.ax-news-item:last-child{border-bottom:0}.ax-news-img{width:68px;height:55px;border-radius:8px;overflow:hidden;background:linear-gradient(135deg,#dceafb,#f7ede1);display:block}.ax-news-img img{width:100%;height:100%;object-fit:cover}.ax-news-meta{display:flex;gap:5px;align-items:center;font-size:6px;color:#8a99aa}.ax-news-cat{padding:4px 6px;border-radius:999px;background:#eef4fb;color:#2b67aa;font-weight:900}.ax-news-item h3{font-size:9px;line-height:1.28;margin:4px 0;color:#163b67}.ax-news-item p{font-size:7px;line-height:1.4;margin:0;color:#73869e}.ax-news-more{padding:8px 5px}.ax-news-more a{font-size:8px}
-
-.ax-lower-grid{display:grid;grid-template-columns:1fr 1fr 1.05fr;gap:12px;padding-top:12px}.ax-lower-card{padding-bottom:8px}.ax-exam-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:2px 11px 11px}.ax-exam-card{display:flex;align-items:center;gap:8px;border-radius:10px;padding:9px;border:1px solid transparent}.ax-exam-card>span{width:29px;height:29px;border-radius:8px;display:grid;place-items:center;font-size:7px;font-weight:900;color:#fff}.ax-exam-card strong,.ax-exam-card small{display:block}.ax-exam-card strong{font-size:9px}.ax-exam-card small{font-size:7px;line-height:1.25;color:#6f8095;margin-top:2px}.ax-exam-card.adre{background:#fff1ee;border-color:#ffd9d1}.ax-exam-card.adre>span{background:#ff7b47}.ax-exam-card.apsc{background:#edf4ff;border-color:#d8e6fb}.ax-exam-card.apsc>span{background:#3278d4}.ax-exam-card.ssc{background:#f2edff;border-color:#e4d8fb}.ax-exam-card.ssc>span{background:#7140c4}.ax-exam-card.police{background:#edf9f3;border-color:#d7f1e5}.ax-exam-card.police>span{background:#198b68}
-.ax-subject-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:2px 11px 11px}.ax-subject-card{padding:8px;border-radius:10px;min-height:62px;display:flex;flex-direction:column;justify-content:space-between}.ax-subject-card span{font-size:14px;font-weight:900}.ax-subject-card strong{font-size:7px;line-height:1.25}.s-assam{background:#fff6df;color:#bf790d}.s-math{background:#edf4ff;color:#2c69ae}.s-reason{background:#fff0f3;color:#ca5268}.s-english{background:#e9f9f2;color:#148565}.s-gk{background:#f0ebff;color:#6940b5}.s-science{background:#edf8ff;color:#1b78a3}.s-computer{background:#eef9f1;color:#287849}.s-ca{background:#fff0e7;color:#ca6c18}
-.ax-books-shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:2px 11px 7px}.ax-book-mini{min-width:0}.ax-book-cover{height:145px;border-radius:8px;overflow:hidden;border:1px solid #d9e3ee;background:linear-gradient(135deg,#1c4575,#f08a23);display:grid;place-items:end start}.ax-book-cover img{width:100%;height:100%;object-fit:cover}.ax-book-fallback{width:100%;height:100%;padding:8px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff}.ax-book-fallback small{font-size:6px;text-transform:uppercase;letter-spacing:.08em;opacity:.75}.ax-book-fallback strong{font-size:8px;line-height:1.2;margin-top:4px}.ax-book-mini h3{font-size:7px;line-height:1.28;margin:5px 1px 4px;color:#163b67}.ax-book-buttons{display:flex;gap:3px}.ax-book-buttons a{font-size:6px;font-weight:900;padding:4px 5px;border-radius:5px;color:#fff}.ax-amz{background:#ff8b1f}.ax-flip{background:#2878c7}.ax-disclosure{font-size:6px;color:#8292a6;padding:0 11px 2px}
-.ax-exam-banner{margin-top:12px;margin-bottom:12px;background:linear-gradient(100deg,#0b2d57,#174f91);border-radius:17px;color:#fff;padding-top:21px;padding-bottom:21px;display:flex;align-items:center;justify-content:space-between;gap:16px}.ax-exam-banner h2{font-size:22px;margin:6px 0}.ax-exam-banner p{font-size:9px;color:#c5d5e8;margin:0}
-.ax-footer{background:#071e3c;color:#a9bdd4;padding:26px 22px 16px}.ax-footer-main{max-width:1480px;margin:auto;display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:30px}.ax-footer-brand img{width:145px}.ax-footer-brand p{font-size:8px;color:#93abc4;margin-top:5px}.ax-footer h4{margin:0 0 7px;color:#fff;font-size:9px}.ax-footer-links{display:flex;flex-wrap:wrap;gap:6px 12px}.ax-footer-links a{font-size:7px;color:#bfd0e3}.ax-footer-bottom{max-width:1480px;margin:16px auto 0;padding-top:11px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:10px;font-size:6px;color:#86a0bb}
-.ax-skeleton{padding:20px;text-align:center;font-size:8px;color:#8090a4;border:1px dashed #cad7e6;border-radius:10px;margin:6px}.ax-empty{padding:18px 10px;text-align:center;color:#8191a4;font-size:8px}.ax-empty strong{display:block;color:#3f5f80;margin-bottom:3px}
-
-@media(max-width:1180px){.ax-nav{gap:14px}.ax-dashboard-grid{grid-template-columns:1fr 1fr}.ax-news-panel{grid-column:1/-1}.ax-lower-grid{grid-template-columns:1fr 1fr}.ax-books-panel{grid-column:1/-1}.ax-books-shelf{grid-template-columns:repeat(6,1fr)}}
-@media(max-width:880px){.ax-nav,.ax-actions{display:none}.ax-menu{display:block;margin-left:auto}.ax-mobile-nav.open{display:grid;padding:8px 18px;border-top:1px solid #e7edf5;background:#fff}.ax-mobile-nav a{padding:9px 4px;font-size:11px;font-weight:800;color:#254869}.ax-hero{grid-template-columns:1fr;padding-top:8px}.ax-hero-art{order:-1}.ax-dashboard-grid{grid-template-columns:1fr}.ax-news-panel{grid-column:auto}.ax-lower-grid{grid-template-columns:1fr}.ax-books-panel{grid-column:auto}.ax-books-shelf{grid-template-columns:repeat(4,1fr)}.ax-statbar{margin-left:14px;margin-right:14px}}
-@media(max-width:600px){.ax-header-inner{min-height:58px}.ax-logo{width:134px}.ax-section-pad{padding-left:14px;padding-right:14px}.ax-hero{padding:10px 14px}.ax-hero-copy{padding:14px 2px}.ax-hero h1{font-size:40px;letter-spacing:-1.8px}.ax-hero p{font-size:13px}.ax-hero-actions{flex-direction:column}.ax-hero-art img{height:235px;border-radius:16px}.ax-hero-badge{display:none}.ax-statbar{grid-template-columns:1fr 1fr}.ax-statbar>div{border-right:0}.ax-quick-grid{grid-template-columns:1fr 1fr}.ax-premium-banner{grid-template-columns:1fr}.ax-price-pair{justify-content:flex-start}.ax-streak-card{grid-template-columns:1fr auto}.ax-week{grid-column:1/-1}.ax-exam-grid{grid-template-columns:1fr}.ax-subject-grid{grid-template-columns:1fr 1fr}.ax-books-shelf{grid-template-columns:repeat(2,1fr)}.ax-footer-main{grid-template-columns:1fr}.ax-footer-bottom{flex-direction:column}.ax-trust-row{gap:9px}.ax-news-item{grid-template-columns:62px 1fr}.ax-news-img{width:62px;height:50px}}
-
-/* =========================================================
-   AxomPrep Homepage v3 — Spacious desktop composition
-   Sidebar: Job Alerts + Current Affairs
-   Main: Today's Focus + study actions + premium + streak
-   This intentionally increases overall page height and text size.
-   ========================================================= */
-
-@media (min-width: 1181px) {
-  .ax-header-inner,
-  .ax-hero,
-  .ax-section-pad,
-  .ax-footer-main,
-  .ax-footer-bottom {
-    max-width: 1540px;
-  }
-
-  .ax-hero {
-    padding-top: 18px;
-    padding-bottom: 24px;
-    gap: 30px;
-  }
-
-  .ax-hero-copy { padding: 34px 18px 24px 30px; }
-  .ax-hero h1 { font-size: clamp(52px, 5.3vw, 76px); margin-top: 16px; }
-  .ax-hero p { font-size: 16px; max-width: 700px; }
-  .ax-hero-pills { gap: 9px; margin: 20px 0; }
-  .ax-hero-pills span { font-size: 10px; padding: 8px 11px; }
-  .ax-trust-row { gap: 20px; margin-top: 18px; }
-  .ax-trust-row span { font-size: 10px; }
-  .ax-hero-art img { height: 380px; }
-
-  .ax-statbar { max-width: 1320px; margin-bottom: 18px; padding: 14px 10px; border-radius: 18px; }
-  .ax-statbar>div { padding: 9px 21px; }
-  .ax-statbar strong { font-size: 15px; }
-  .ax-statbar span { font-size: 9px; }
-
-  .ax-dashboard-grid {
-    grid-template-columns: minmax(280px, .72fr) minmax(0, 1.72fr);
-    grid-template-areas:
-      "jobs center"
-      "news center";
-    gap: 16px;
-    align-items: stretch;
-  }
-
-  .ax-job-panel { grid-area: jobs; }
-  .ax-center-stack { grid-area: center; }
-  .ax-news-panel { grid-area: news; }
-
-  .ax-card { border-radius: 18px; }
-  .ax-card-head { padding: 16px 18px 10px; }
-  .ax-card-head>a { font-size: 10px; }
-  .ax-card-title { gap: 10px; }
-  .ax-card-title h2 { font-size: 19px; }
-  .ax-title-icon { width: 31px; height: 31px; font-size: 13px; border-radius: 9px; }
-  .ax-chip-row { gap: 6px; padding: 0 17px 12px; }
-  .ax-chip-row button { padding: 6px 10px; font-size: 8px; }
-
-  /* Job Alerts becomes a compact but readable side column. */
-  .ax-list-stack { padding: 0 13px 8px; }
-  .ax-job-item { padding: 11px; margin: 7px 0; border-radius: 12px; }
-  .ax-job-top strong { font-size: 11px; line-height: 1.38; }
-  .ax-job-pill { font-size: 7px; padding: 4px 6px; }
-  .ax-job-org { font-size: 8px; margin-top: 4px; }
-  .ax-job-meta { gap: 6px; margin-top: 8px; }
-  .ax-job-meta div { padding: 6px; border-radius: 8px; }
-  .ax-job-meta span { font-size: 7px; }
-  .ax-job-meta b { font-size: 8px; }
-  .ax-job-actions { gap: 6px; margin-top: 8px; }
-  .ax-job-apply, .ax-job-official { font-size: 8px; padding: 6px 8px; }
-  .ax-panel-foot { margin: 4px 13px 0; padding: 10px 5px; }
-  .ax-panel-foot span { font-size: 8px; }
-  .ax-panel-foot a { font-size: 9px; }
-
-  /* Main focus panel is deliberately tall and readable. */
-  .ax-focus-card { min-height: 390px; }
-  .ax-focus-inner { padding: 0 19px 19px; }
-  .ax-focus-meta { margin-bottom: 10px; }
-  .ax-focus-tag { font-size: 8px; padding: 5px 8px; }
-  .ax-focus-count { font-size: 8px; }
-  .ax-focus-question { font-size: 17px; line-height: 1.48; margin-bottom: 12px; }
-  .ax-focus-option { padding: 11px 12px; margin: 7px 0; font-size: 11px; border-radius: 9px; gap: 9px; }
-  .ax-focus-option span { width: 24px; height: 24px; font-size: 10px; border-radius: 6px; }
-  .ax-focus-submit { margin-top: 10px; width: 170px; font-size: 12px; padding: 11px 16px; }
-  .ax-focus-result { font-size: 10px; margin-top: 9px; padding: 9px; }
-
-  .ax-quick-grid { gap: 8px; }
-  .ax-quick-card { min-height: 98px; padding: 12px 11px; border-radius: 14px; }
-  .ax-quick-card .qicon { width: 27px; height: 27px; font-size: 9px; margin-bottom: 10px; border-radius: 8px; }
-  .ax-quick-card strong { font-size: 10px; }
-  .ax-quick-card small { font-size: 8px; }
-  .ax-quick-card b { font-size: 12px; right: 10px; bottom: 9px; }
-
-  .ax-premium-banner { padding: 13px; border-radius: 15px; gap: 11px; }
-  .ax-premium-copy { gap: 9px; }
-  .ax-premium-icon { font-size: 24px; }
-  .ax-premium-copy strong { font-size: 12px; }
-  .ax-premium-copy small { font-size: 8px; }
-  .ax-price-pair { gap: 6px; }
-  .ax-price-pair>div { min-width: 70px; padding: 7px 10px; }
-  .ax-price-pair strong { font-size: 14px; }
-  .ax-price-pair span { font-size: 7px; }
-
-  .ax-streak-card { padding: 12px 14px; border-radius: 15px; }
-  .ax-streak-icon { font-size: 21px; }
-  .ax-streak-left { gap: 9px; }
-  .ax-streak-left strong { font-size: 10px; }
-  .ax-streak-left small { font-size: 8px; }
-  .ax-streak-days strong { font-size: 20px; }
-  .ax-streak-days span { font-size: 7px; }
-  .ax-week i { width: 22px; height: 22px; line-height: 22px; }
-  .ax-week span { font-size: 7px; }
-
-  /* Current Affairs stacked in the left rail. */
-  .ax-news-list { padding: 0 11px 11px; }
-  .ax-news-item { grid-template-columns: 84px 1fr; gap: 10px; padding: 10px 5px; }
-  .ax-news-img { width: 84px; height: 66px; border-radius: 9px; }
-  .ax-news-meta { font-size: 7px; }
-  .ax-news-cat { padding: 4px 6px; }
-  .ax-news-item h3 { font-size: 10.5px; line-height: 1.34; margin: 5px 0; }
-  .ax-news-item p { font-size: 8px; line-height: 1.42; }
-  .ax-news-more { padding: 10px 5px; }
-  .ax-news-more a { font-size: 9px; }
-
-  /* Lower content gets more breathing room and larger exam tiles. */
-  .ax-lower-grid { gap: 16px; padding-top: 16px; }
-  .ax-exam-grid { gap: 10px; padding: 4px 14px 14px; }
-  .ax-exam-card { min-height: 76px; padding: 12px; gap: 10px; border-radius: 13px; }
-  .ax-exam-card>span { width: 38px; height: 38px; font-size: 9px; border-radius: 10px; }
-  .ax-exam-card strong { font-size: 11px; }
-  .ax-exam-card small { font-size: 8px; }
-  .ax-subject-grid { gap: 8px; padding: 4px 14px 14px; }
-  .ax-subject-card { min-height: 82px; padding: 10px; border-radius: 12px; }
-  .ax-subject-card span { font-size: 17px; }
-  .ax-subject-card strong { font-size: 8px; }
-  .ax-books-shelf { gap: 9px; padding: 4px 14px 9px; }
-  .ax-book-cover { height: 180px; border-radius: 10px; }
-  .ax-book-mini h3 { font-size: 8px; }
-  .ax-book-buttons a { font-size: 7px; padding: 5px 6px; }
-  .ax-disclosure { font-size: 7px; padding: 0 14px 3px; }
-
-  /* New TET / Railway card colors. */
-  .ax-exam-card.tet { background:#fff7e8; border-color:#ffe2ae; }
-  .ax-exam-card.tet>span { background:#e99b17; }
-  .ax-exam-card.railway { background:#eaf5ff; border-color:#d5e8fb; }
-  .ax-exam-card.railway>span { background:#2f78c4; }
-
-  .ax-exam-banner { margin-top: 16px; margin-bottom: 16px; padding-top: 28px; padding-bottom: 28px; }
-  .ax-exam-banner h2 { font-size: 28px; }
-  .ax-exam-banner p { font-size: 11px; }
+  --stu-navy:#0d2b52;
+  --stu-blue:#1553a0;
+  --stu-blue-2:#2878c9;
+  --stu-orange:#f28c28;
+  --stu-bg:#f7f9fc;
+  --stu-line:#dfe7f1;
+  --stu-muted:#61738d;
+  --stu-card:#fff;
+  --stu-shadow:0 14px 38px rgba(16,42,76,.075);
 }
 
-@media (min-width: 1181px) and (max-width: 1320px) {
-  .ax-dashboard-grid { grid-template-columns: minmax(260px, .78fr) minmax(0, 1.7fr); }
-  .ax-nav { gap: 17px; }
-}
+body{background:#fff;color:#102a4c}
+.student-topbar{background:rgba(255,255,255,.96);backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(16,42,76,.045);z-index:50}
+.topbar-inner{width:100%;display:flex;align-items:center;justify-content:space-between;gap:22px}
+.student-topbar nav{align-items:center}
+.student-topbar nav a{padding:9px 7px;border-radius:8px;transition:background .18s ease,color .18s ease}
+.student-topbar nav a:hover{background:#f0f5fb;color:var(--stu-blue)}
+.student-topbar .nav-actions .btn{white-space:nowrap}
+.mobile-nav{display:none}
 
-@media (max-width: 1180px) {
-  .ax-exam-grid { grid-template-columns: 1fr 1fr; }
-}
+.student-hero{max-width:1380px;margin:0 auto;padding:58px 5.5% 48px;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:44px;background:radial-gradient(circle at 93% 8%,rgba(242,140,40,.19),transparent 25%),radial-gradient(circle at 5% 15%,rgba(40,120,201,.1),transparent 23%),linear-gradient(180deg,#f7faff 0%,#fff 100%)}
+.student-hero .hero-copy{padding-left:12px}
+.student-hero h1{font-size:clamp(42px,5.3vw,72px);letter-spacing:-2.6px;line-height:.99;margin:14px 0 20px;max-width:680px}
+.student-hero h1 span{color:var(--stu-blue)}
+.student-hero p{font-size:18px;line-height:1.72;max-width:650px;color:#5c718d}
+.student-hero .hero-actions{margin:26px 0 20px}
+.student-proof{display:flex;gap:14px;flex-wrap:wrap}
+.student-proof span{padding:9px 11px;border:1px solid var(--stu-line);background:#fff;border-radius:10px;color:#6a7b91;font-size:11px;box-shadow:0 5px 16px rgba(16,42,76,.04)}
+.student-proof b{color:var(--stu-navy)}
+.student-hero-visual{position:relative;min-height:370px;display:flex;align-items:center}
+.student-hero-visual img{border-radius:28px;box-shadow:0 24px 60px rgba(13,43,82,.18);width:100%;max-height:560px;object-fit:cover;object-position:center}
+.hero-float{position:absolute;display:flex;gap:10px;align-items:center;padding:11px 13px;background:rgba(255,255,255,.96);border:1px solid rgba(223,231,241,.95);border-radius:13px;box-shadow:0 12px 28px rgba(13,43,82,.14);backdrop-filter:blur(8px)}
+.hero-float b{display:block;font-size:11px;color:var(--stu-navy)}
+.hero-float small{display:block;margin-top:2px;font-size:9px;color:#718299}
+.float-top{left:-12px;top:24px}.float-bottom{right:-12px;bottom:24px}
+.float-icon{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#e8f7ef;color:#18834f;font-weight:900;font-size:13px}
+.float-icon.orange{background:#fff0df;color:#d36b0c}
 
-/* AxomPrep Homepage v4 — information-dense, student-friendly desktop layout */
-.ax-head-note{display:block;font-size:8px;font-weight:600;color:#7a8fa8;margin-top:1px}
-.ax-left-rail{display:grid;gap:12px;align-content:start}
-.ax-dashboard-grid{align-items:start}
-.ax-job-panel,.ax-news-panel{height:auto;align-self:start}
-.ax-panel-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 13px 10px}
-.ax-panel-summary span{background:#f6f9fc;border:1px solid #e4ecf4;border-radius:9px;padding:7px 8px}
-.ax-panel-summary b,.ax-panel-summary small{display:block}
-.ax-panel-summary b{font-size:10px;color:#173f6d}
-.ax-panel-summary small{font-size:7px;color:#8293a7;margin-top:2px}
-.news-summary{padding-bottom:8px}
-.ax-focus-chip-row{display:flex;flex-wrap:wrap;gap:6px;padding:0 19px 9px}
-.ax-focus-chip-row span{background:#f0f5fb;border:1px solid #dde7f2;color:#496883;border-radius:999px;padding:5px 8px;font-size:8px;font-weight:800}
-.ax-focus-goals{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 19px 10px}
-.ax-focus-goals span{background:#f7fafd;border:1px solid #e3ebf4;border-radius:9px;padding:8px 9px;font-size:8px;color:#72879d}
-.ax-focus-goals b{color:#173f6d}
-.ax-focus-tip{display:flex;gap:9px;align-items:center;background:#f0f7ff;border:1px solid #d9e9fb;border-radius:12px;padding:10px 12px}
-.ax-focus-tip>span{font-size:18px}
-.ax-focus-tip strong{font-size:9px;color:#17416f}
-.ax-focus-tip p{margin:2px 0 0;font-size:8px;color:#72879e;line-height:1.4}
-.ax-center-snapshot{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;background:#fff;border:1px solid var(--ax-line);border-radius:13px;padding:10px 12px}
-.ax-center-snapshot span{text-align:center}
-.ax-center-snapshot b,.ax-center-snapshot small{display:block}
-.ax-center-snapshot b{font-size:11px;color:#173f6d}
-.ax-center-snapshot small{font-size:7px;color:#8192a5;margin-top:2px}
-@media (min-width:1181px){
-  .ax-dashboard-grid{grid-template-columns:minmax(285px,.72fr) minmax(0,1.7fr);grid-template-areas:"rail center";}
-  .ax-left-rail{grid-area:rail}
-  .ax-center-stack{grid-area:center}
-  .ax-card-title h2{font-size:18px}
-  .ax-job-top strong{font-size:10.5px}
-  .ax-job-org{font-size:8px}
-  .ax-job-meta span{font-size:7px}
-  .ax-job-meta b{font-size:8px}
-  .ax-job-apply,.ax-job-official{font-size:8px}
-  .ax-news-item{grid-template-columns:74px 1fr;gap:9px;padding:8px 5px}
-  .ax-news-img{width:74px;height:58px}
-  .ax-news-item h3{font-size:10.5px;line-height:1.32}
-  .ax-news-item p{font-size:8px;line-height:1.4}
-  .ax-news-more{padding-top:8px}
-}
-@media (max-width:600px){
-  .ax-focus-goals{grid-template-columns:1fr}
-  .ax-panel-summary{grid-template-columns:1fr 1fr}
-  .ax-panel-summary span:last-child{grid-column:1/-1}
-  .ax-center-snapshot{grid-template-columns:1fr 1fr}
-}
+.student-statbar{max-width:1200px;margin:0 auto 6px;padding:17px 18px;display:grid;grid-template-columns:repeat(4,1fr);background:var(--stu-navy);color:#fff;border-radius:18px;box-shadow:0 14px 34px rgba(13,43,82,.15);position:relative;z-index:3}
+.student-statbar div{padding:5px 20px;border-right:1px solid rgba(255,255,255,.12)}
+.student-statbar div:last-child{border-right:0}
+.student-statbar strong,.student-statbar span{display:block}
+.student-statbar strong{font-size:15px}.student-statbar span{margin-top:4px;color:#b9c9df;font-size:10px}
 
-/* ============================================================
-   AXOMPREP — SIMPLE STUNNING HOMEPAGE
-   Final presentation override
-   Existing HTML / JS / Supabase functionality preserved
-   ============================================================ */
+.student-section-head{margin-bottom:24px}
+.student-section-head h2{font-size:32px;line-height:1.15;letter-spacing:-.7px}
+.student-section-head p{max-width:690px;margin:6px 0 0;line-height:1.6}
+.student-exam-section{padding-top:72px;padding-bottom:62px}
+.student-exam-grid{grid-template-columns:repeat(4,1fr);gap:16px}
+.student-exam-card{display:block;text-decoration:none;color:inherit;padding:20px;border-radius:18px;min-height:205px;position:relative;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.student-exam-card:hover{transform:translateY(-4px);box-shadow:var(--stu-shadow);border-color:#cfdae7}
+.student-exam-card::after{content:"";position:absolute;right:-30px;bottom:-34px;width:125px;height:125px;border-radius:50%;background:rgba(242,140,40,.08)}
+.exam-card-top{display:flex;align-items:center;justify-content:space-between}
+.exam-logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:11px;color:#fff;box-shadow:0 7px 16px rgba(16,42,76,.14)}
+.exam-arrow{color:#94a3b8;font-size:17px}
+.exam-label{margin-top:18px;font-size:10px;letter-spacing:.11em;font-weight:900;color:#7b8b9f}
+.student-exam-card h3{font-size:17px;line-height:1.28;margin:6px 0}
+.student-exam-card p{line-height:1.5;min-height:52px}
+.student-card-link{font-size:11px;font-weight:900;color:var(--stu-blue)}
+.exam-adre .exam-logo{background:linear-gradient(135deg,#1553a0,#317dcc)}
+.exam-apsc .exam-logo{background:linear-gradient(135deg,#7d31c8,#b24bdd)}
+.exam-ssc .exam-logo{background:linear-gradient(135deg,#10815a,#2ab477)}
+.exam-police .exam-logo{background:linear-gradient(135deg,#d86f10,#f49a2d)}
 
-:root{--ax-navy:#082f63;--ax-blue:#0d5bbb;--ax-orange:#ff7518;--ax-bg:#f7f9fc;--ax-text:#12345b;--ax-muted:#6d7f94;--ax-border:#e4eaf1}
-body{background:#f7f9fc;color:var(--ax-text)}
-.ax-header,.ax-hero,.ax-statbar,.ax-section-pad,.ax-lower-grid,.ax-footer-main,.ax-footer-bottom{max-width:1200px;margin-left:auto;margin-right:auto}
-.ax-header{background:#fff;border-bottom:1px solid #edf1f5}.ax-header-inner{max-width:1200px;min-height:62px;padding:0 4px}.ax-logo{transform:none}.ax-nav{gap:22px}.ax-nav a{font-size:12px;font-weight:700;color:#183b62}.ax-nav a:hover{color:var(--ax-orange)}.ax-actions{gap:8px}.ax-search{width:210px;height:34px;border-radius:9px;font-size:10px}.ax-login,.ax-get-started{height:34px;border-radius:8px;font-size:10px}
-.ax-hero{max-width:1200px;min-height:360px;margin-top:18px;margin-bottom:18px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:35px;align-items:center}.ax-hero-copy{padding:20px 0 20px 25px}.ax-hero-copy>span,.ax-hero-copy small{color:var(--ax-orange);font-size:11px;font-weight:800;letter-spacing:.5px}.ax-hero h1{margin:12px 0 15px;font-size:clamp(46px,5vw,64px);line-height:.98;letter-spacing:-2.5px;color:var(--ax-navy)}.ax-hero p{max-width:560px;margin-bottom:20px;color:#657991;font-size:14px;line-height:1.65}.ax-hero-pills,.ax-trust-row{display:none}.ax-hero-actions{display:flex;flex-direction:row;gap:10px;margin-top:20px}.ax-hero-actions a{min-height:42px;padding:11px 20px;border-radius:9px;font-size:11px;font-weight:800}.ax-hero-actions a:first-child{background:var(--ax-orange);color:#fff;box-shadow:0 7px 20px rgba(255,117,24,.22)}.ax-hero-actions a:last-child{background:#fff;color:var(--ax-navy);border:1px solid #dce5ee}.ax-hero-art{height:320px}.ax-hero-art img{width:100%;height:320px;object-fit:cover;border-radius:22px;box-shadow:0 18px 45px rgba(25,63,100,.14)}
-.ax-statbar{width:100%;min-height:72px;padding:0 20px;margin-top:5px;margin-bottom:45px;border-radius:14px;background:var(--ax-navy);display:grid;grid-template-columns:repeat(4,1fr);box-shadow:0 12px 28px rgba(8,47,99,.15)}.ax-statbar>div{padding:10px 20px;display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.16)}.ax-statbar>div:last-child{border-right:none}.ax-statbar>div:nth-child(5),.ax-statbar>div:nth-child(6){display:none}.ax-statbar strong{color:#fff;font-size:18px;font-weight:800}.ax-statbar span{color:#bcd0e7;font-size:9px}
-.ax-section-pad{padding:0}.ax-dashboard-grid{display:grid;grid-template-columns:1.35fr 1fr;grid-template-areas:"center rail";gap:18px;align-items:start}.ax-center-stack{grid-area:center}.ax-left-rail{grid-area:rail;display:grid;gap:18px}.ax-job-panel,.ax-news-panel,.ax-focus-panel{background:#fff;border:1px solid var(--ax-border);border-radius:15px;box-shadow:0 5px 20px rgba(24,58,91,.05)}
-.ax-focus-panel{min-height:390px}.ax-focus-panel .ax-card-title{padding:18px 20px 10px}.ax-focus-panel .ax-card-title h2{font-size:18px}.ax-focus-chip-row{padding:0 20px 12px}.ax-focus-chip-row span{font-size:8px;padding:6px 9px}.ax-question-area{padding:5px 20px 20px}.ax-question-area h3,.ax-focus-question{font-size:20px;line-height:1.35;margin:8px 0 15px}.ax-question-option{min-height:42px;padding:7px 11px;margin-bottom:7px;border-radius:9px;font-size:12px}.ax-answer-actions{margin-top:12px}.ax-answer-actions button{min-height:38px;padding:9px 17px;font-size:10px}
-.ax-job-panel{min-height:280px}.ax-job-panel .ax-card-title{padding:18px 18px 9px}.ax-job-panel .ax-card-title h2{font-size:17px}.ax-job-item{padding:11px 16px}.ax-job-item h3,.ax-job-item strong{font-size:11px}.ax-job-item p{font-size:9px}.ax-job-item small{font-size:8px}.ax-news-panel{display:none}
-.ax-quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.ax-quick-card{min-height:72px;padding:11px;border-radius:11px;background:#fff;border:1px solid var(--ax-border)}.ax-quick-card strong{font-size:10px}.ax-quick-card span{font-size:8px}
-.ax-premium-banner{min-height:76px;margin-top:14px;padding:12px 18px;border-radius:14px;display:grid;grid-template-columns:1fr auto auto;align-items:center;background:linear-gradient(105deg,#fff4e9,#fffaf4);border:1px solid #ffd9bb}.ax-premium-banner h2{font-size:17px}.ax-premium-banner p{font-size:8px}.ax-premium-banner li,.ax-premium-banner span{font-size:7px}.ax-premium-banner button{min-height:37px;padding:0 15px;font-size:9px}.ax-streak-card{display:none}
-.ax-lower-grid{margin-top:45px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}.ax-exam-panel,.ax-subject-panel,.ax-books-panel{background:#fff;border:1px solid var(--ax-border);border-radius:15px;min-height:190px;box-shadow:0 5px 18px rgba(24,58,91,.04)}.ax-exam-panel h2,.ax-subject-panel h2,.ax-books-panel h2{font-size:16px}.ax-exam-grid{grid-template-columns:repeat(2,1fr);gap:7px}.ax-exam-card{min-height:60px;border-radius:9px}.ax-subject-grid{grid-template-columns:repeat(3,1fr);gap:6px}.ax-subject-card{min-height:48px;border-radius:8px}.ax-subject-card strong{font-size:8px}.ax-books-shelf{grid-template-columns:repeat(4,1fr);gap:8px}.ax-book-cover{height:110px}.ax-book-mini h3{font-size:7px}
-.ax-lower-grid::after{content:"Prepare daily. Stay updated. Crack your target exam with AxomPrep.";grid-column:1/-1;display:flex;align-items:center;justify-content:center;min-height:100px;margin-top:18px;border-radius:15px;background:var(--ax-navy);color:#fff;font-size:18px;font-weight:800;text-align:center}.ax-footer{margin-top:35px}.ax-footer-main{min-height:100px}.ax-footer-main h3{font-size:9px}.ax-footer-main a,.ax-footer-main p{font-size:8px}
-@media (max-width:1100px){.ax-header-inner,.ax-hero,.ax-section-pad,.ax-lower-grid{width:calc(100% - 32px)}.ax-nav{gap:12px}.ax-search{width:150px}.ax-hero{grid-template-columns:1fr 1fr}.ax-hero h1{font-size:42px}}
-@media (max-width:850px){.ax-nav,.ax-actions{display:none}.ax-hero{grid-template-columns:1fr;min-height:auto}.ax-hero-copy{padding:25px 10px}.ax-hero h1{font-size:43px}.ax-hero-art{height:250px}.ax-hero-art img{height:250px;border-radius:15px}.ax-statbar{grid-template-columns:repeat(2,1fr);height:auto}.ax-statbar>div{min-height:55px}.ax-dashboard-grid{grid-template-columns:1fr;grid-template-areas:"center" "rail"}.ax-quick-grid{grid-template-columns:repeat(2,1fr)}.ax-lower-grid{grid-template-columns:1fr}}
-@media (max-width:550px){.ax-hero h1{font-size:38px}.ax-hero p{font-size:12px}.ax-statbar{width:calc(100% - 20px)}.ax-section-pad,.ax-lower-grid{width:calc(100% - 20px)}.ax-quick-grid{grid-template-columns:1fr 1fr}.ax-premium-banner{grid-template-columns:1fr}.ax-lower-grid::after{font-size:14px;padding:20px}}
+.student-steps-section{padding-top:48px;padding-bottom:68px;background:#fff}
+.study-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.study-steps article{display:flex;gap:14px;padding:20px;border:1px solid var(--stu-line);border-radius:17px;background:#fbfcfe;box-shadow:0 8px 22px rgba(16,42,76,.04)}
+.step-number{flex:none;font-size:11px;font-weight:900;color:var(--stu-orange);background:#fff1e2;border-radius:10px;padding:8px 9px;height:max-content}
+.study-steps h3{font-size:15px;margin:0 0 6px}.study-steps p{font-size:12px;line-height:1.55;margin:0;color:#677991}
+
+.student-subject-grid .subject-card{min-height:122px!important;padding:22px 48px 20px 64px!important}
+.student-subject-grid .subject-card b{display:block;margin-top:9px;font-size:10px;color:rgba(255,255,255,.95)}
+.student-subject-grid .subject-card .subject-icon{top:22px}
+
+.student-quiz-section{padding-top:62px;padding-bottom:70px}
+.student-daily-card{padding:36px 40px;border-radius:23px;box-shadow:0 18px 42px rgba(13,43,82,.14)}
+.quiz-perks{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0 20px}.quiz-perks span{font-size:10px;padding:7px 9px;background:rgba(255,255,255,.08);border-radius:999px;color:#d6e1ef}
+.student-daily-visual{gap:20px}
+.student-daily-visual .score-ring{box-shadow:0 10px 24px rgba(242,140,40,.16)}
+
+.student-mock-grid{grid-template-columns:repeat(3,1fr);gap:16px}
+.student-mock-card{padding:22px;min-height:220px;display:flex;flex-direction:column}
+.mock-top{display:flex;align-items:center;justify-content:space-between}.mock-top>span{font-size:9px;font-weight:900;letter-spacing:.1em;color:#8090a4}
+.student-mock-card h3{font-size:18px;line-height:1.25;margin:14px 0 6px}.student-mock-card p{margin-top:0}.student-mock-card .btn{margin-top:auto;align-self:flex-start}
+
+.student-news-section{padding-top:70px;padding-bottom:68px}
+.news-grid{margin-top:18px}
+.news-card{box-shadow:0 9px 24px rgba(16,42,76,.055)}
+.news-card .news-body{padding:17px}
+.news-card h3{font-size:17px}
+.news-featured{background:#fff2df;color:#cb690d;padding:3px 6px;border-radius:999px}
+.news-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
+.news-source{font-size:10px;color:#7a8aa0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.student-books-section{padding-top:70px;padding-bottom:68px}
+.home-book-card{padding:14px;gap:14px;border-radius:19px}
+.home-book-cover{width:112px;min-width:112px;height:160px;border-radius:13px}
+.home-book-body h3{font-size:15px}
+.home-book-body p{font-size:10px;line-height:1.55}
+.home-book-actions .home-affiliate{padding:7px 10px}
+
+.student-pricing{padding-top:74px;padding-bottom:82px}
+.student-price-grid{max-width:960px;grid-template-columns:repeat(3,1fr);gap:16px}
+.student-plan{padding:27px 24px!important;border-radius:19px!important;display:flex;flex-direction:column}
+.plan-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10px;font-weight:900;letter-spacing:.06em;color:#718198}
+.plan-tag{padding:5px 7px;border-radius:999px;background:#f1f5fa;color:#6b7c92;font-size:8px;letter-spacing:.05em}.plan-tag.orange{background:#fff0df;color:#cd6d0d}
+.student-plan h3{font-size:39px!important;letter-spacing:-1px}.student-plan h3 small{font-size:13px;font-weight:700;letter-spacing:0;color:#708098}
+.student-plan p{min-height:42px}.student-plan ul{margin:0 0 18px}.student-plan .btn{margin-top:auto}
+.featured-long{transform:translateY(-5px)}
+
+.student-cta{margin:44px auto 62px;max-width:1230px;border-radius:25px;padding:42px 46px;box-shadow:0 18px 40px rgba(16,42,76,.14)}
+.student-cta h2{font-size:34px;letter-spacing:-.6px}
+.student-cta a{text-decoration:none}
+
+.student-footer{display:block;padding:38px 6% 24px;background:#0b2446;color:#aebed2}
+.footer-main{display:flex;align-items:center;justify-content:space-between;gap:30px;max-width:1200px;margin:0 auto 24px}.footer-main .brand{color:#fff}.footer-main p{font-size:11px;margin:7px 0 0;color:#9cb0c8}.footer-links{display:flex;gap:18px;flex-wrap:wrap}.footer-links a{color:#c7d4e4;font-size:11px}.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:16px;display:flex;justify-content:space-between;gap:15px;max-width:1200px;margin:auto;font-size:10px;color:#92a8c2}
+
+@media(max-width:1100px){
+  .student-hero{grid-template-columns:1fr;max-width:100%;padding:42px 6%}.student-hero .hero-copy{padding-left:0}.student-hero-visual{order:-1;min-height:0}.student-statbar{margin:0 5% 6px}.student-exam-grid{grid-template-columns:1fr 1fr}.student-subject-grid{grid-template-columns:1fr 1fr!important}.home-book-grid{grid-template-columns:1fr 1fr}.student-price-grid{max-width:760px;grid-template-columns:1fr}
+  .featured-long{transform:none}
+}
+@media(max-width:900px){
+  .student-topbar nav,.student-topbar .nav-actions{display:none}.student-topbar .menu{display:block}.mobile-nav{position:absolute;left:4%;right:4%;top:66px;background:#fff;border:1px solid var(--stu-line);border-radius:15px;box-shadow:0 14px 30px rgba(16,42,76,.14);padding:10px}.mobile-nav.open{display:grid}.mobile-nav a{padding:11px 12px;color:#18345f;text-decoration:none;font-size:12px;font-weight:800;border-radius:9px}.mobile-nav a:hover{background:#f3f7fb}
+  .study-steps,.student-mock-grid{grid-template-columns:1fr}.student-statbar{grid-template-columns:1fr 1fr}.student-statbar div{border-right:0}.student-daily-card{display:flex;flex-direction:column;gap:20px}.student-daily-visual{justify-content:flex-start}.student-cta{margin:36px 6% 52px}
+}
+@media(max-width:650px){
+  .student-hero{padding:24px 16px 36px}.student-hero h1{font-size:40px;letter-spacing:-1.5px}.student-hero p{font-size:15px}.student-hero .hero-actions{flex-direction:column}.student-proof{display:grid;grid-template-columns:1fr}.student-hero-visual img{border-radius:18px}.hero-float{display:none}.student-statbar{margin:0 16px 4px;padding:15px;border-radius:14px;grid-template-columns:1fr 1fr}.student-statbar strong{font-size:13px}.student-statbar span{font-size:9px}
+  .student-exam-section,.student-steps-section,.student-news-section,.student-books-section,.student-pricing{padding-top:54px;padding-bottom:54px}.section{padding-left:16px;padding-right:16px}.student-section-head{align-items:flex-start;flex-direction:column;gap:8px}.student-section-head h2{font-size:28px}.student-exam-grid,.student-subject-grid,.home-book-grid{grid-template-columns:1fr!important}.student-exam-card{min-height:190px}.student-subject-grid .subject-card{min-height:98px!important}.student-daily-card{padding:28px}.student-daily-visual{justify-content:space-between}.student-cta{padding:30px;margin:30px 16px 42px}.student-cta h2{font-size:28px}.footer-main{align-items:flex-start;flex-direction:column}.footer-links{gap:10px 14px}.footer-bottom{flex-direction:column}
+}
