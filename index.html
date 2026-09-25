@@ -83,6 +83,7 @@
   </section>
 
   <section class="ax-dashboard-grid ax-section-pad">
+    <div class="ax-left-rail">
     <article class="ax-card ax-job-panel">
       <div class="ax-card-head">
         <div class="ax-card-title"><span class="ax-title-icon orange">▣</span><h2>Job Alerts</h2></div>
@@ -95,9 +96,28 @@
         <button data-cat="State Govt">State Govt</button>
         <button data-cat="Defence">Defence</button>
       </div>
+      <div class="ax-panel-summary"><span><b id="jobsOpenCount">Live</b><small>open alerts</small></span><span><b id="jobsClosingCount">0</b><small>closing soon</small></span><span><b>Official</b><small>links included</small></span></div>
       <div id="homeJobsList" class="ax-list-stack"><div class="ax-skeleton">Loading current jobs…</div></div>
       <div class="ax-panel-foot"><span id="homeJobsUpdated">Auto-updated daily</span><a href="current-jobs.html">Explore Current Jobs →</a></div>
     </article>
+
+    <article class="ax-card ax-news-panel">
+      <div class="ax-card-head">
+        <div class="ax-card-title"><span class="ax-title-icon green">▤</span><div><h2>Current Affairs</h2><small class="ax-head-note">Short, exam-ready news updates</small></div><span class="ax-live-dot" id="newsUpdatedLabel">Updated</span></div>
+        <a href="current-affairs.html">See all →</a>
+      </div>
+      <div class="ax-chip-row" id="newsFilters">
+        <button class="active" data-cat="all">All</button>
+        <button data-cat="Assam">Assam</button>
+        <button data-cat="India">India</button>
+        <button data-cat="International">World</button>
+        <button data-cat="Economy">Economy</button>
+        <button data-cat="Sports">Sports</button>
+      </div>
+      <div class="ax-panel-summary news-summary"><span><b id="newsCount">Live</b><small>latest updates</small></span><span><b>Assam</b><small>priority coverage</small></span><span><b>Daily</b><small>refresh cycle</small></span></div>
+      <div id="homeNewsList" class="ax-news-list"><div class="ax-skeleton">Loading current affairs…</div></div>
+    </article>
+    </div>
 
     <div class="ax-center-stack">
       <article class="ax-card ax-focus-card">
@@ -105,8 +125,11 @@
           <div class="ax-card-title"><span class="ax-title-icon red">◎</span><h2>Today's Focus</h2></div>
           <a href="practice.html">View more questions →</a>
         </div>
+        <div class="ax-focus-chip-row"><span>General Science</span><span>ADRE</span><span>APSC</span><span>SSC</span><span>TET</span><span>Railway</span></div>
+        <div class="ax-focus-goals"><span>🎯 Daily target <b>10 MCQs</b></span><span>⏱ Avg. time <b>8 min</b></span><span>📈 Goal <b>Accuracy</b></span></div>
         <div id="focusQuestion" class="ax-focus-inner"><div class="ax-skeleton">Loading a practice question…</div></div>
       </article>
+      <div class="ax-focus-tip"><span>💡</span><div><strong>Quick study tip</strong><p>Answer first, check the explanation, then revisit the topic in Practice.</p></div></div>
 
       <div class="ax-quick-grid">
         <a href="practice.html" class="ax-quick-card"><span class="qicon purple">▣</span><strong>Practice</strong><small>Topic-wise MCQs</small><b>→</b></a>
@@ -126,23 +149,8 @@
         <div class="ax-streak-days"><strong id="streakDays">0</strong><span>days</span></div>
         <div id="streakWeek" class="ax-week"></div>
       </article>
+      <div class="ax-center-snapshot"><span><b>10k+</b><small>questions</small></span><span><b>10 min</b><small>daily quiz</small></span><span><b>4+</b><small>exam tracks</small></span><span><b>Daily</b><small>current affairs</small></span></div>
     </div>
-
-    <article class="ax-card ax-news-panel">
-      <div class="ax-card-head">
-        <div class="ax-card-title"><span class="ax-title-icon green">▤</span><h2>Current Affairs</h2><span class="ax-live-dot" id="newsUpdatedLabel">Updated</span></div>
-        <a href="current-affairs.html">See all →</a>
-      </div>
-      <div class="ax-chip-row" id="newsFilters">
-        <button class="active" data-cat="all">All</button>
-        <button data-cat="Assam">Assam</button>
-        <button data-cat="India">India</button>
-        <button data-cat="International">World</button>
-        <button data-cat="Economy">Economy</button>
-        <button data-cat="Sports">Sports</button>
-      </div>
-      <div id="homeNewsList" class="ax-news-list"><div class="ax-skeleton">Loading current affairs…</div></div>
-    </article>
   </section>
 
   <section class="ax-lower-grid ax-section-pad">
@@ -169,6 +177,7 @@
         <a href="practice.html?subject=General%20Science" class="ax-subject-card s-science"><span>⚗</span><strong>General Science</strong></a>
         <a href="practice.html?subject=Computer" class="ax-subject-card s-computer"><span>▣</span><strong>Computer</strong></a>
         <a href="current-affairs.html" class="ax-subject-card s-ca"><span>▤</span><strong>Current Affairs</strong></a>
+        <a href="practice.html?subject=Polity%20%26%20Economy" class="ax-subject-card s-polity"><span>⌂</span><strong>Polity & Economy</strong></a>
       </div>
     </article>
 
