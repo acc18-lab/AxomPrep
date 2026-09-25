@@ -1,0 +1,42 @@
+/* AxomPrep — universal A logo override */
+
+.brand-mark,
+.logo-icon,
+.brand-logo-mark {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  flex: 0 0 38px !important;
+  border-radius: 10px !important;
+  background: url('/axomprep-mark-cropped.png') center center / cover no-repeat !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.brand-mark::before,
+.brand-mark::after,
+.logo-icon::before,
+.logo-icon::after,
+.brand-logo-mark::before,
+.brand-logo-mark::after {
+  content: none !important;
+}
+
+/* Keep the wordmark aligned with the new mark. */
+.brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+}
+
+/* Footer/full-logo images: preserve their proportions. */
+.brand-logo-img {
+  display: block !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
