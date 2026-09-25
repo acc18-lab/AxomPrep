@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AxomPrep — Practice Today. Prepare for Tomorrow.</title>
   <meta name="description" content="AxomPrep helps Assam and national competitive-exam aspirants practise MCQs, take daily quizzes, read current affairs, track jobs and use study resources.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,197 +13,202 @@
   <link rel="stylesheet" href="brand-logo.css">
 </head>
 <body class="ax-home">
-  <header class="ax-header">
-    <div class="ax-header-inner">
-      <a class="ax-brand" href="index.html" aria-label="AxomPrep home">
-        <img src="axomprep-logo.png" alt="AxomPrep" class="ax-logo">
-      </a>
-      <nav class="ax-nav" aria-label="Primary navigation">
-        <a href="practice.html">Practice</a>
-        <a href="daily-quiz.html">Daily Quiz</a>
-        <a href="mock-tests.html">Mock Tests</a>
-        <a href="current-affairs.html">Current Affairs</a>
-        <a href="current-jobs.html">Jobs</a>
-        <a href="books.html">Books</a>
-        <a href="premium.html">Premium</a>
-      </nav>
-      <div class="ax-actions">
-        <button class="ax-btn ax-btn-light" id="loginBtn">Login</button>
-        <button class="ax-btn ax-btn-primary" id="signupBtn">Get Started</button>
-      </div>
-      <button class="ax-menu" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
-    </div>
-    <div class="ax-mobile-nav" id="mobileNav" aria-hidden="true">
+<header class="ax-header">
+  <div class="ax-header-inner">
+    <a class="ax-brand" href="index.html" aria-label="AxomPrep home">
+      <img src="axomprep-logo.png" alt="AxomPrep" class="ax-logo">
+    </a>
+    <nav class="ax-nav" aria-label="Primary navigation">
       <a href="practice.html">Practice</a>
       <a href="daily-quiz.html">Daily Quiz</a>
       <a href="mock-tests.html">Mock Tests</a>
       <a href="current-affairs.html">Current Affairs</a>
-      <a href="current-jobs.html">Current Jobs</a>
+      <a href="current-jobs.html">Jobs</a>
       <a href="books.html">Books</a>
       <a href="premium.html">Premium</a>
+    </nav>
+    <div class="ax-actions">
+      <button class="ax-search" id="homeSearchBtn" type="button" aria-label="Search AxomPrep">⌕</button>
+      <button class="ax-btn ax-btn-light" id="loginBtn">Login</button>
+      <button class="ax-btn ax-btn-primary" id="signupBtn">Get Started</button>
     </div>
-  </header>
-
-  <main>
-    <section class="ax-hero">
-      <div class="ax-hero-copy">
-        <div class="ax-eyebrow">ASSAM'S COMPETITIVE EXAM PREP PLATFORM</div>
-        <h1>Your next exam <span>starts here.</span></h1>
-        <p>Practice smarter, stay updated, and apply on time. AxomPrep brings together focused MCQs, daily quizzes, mock tests, current affairs and live recruitment alerts in one place.</p>
-        <div class="ax-hero-pills">
-          <span>◉ MCQs with explanations</span>
-          <span>▣ Latest job alerts</span>
-          <span>◫ Daily current affairs</span>
-          <span>▤ Study resources</span>
-        </div>
-        <div class="ax-hero-actions">
-          <a class="ax-btn ax-btn-primary ax-btn-lg" href="practice.html">Start Practising <span>→</span></a>
-          <a class="ax-btn ax-btn-white ax-btn-lg" href="current-jobs.html">View Jobs <span>→</span></a>
-        </div>
-        <div class="ax-trust-row">
-          <span><b id="homeQuestionCount">10,000+</b> practice questions</span>
-          <span><b>10 min</b> daily quiz</span>
-          <span><b>4+</b> exam tracks</span>
-        </div>
-      </div>
-      <div class="ax-hero-art">
-        <img src="assam-exam-hero.png" alt="Students preparing for competitive exams in Assam" loading="eager">
-        <div class="ax-hero-badge ax-badge-top"><strong>Daily practice</strong><small>Small steps every day</small></div>
-        <div class="ax-hero-badge ax-badge-bottom"><strong>Today's quiz</strong><small>10 questions • 10 minutes</small></div>
-      </div>
-    </section>
-
-    <section class="ax-statbar">
-      <div><strong id="statQuestions">10,000+</strong><span>Practice Questions</span></div>
-      <div><strong>ADRE • APSC • SSC</strong><span>Core Exam Tracks</span></div>
-      <div><strong>Daily</strong><span>Fresh Practice</span></div>
-      <div><strong>₹0</strong><span>Start Free</span></div>
-    </section>
-
-    <section class="ax-dashboard-grid ax-section-pad">
-      <article class="ax-card ax-job-panel">
-        <div class="ax-card-head">
-          <div class="ax-card-title"><span class="ax-title-icon orange">▣</span><h2>Job Alerts</h2></div>
-          <a href="current-jobs.html">View all jobs →</a>
-        </div>
-        <div class="ax-chip-row" id="jobFilters">
-          <button class="active" data-cat="all">All</button>
-          <button data-cat="Assam">Assam</button>
-          <button data-cat="Central Govt">Central Govt</button>
-          <button data-cat="State Govt">State Govt</button>
-          <button data-cat="Defence">Defence</button>
-        </div>
-        <div id="homeJobsList" class="ax-list-stack"><div class="ax-skeleton">Loading current jobs…</div></div>
-        <div class="ax-panel-foot"><span id="homeJobsUpdated">Auto-updated daily</span><a href="current-jobs.html">Explore Current Jobs →</a></div>
-      </article>
-
-      <div class="ax-center-stack">
-        <article class="ax-card ax-focus-card">
-          <div class="ax-card-head">
-            <div class="ax-card-title"><span class="ax-title-icon red">◎</span><h2>Today's Focus</h2></div>
-            <a href="practice.html">View more questions →</a>
-          </div>
-          <div id="focusQuestion" class="ax-focus-inner"><div class="ax-skeleton">Loading a practice question…</div></div>
-        </article>
-        <div class="ax-quick-grid">
-          <a href="practice.html" class="ax-quick-card"><span class="qicon purple">▣</span><strong>Practice</strong><small>Topic-wise MCQs</small><b>→</b></a>
-          <a href="daily-quiz.html" class="ax-quick-card"><span class="qicon blue">◫</span><strong>Daily Quiz</strong><small>Test your knowledge</small><b>→</b></a>
-          <a href="mock-tests.html" class="ax-quick-card"><span class="qicon green">◉</span><strong>Mock Tests</strong><small>Exam-like experience</small><b>→</b></a>
-          <a href="#subjects" class="ax-quick-card"><span class="qicon orange">Aa</span><strong>Study by Subject</strong><small>All major subjects</small><b>→</b></a>
-        </div>
-        <article class="ax-premium-banner">
-          <div class="ax-premium-copy"><div class="ax-premium-icon">♛</div><div><strong>Go Premium</strong><small>Unlock premium questions, mock tests and more</small></div></div>
-          <div class="ax-price-pair"><div><strong>₹49</strong><span>1 Month</span></div><div><strong>₹129</strong><span>3 Months</span></div></div>
-          <a class="ax-btn ax-btn-primary" href="premium.html">Upgrade Now →</a>
-        </article>
-        <article class="ax-streak-card">
-          <div class="ax-streak-left"><span class="ax-streak-icon">🔥</span><div><strong>Your Study Streak</strong><small>Keep your routine going.</small></div></div>
-          <div class="ax-streak-days"><strong id="streakDays">0</strong><span>days</span></div>
-          <div id="streakWeek" class="ax-week"></div>
-        </article>
-      </div>
-
-      <article class="ax-card ax-news-panel">
-        <div class="ax-card-head">
-          <div class="ax-card-title"><span class="ax-title-icon green">▤</span><h2>Current Affairs</h2><span class="ax-live-dot">Updated</span></div>
-          <a href="current-affairs.html">See all →</a>
-        </div>
-        <div class="ax-chip-row" id="newsFilters">
-          <button class="active" data-cat="all">All</button>
-          <button data-cat="Assam">Assam</button>
-          <button data-cat="India">India</button>
-          <button data-cat="International">World</button>
-          <button data-cat="Economy">Economy</button>
-          <button data-cat="Sports">Sports</button>
-        </div>
-        <div id="homeNewsList" class="ax-news-list"><div class="ax-skeleton">Loading current affairs…</div></div>
-      </article>
-    </section>
-
-    <section class="ax-lower-grid ax-section-pad">
-      <article class="ax-card ax-lower-card" id="exams">
-        <div class="ax-card-head"><div class="ax-card-title"><span class="ax-title-icon red">◎</span><h2>Choose Your Exam</h2></div><a href="practice.html">View all exams →</a></div>
-        <div class="ax-exam-grid">
-          <a href="practice.html?exam=ADRE" class="ax-exam-card adre"><span>AD</span><div><strong>ADRE</strong><small>Assam Direct Recruitment</small></div></a>
-          <a href="practice.html?exam=APSC" class="ax-exam-card apsc"><span>AP</span><div><strong>APSC</strong><small>Assam Public Service</small></div></a>
-          <a href="practice.html?exam=SSC" class="ax-exam-card ssc"><span>SC</span><div><strong>SSC</strong><small>Staff Selection Commission</small></div></a>
-          <a href="practice.html?exam=Assam%20Police" class="ax-exam-card police"><span>AS</span><div><strong>ASSAM POLICE</strong><small>Constable & other posts</small></div></a>
-        </div>
-      </article>
-
-      <article class="ax-card ax-lower-card" id="subjects">
-        <div class="ax-card-head"><div class="ax-card-title"><span class="ax-title-icon blue">▤</span><h2>Study by Subject</h2></div><a href="practice.html">View all subjects →</a></div>
-        <div class="ax-subject-grid">
-          <a href="practice.html?subject=Assam%20GK" class="ax-subject-card s-assam"><span>⌁</span><strong>Assam GK</strong></a>
-          <a href="practice.html?subject=Mathematics" class="ax-subject-card s-math"><span>∑</span><strong>Mathematics</strong></a>
-          <a href="practice.html?subject=Reasoning" class="ax-subject-card s-reason"><span>◎</span><strong>Reasoning</strong></a>
-          <a href="practice.html?subject=English" class="ax-subject-card s-english"><span>Aa</span><strong>English</strong></a>
-          <a href="practice.html?subject=General%20Knowledge" class="ax-subject-card s-gk"><span>◈</span><strong>General Knowledge</strong></a>
-          <a href="practice.html?subject=General%20Science" class="ax-subject-card s-science"><span>⚗</span><strong>General Science</strong></a>
-          <a href="practice.html?subject=Computer" class="ax-subject-card s-computer"><span>▣</span><strong>Computer</strong></a>
-          <a href="practice.html?subject=Current%20Affairs" class="ax-subject-card s-ca"><span>▤</span><strong>Current Affairs</strong></a>
-        </div>
-      </article>
-
-      <article class="ax-card ax-lower-card ax-books-panel" id="books">
-        <div class="ax-card-head"><div class="ax-card-title"><span class="ax-title-icon orange">▤</span><h2>Books for Aspirants</h2></div><a href="books.html">View all books →</a></div>
-        <div id="homeBooksShelf" class="ax-books-shelf"><div class="ax-skeleton">Loading recommended books…</div></div>
-        <div class="ax-disclosure">Some purchase links may be affiliate links. AxomPrep may earn a commission on eligible purchases.</div>
-      </article>
-    </section>
-
-    <section class="ax-exam-banner ax-section-pad">
-      <div><div class="ax-eyebrow">ONE FOCUSED SESSION AT A TIME</div><h2>Build your preparation habit with AxomPrep.</h2><p>Practice today. Review your weak areas. Come back tomorrow.</p></div>
-      <a class="ax-btn ax-btn-white ax-btn-lg" href="practice.html">Start Practising →</a>
-    </section>
-  </main>
-
-  <footer class="ax-footer">
-    <div class="ax-footer-main">
-      <div class="ax-footer-brand"><img src="axomprep-logo.png" alt="AxomPrep"><p>Prepare Today. Rank Tomorrow.</p></div>
-      <div><h4>Quick Links</h4><div class="ax-footer-links"><a href="practice.html">Practice</a><a href="daily-quiz.html">Daily Quiz</a><a href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="current-jobs.html">Current Jobs</a><a href="books.html">Books</a><a href="premium.html">Premium</a></div></div>
-      <div><h4>Important</h4><div class="ax-footer-links"><a href="about.html">About Us</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="disclaimer.html">Disclaimer</a></div></div>
-    </div>
-    <div class="ax-footer-bottom"><span>© 2026 AxomPrep. All rights reserved.</span><span>An Assam-focused platform for competitive-exam aspirants.</span></div>
-  </footer>
-
-  <div class="modal hidden" id="authModal">
-    <div class="modal-box">
-      <button class="close" onclick="closeModal()">×</button>
-      <div class="auth-tabs"><button class="active" id="tabLogin">Login</button><button id="tabSignup">Create account</button></div>
-      <form id="authForm">
-        <label>Email<input type="email" id="email" required></label>
-        <label>Password<input type="password" id="password" required minlength="6"></label>
-        <label id="nameWrap" class="hidden">Full name<input type="text" id="fullName"></label>
-        <button class="btn primary full" id="authSubmit">Login</button>
-        <p id="authMsg"></p>
-      </form>
-    </div>
+    <button class="ax-menu" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
   </div>
+  <div class="ax-mobile-nav" id="mobileNav" aria-hidden="true">
+    <a href="practice.html">Practice</a>
+    <a href="daily-quiz.html">Daily Quiz</a>
+    <a href="mock-tests.html">Mock Tests</a>
+    <a href="current-affairs.html">Current Affairs</a>
+    <a href="current-jobs.html">Current Jobs</a>
+    <a href="books.html">Books</a>
+    <a href="premium.html">Premium</a>
+  </div>
+</header>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
-  <script src="app.js"></script>
-  <script src="homepage-live.js"></script>
+<main>
+  <section class="ax-hero">
+    <div class="ax-hero-copy">
+      <div class="ax-eyebrow">ASSAM'S TRUSTED EXAM PREPARATION PLATFORM</div>
+      <h1>Your next exam <span>starts here.</span></h1>
+      <p>Practice smarter, stay updated, and apply on time. AxomPrep brings together focused MCQs, daily quizzes, mock tests, current affairs, books and recruitment alerts for serious aspirants.</p>
+      <div class="ax-hero-pills">
+        <span>◉ MCQs with explanations</span>
+        <span>▣ Latest job alerts</span>
+        <span>◫ Daily current affairs</span>
+        <span>▤ Study resources</span>
+      </div>
+      <div class="ax-hero-actions">
+        <a class="ax-btn ax-btn-primary ax-btn-lg" href="practice.html">Start Practising <span>→</span></a>
+        <a class="ax-btn ax-btn-white ax-btn-lg" href="current-jobs.html">View Jobs <span>→</span></a>
+      </div>
+      <div class="ax-trust-row">
+        <span><b id="homeQuestionCount">10k+</b> practice questions</span>
+        <span><b>10 min</b> daily quiz</span>
+        <span><b>4+</b> exam tracks</span>
+        <span><b id="heroJobsCount">Live</b> job alerts</span>
+      </div>
+    </div>
+    <div class="ax-hero-art">
+      <img src="assam-exam-hero.png" alt="Students preparing for competitive exams in Assam" loading="eager">
+      <div class="ax-hero-badge ax-badge-top"><strong>Daily practice</strong><small>Small steps every day</small></div>
+      <div class="ax-hero-badge ax-badge-bottom"><strong>Today's focus</strong><small>Read • Answer • Improve</small></div>
+    </div>
+  </section>
+
+  <section class="ax-statbar">
+    <div><strong id="statQuestions">10k+</strong><span>Practice Questions</span></div>
+    <div><strong>ADRE • APSC • SSC</strong><span>Core Exam Tracks</span></div>
+    <div><strong id="statJobs">Live</strong><span>Job Alerts</span></div>
+    <div><strong>Daily</strong><span>Current Affairs</span></div>
+  </section>
+
+  <section class="ax-dashboard-grid ax-section-pad">
+    <article class="ax-card ax-job-panel">
+      <div class="ax-card-head">
+        <div class="ax-card-title"><span class="ax-title-icon orange">▣</span><h2>Job Alerts</h2></div>
+        <a href="current-jobs.html">View all jobs →</a>
+      </div>
+      <div class="ax-chip-row" id="jobFilters">
+        <button class="active" data-cat="all">All</button>
+        <button data-cat="Assam">Assam</button>
+        <button data-cat="Central Govt">Central Govt</button>
+        <button data-cat="State Govt">State Govt</button>
+        <button data-cat="Defence">Defence</button>
+      </div>
+      <div id="homeJobsList" class="ax-list-stack"><div class="ax-skeleton">Loading current jobs…</div></div>
+      <div class="ax-panel-foot"><span id="homeJobsUpdated">Auto-updated daily</span><a href="current-jobs.html">Explore Current Jobs →</a></div>
+    </article>
+
+    <div class="ax-center-stack">
+      <article class="ax-card ax-focus-card">
+        <div class="ax-card-head">
+          <div class="ax-card-title"><span class="ax-title-icon red">◎</span><h2>Today's Focus</h2></div>
+          <a href="practice.html">View more questions →</a>
+        </div>
+        <div id="focusQuestion" class="ax-focus-inner"><div class="ax-skeleton">Loading a practice question…</div></div>
+      </article>
+
+      <div class="ax-quick-grid">
+        <a href="practice.html" class="ax-quick-card"><span class="qicon purple">▣</span><strong>Practice</strong><small>Topic-wise MCQs</small><b>→</b></a>
+        <a href="daily-quiz.html" class="ax-quick-card"><span class="qicon blue">◫</span><strong>Daily Quiz</strong><small>Test your knowledge</small><b>→</b></a>
+        <a href="mock-tests.html" class="ax-quick-card"><span class="qicon green">◉</span><strong>Mock Tests</strong><small>Exam-like experience</small><b>→</b></a>
+        <a href="#subjects" class="ax-quick-card"><span class="qicon orange">Aa</span><strong>Study by Subject</strong><small>All major subjects</small><b>→</b></a>
+      </div>
+
+      <article class="ax-premium-banner">
+        <div class="ax-premium-copy"><div class="ax-premium-icon">♛</div><div><strong>Go Premium</strong><small>More practice, mocks and detailed explanations</small></div></div>
+        <div class="ax-price-pair"><div><strong>₹49</strong><span>1 Month</span></div><div class="popular"><strong>₹129</strong><span>3 Months</span></div></div>
+        <a class="ax-btn ax-btn-primary" href="premium.html">Upgrade Now →</a>
+      </article>
+
+      <article class="ax-streak-card">
+        <div class="ax-streak-left"><span class="ax-streak-icon">🔥</span><div><strong>Your Study Streak</strong><small>Keep your routine going.</small></div></div>
+        <div class="ax-streak-days"><strong id="streakDays">0</strong><span>days</span></div>
+        <div id="streakWeek" class="ax-week"></div>
+      </article>
+    </div>
+
+    <article class="ax-card ax-news-panel">
+      <div class="ax-card-head">
+        <div class="ax-card-title"><span class="ax-title-icon green">▤</span><h2>Current Affairs</h2><span class="ax-live-dot" id="newsUpdatedLabel">Updated</span></div>
+        <a href="current-affairs.html">See all →</a>
+      </div>
+      <div class="ax-chip-row" id="newsFilters">
+        <button class="active" data-cat="all">All</button>
+        <button data-cat="Assam">Assam</button>
+        <button data-cat="India">India</button>
+        <button data-cat="International">World</button>
+        <button data-cat="Economy">Economy</button>
+        <button data-cat="Sports">Sports</button>
+      </div>
+      <div id="homeNewsList" class="ax-news-list"><div class="ax-skeleton">Loading current affairs…</div></div>
+    </article>
+  </section>
+
+  <section class="ax-lower-grid ax-section-pad">
+    <article class="ax-card ax-lower-card" id="exams">
+      <div class="ax-card-head"><div class="ax-card-title"><span class="ax-title-icon red">◎</span><h2>Choose Your Exam</h2></div><a href="practice.html">View all exams →</a></div>
+      <div class="ax-exam-grid">
+        <a href="practice.html?exam=ADRE" class="ax-exam-card adre"><span>AD</span><div><strong>ADRE</strong><small>Assam Direct Recruitment</small></div></a>
+        <a href="practice.html?exam=APSC" class="ax-exam-card apsc"><span>AP</span><div><strong>APSC</strong><small>Assam Public Service</small></div></a>
+        <a href="practice.html?exam=SSC" class="ax-exam-card ssc"><span>SC</span><div><strong>SSC</strong><small>Staff Selection Commission</small></div></a>
+        <a href="practice.html?exam=Assam%20Police" class="ax-exam-card police"><span>AS</span><div><strong>ASSAM POLICE</strong><small>Constable & other posts</small></div></a>
+      </div>
+    </article>
+
+    <article class="ax-card ax-lower-card" id="subjects">
+      <div class="ax-card-head"><div class="ax-card-title"><span class="ax-title-icon blue">▤</span><h2>Study by Subject</h2></div><a href="practice.html">View all subjects →</a></div>
+      <div class="ax-subject-grid">
+        <a href="practice.html?subject=Assam%20GK" class="ax-subject-card s-assam"><span>⌁</span><strong>Assam GK</strong></a>
+        <a href="practice.html?subject=Mathematics" class="ax-subject-card s-math"><span>∑</span><strong>Mathematics</strong></a>
+        <a href="practice.html?subject=Reasoning" class="ax-subject-card s-reason"><span>◎</span><strong>Reasoning</strong></a>
+        <a href="practice.html?subject=English" class="ax-subject-card s-english"><span>Aa</span><strong>English</strong></a>
+        <a href="practice.html?subject=General%20Knowledge" class="ax-subject-card s-gk"><span>◈</span><strong>General Knowledge</strong></a>
+        <a href="practice.html?subject=General%20Science" class="ax-subject-card s-science"><span>⚗</span><strong>General Science</strong></a>
+        <a href="practice.html?subject=Computer" class="ax-subject-card s-computer"><span>▣</span><strong>Computer</strong></a>
+        <a href="current-affairs.html" class="ax-subject-card s-ca"><span>▤</span><strong>Current Affairs</strong></a>
+      </div>
+    </article>
+
+    <article class="ax-card ax-lower-card ax-books-panel" id="books">
+      <div class="ax-card-head"><div class="ax-card-title"><span class="ax-title-icon orange">▤</span><h2>Books for Aspirants</h2></div><a href="books.html">View all books →</a></div>
+      <div id="homeBooksShelf" class="ax-books-shelf"><div class="ax-skeleton">Loading recommended books…</div></div>
+      <div class="ax-disclosure">Some purchase links may be affiliate links. AxomPrep may earn a commission on eligible purchases.</div>
+    </article>
+  </section>
+
+  <section class="ax-exam-banner ax-section-pad">
+    <div><div class="ax-eyebrow">ONE FOCUSED SESSION AT A TIME</div><h2>Build your preparation habit with AxomPrep.</h2><p>Practice today. Review your weak areas. Come back tomorrow.</p></div>
+    <a class="ax-btn ax-btn-white ax-btn-lg" href="practice.html">Start Practising →</a>
+  </section>
+</main>
+
+<footer class="ax-footer">
+  <div class="ax-footer-main">
+    <div class="ax-footer-brand"><img src="axomprep-logo.png" alt="AxomPrep"><p>Prepare Today. Rank Tomorrow.</p></div>
+    <div><h4>Quick Links</h4><div class="ax-footer-links"><a href="practice.html">Practice</a><a href="daily-quiz.html">Daily Quiz</a><a href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="current-jobs.html">Current Jobs</a><a href="books.html">Books</a><a href="premium.html">Premium</a></div></div>
+    <div><h4>Important</h4><div class="ax-footer-links"><a href="about.html">About Us</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="disclaimer.html">Disclaimer</a></div></div>
+  </div>
+  <div class="ax-footer-bottom"><span>© 2026 AxomPrep. All rights reserved.</span><span>An Assam-focused platform for competitive-exam aspirants.</span></div>
+</footer>
+
+<div class="modal hidden" id="authModal">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal()">×</button>
+    <div class="auth-tabs"><button class="active" id="tabLogin">Login</button><button id="tabSignup">Create account</button></div>
+    <form id="authForm">
+      <label>Email<input type="email" id="email" required></label>
+      <label>Password<input type="password" id="password" required minlength="6"></label>
+      <label id="nameWrap" class="hidden">Full name<input type="text" id="fullName"></label>
+      <button class="btn primary full" id="authSubmit">Login</button>
+      <p id="authMsg"></p>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="homepage-live.js"></script>
 </body>
 </html>
