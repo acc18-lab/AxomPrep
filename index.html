@@ -136,10 +136,82 @@
                         </div>
                     </div>
                     
-                    <!-- Hero Visual: Assam-themed -->
+                    <!-- Hero Visual: Study Dashboard Preview -->
                     <div class="relative hidden sm:block">
-                        <div class="relative z-10 rounded-3xl border border-slate-200 shadow-xl overflow-hidden aspect-[4/3] bg-slate-100">
-                            <img src="assets/axomprep-assam-hero.png" alt="Assam-inspired AxomPrep learning visual" class="absolute inset-0 w-full h-full object-cover" loading="eager">
+                        <div class="bg-slate-100 rounded-3xl p-5 md:p-6 relative z-10 border border-slate-200 shadow-xl overflow-hidden aspect-[4/3]">
+                            <!-- Soft background shapes -->
+                            <div class="absolute -top-24 -right-20 w-64 h-64 rounded-full bg-blue-100/60"></div>
+                            <div class="absolute -bottom-24 -left-20 w-64 h-64 rounded-full bg-white/70"></div>
+
+                            <div class="relative z-10 h-full flex flex-col justify-center">
+                                <!-- Dashboard card -->
+                                <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-4 md:p-5 max-w-md mx-auto w-full">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div>
+                                            <p class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">Today's preparation</p>
+                                            <h3 class="text-lg font-bold text-axom-dark">Daily Quiz</h3>
+                                        </div>
+                                        <div class="flex items-center gap-1.5 bg-orange-50 text-orange-500 px-2.5 py-1.5 rounded-lg text-xs font-semibold">
+                                            <i class="fa-solid fa-fire"></i> 7 days
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-slate-50 rounded-xl p-3.5 mb-3">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="w-6 h-6 rounded-full bg-blue-100 text-axom-blue flex items-center justify-center text-[10px] font-bold">Q1</span>
+                                            <span class="text-[11px] font-medium text-slate-400">Assam General Knowledge</span>
+                                        </div>
+                                        <p class="text-sm md:text-base font-semibold text-slate-700 leading-snug">Which sanctuary is famous for the Golden Langur?</p>
+                                        <div class="grid grid-cols-2 gap-2 mt-3">
+                                            <div class="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-600">A. Kaziranga</div>
+                                            <div class="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-600">B. Chakrashila</div>
+                                            <div class="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-600">C. Orang</div>
+                                            <div class="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-600">D. Pobitora</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-3 gap-2 mb-3">
+                                        <div class="bg-blue-50 rounded-xl p-2.5 text-center">
+                                            <p class="text-base font-extrabold text-axom-blue">42</p>
+                                            <p class="text-[9px] text-slate-500">Questions</p>
+                                        </div>
+                                        <div class="bg-green-50 rounded-xl p-2.5 text-center">
+                                            <p class="text-base font-extrabold text-axom-green">82%</p>
+                                            <p class="text-[9px] text-slate-500">Score</p>
+                                        </div>
+                                        <div class="bg-red-50 rounded-xl p-2.5 text-center">
+                                            <p class="text-base font-extrabold text-axom-red">#128</p>
+                                            <p class="text-[9px] text-slate-500">Rank</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex-1">
+                                            <div class="flex justify-between text-[10px] font-semibold mb-1">
+                                                <span class="text-slate-500">Study progress</span>
+                                                <span class="text-axom-blue">75%</span>
+                                            </div>
+                                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                                <div class="h-full w-3/4 bg-axom-blue rounded-full"></div>
+                                            </div>
+                                        </div>
+                                        <div class="w-9 h-9 rounded-xl bg-blue-50 text-axom-blue flex items-center justify-center">
+                                            <i class="fa-solid fa-arrow-trend-up text-sm"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Floating aspirant badge -->
+                                <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 translate-y-1/2 bg-white rounded-xl shadow-lg border border-slate-100 px-5 py-2.5 flex items-center gap-3 whitespace-nowrap">
+                                    <div class="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center text-axom-blue">
+                                        <i class="fa-solid fa-graduation-cap"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-sm text-axom-dark">15,000+ Aspirants</p>
+                                        <p class="text-[11px] text-slate-500">Preparing daily</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- Accent dots -->
                         <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-[radial-gradient(circle,#cbd5e1_2px,transparent_2px)] [background-size:12px_12px] opacity-70 z-0"></div>
@@ -187,11 +259,11 @@
                         <h2 class="font-bold text-axom-dark flex items-center gap-2">
                             <i class="fa-solid fa-briefcase text-axom-blue"></i> Latest Job Alerts
                         </h2>
-                        <a href="#" class="text-xs font-semibold text-axom-blue hover:underline">View All</a>
+                        <a href="current-jobs.html" class="text-xs font-semibold text-axom-blue hover:underline">View All</a>
                     </div>
                     <div class="p-5 flex-1 flex flex-col gap-4">
                         <!-- Job Item -->
-                        <a href="#" class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white">
+                        <a href="current-jobs.html" class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white">
                             <div class="flex justify-between items-start mb-2">
                                 <span class="bg-red-50 text-axom-red text-xs font-bold px-2 py-1 rounded">ADRE</span>
                                 <span class="text-xs text-slate-400"><i class="fa-regular fa-clock"></i> 2h ago</span>
@@ -200,7 +272,7 @@
                             <p class="text-xs text-slate-500">12,600+ Vacancies • 10th/12th/Graduate</p>
                         </a>
                         <!-- Job Item -->
-                        <a href="#" class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white">
+                        <a href="current-jobs.html" class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white">
                             <div class="flex justify-between items-start mb-2">
                                 <span class="bg-blue-50 text-axom-blue text-xs font-bold px-2 py-1 rounded">APSC</span>
                                 <span class="text-xs text-slate-400"><i class="fa-regular fa-clock"></i> 1d ago</span>
@@ -209,7 +281,7 @@
                             <p class="text-xs text-slate-500">235 Vacancies • Any Graduate</p>
                         </a>
                         <!-- Job Item -->
-                        <a href="#" class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white">
+                        <a href="current-jobs.html" class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white">
                             <div class="flex justify-between items-start mb-2">
                                 <span class="bg-green-50 text-axom-green text-xs font-bold px-2 py-1 rounded">Police</span>
                                 <span class="text-xs text-slate-400"><i class="fa-regular fa-clock"></i> 2d ago</span>
