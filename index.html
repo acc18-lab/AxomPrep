@@ -105,6 +105,28 @@
         </div>
     </header>
 
+    <style>
+        @keyframes axomprep-alert-blink {
+            0%, 45% { opacity: 1; }
+            50%, 100% { opacity: 0.18; }
+        }
+        .axomprep-development-alert-text {
+            animation: axomprep-alert-blink 1.2s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .axomprep-development-alert-text { animation: none; }
+        }
+    </style>
+
+    <!-- Development Alert -->
+    <div role="alert" class="w-full bg-red-50 border-y border-red-200 text-red-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[82px] flex items-center justify-center text-center">
+            <p class="axomprep-development-alert-text text-base sm:text-lg md:text-xl font-semibold tracking-wide">
+                The website is under development and will be back with new and exciting features!
+            </p>
+        </div>
+    </div>
+
     <main>
         <!-- Hero Section -->
         <section class="bg-white overflow-hidden relative border-b border-slate-200">
