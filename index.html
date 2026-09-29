@@ -1,882 +1,186 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AxomPrep - Your Next Exam Starts Here</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Tailwind Configuration -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        axom: {
-                            blue: '#1A56DB', // Primary Blue
-                            dark: '#1e293b',
-                            red: '#E02424', // Subtle Assam Red accent
-                            orange: '#F05252',
-                            green: '#057A55',
-                            light: '#f8fafc',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            overflow-x: hidden;
-        }
-        /* Custom scrollbar for a premium feel */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mock Tests | AxomPrep</title>
+<meta name="description" content="Take full-length competitive exam mock tests on AxomPrep.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Assamese:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="homepage.css">
+<link rel="stylesheet" href="brand-logo.css">
+<link rel="stylesheet" href="axomprep-mobile-optimized.css">
+<style>
+:root{--blue:#1A56DB;--dark:#1e293b;--red:#E02424;--green:#057A55;--light:#f8fafc}
+body{margin:0;background:#f8fafc;color:#1e293b;font-family:Inter,system-ui,sans-serif}
+.ax-header{position:sticky;top:0;z-index:1000;background:#fff;border-bottom:1px solid #e2e8f0}
+.ax-header-inner{max-width:1280px;margin:auto;min-height:72px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.ax-brand{text-decoration:none;display:flex;align-items:center;flex-shrink:0}
+.ax-nav{display:flex;align-items:center;justify-content:center;gap:25px;flex:1}
+.ax-nav a{color:#1e293b;text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+.ax-nav a:hover,.ax-nav a.active{color:var(--blue)}
+.ax-actions{display:flex;gap:10px;align-items:center}
+.ax-btn{border:0;border-radius:9px;padding:9px 17px;font-size:14px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.ax-btn-light{color:#1e293b;background:#fff;border:1px solid #e2e8f0}
+.ax-btn-primary{color:#fff;background:var(--blue)}
+.ax-menu{display:none;border:0;background:transparent;font-size:24px;cursor:pointer}
+.ax-mobile-nav{display:none}
+.page{max-width:1180px;margin:0 auto;padding:42px 20px 70px}
+.hero{background:linear-gradient(135deg,#0f4380,#1A56DB);border-radius:22px;padding:42px;color:#fff;display:flex;justify-content:space-between;gap:30px;align-items:center;box-shadow:0 18px 40px rgba(30,64,175,.18)}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:1.5px;color:#bfdbfe;text-transform:uppercase}
+h1{font-size:42px;line-height:1.1;margin:10px 0 12px}
+.hero p{max-width:650px;color:#dbeafe;line-height:1.7;margin:0}
+.hero-stat{min-width:190px;border:1px solid rgba(255,255,255,.25);border-radius:16px;padding:20px;background:rgba(255,255,255,.08)}
+.hero-stat b{display:block;font-size:28px}.hero-stat span{font-size:12px;color:#dbeafe}
+.controls{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:18px;margin-top:22px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+select,.control-btn{height:44px;border:1px solid #d8e1ec;border-radius:10px;padding:0 14px;font:inherit;background:#fff;color:#1e293b}
+.control-btn{background:var(--blue);color:#fff;border:none;font-weight:700;cursor:pointer}
+.tests{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:22px}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:22px;box-shadow:0 4px 16px rgba(15,23,42,.04)}
+.card h3{margin:0 0 8px;font-size:19px}.muted{color:#64748b;font-size:13px;line-height:1.6}
+.badge{display:inline-block;background:#eff6ff;color:#1d4ed8;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800;margin-bottom:12px}
+.card button{width:100%;margin-top:18px;padding:11px;border:0;border-radius:9px;background:#1A56DB;color:#fff;font-weight:700;cursor:pointer}
+.empty{grid-column:1/-1;text-align:center;padding:35px;color:#64748b}
+.quiz{display:none;margin-top:22px}.quiz.active{display:block}
+.quiz-head{display:flex;justify-content:space-between;gap:20px;align-items:center;background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:18px}
+.timer{font-weight:800;color:#E02424}.progress{height:7px;background:#e2e8f0;border-radius:10px;overflow:hidden;margin-top:14px}.progress>div{height:100%;background:#1A56DB;width:0}
+.question-card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:24px;margin-top:18px}
+.qmeta{font-size:12px;color:#64748b;font-weight:700}.question{font-size:21px;font-weight:800;line-height:1.45;margin:10px 0 20px}
+.option{display:block;border:2px solid #e2e8f0;border-radius:12px;padding:13px 15px;margin:10px 0;cursor:pointer}
+.option:hover{border-color:#93c5fd;background:#eff6ff}.option input{margin-right:10px}
+.quiz-actions{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+.result{display:none;margin-top:22px;background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:32px;text-align:center}.result.active{display:block}
+.score{font-size:52px;font-weight:900;color:#1A56DB}
+footer{background:#0f172a;color:#cbd5e1;padding:28px;text-align:center;font-size:13px}
+@media(max-width:900px){.ax-header-inner{padding:0 18px;min-height:64px}.ax-nav,.ax-actions{display:none}.ax-menu{display:block}.ax-mobile-nav{padding:8px 18px 16px;background:#fff;border-top:1px solid #eef2f7}.ax-mobile-nav.open{display:block}.ax-mobile-nav a{display:block;padding:11px 4px;color:#1e293b;text-decoration:none;font-weight:600}.hero{flex-direction:column;align-items:flex-start}.tests{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.page{padding:25px 14px 50px}.hero{padding:28px 22px}.hero h1{font-size:32px}.tests{grid-template-columns:1fr}.controls{align-items:stretch}.controls>*{width:100%}.question{font-size:18px}}
+</style>
 </head>
-<body class="text-slate-800 antialiased">
+<body>
+<header class="ax-header">
+  <div class="ax-header-inner">
+    <a class="ax-brand" href="index.html" aria-label="AxomPrep home">
+      <span style="display:flex;align-items:center;gap:9px"><span style="width:32px;height:32px;background:#1A56DB;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px">A</span><span style="font-weight:800;font-size:20px;color:#1e293b">Axom<span style="color:#1A56DB">Prep</span></span></span>
+    </a>
+    <nav class="ax-nav">
+      <a href="index.html">Home</a><a href="practice.html">Practice</a><a href="daily-quiz.html">Daily Quiz</a><a class="active" href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="current-jobs.html">Jobs</a><a href="books.html">Books</a><a href="premium.html">Premium</a>
+    </nav>
+    <div class="ax-actions"><a class="ax-btn ax-btn-light" href="index.html">Home</a><a class="ax-btn ax-btn-primary" href="premium.html">Premium</a></div>
+    <button class="ax-menu" id="menuBtn" aria-label="Open menu">☰</button>
+  </div>
+  <div class="ax-mobile-nav" id="mobileNav"><a href="index.html">Home</a><a href="practice.html">Practice</a><a href="daily-quiz.html">Daily Quiz</a><a href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="current-jobs.html">Jobs</a><a href="books.html">Books</a><a href="premium.html">Premium</a></div>
+</header>
 
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
-                    <div class="w-8 h-8 bg-axom-blue rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-sm">A</div>
-                    <span class="font-bold text-xl tracking-tight text-axom-dark">Axom<span class="text-axom-blue">Prep</span></span>
-                </div>
-                
-                <!-- Desktop Nav -->
-                <nav class="hidden lg:flex space-x-6 items-center">
-                    <a href="practice.html" class="text-sm font-medium text-slate-600 hover:text-axom-blue transition-colors">Practice</a>
-                    <a href="daily-quiz.html" class="text-sm font-medium text-slate-600 hover:text-axom-blue transition-colors">Daily Quiz</a>
-                    <a href="mock-tests.html" class="text-sm font-medium text-slate-600 hover:text-axom-blue transition-colors">Mock Tests</a>
-                    <a href="current-affairs.html" class="text-sm font-medium text-slate-600 hover:text-axom-blue transition-colors">Current Affairs</a>
-                    <a href="current-jobs.html" class="text-sm font-medium text-slate-600 hover:text-axom-blue transition-colors">Jobs</a>
-                    <a href="books.html" class="text-sm font-medium text-slate-600 hover:text-axom-blue transition-colors">Books</a>
-                    <a href="#" class="text-sm font-medium text-amber-600 bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100 transition-colors"><i class="fa-solid fa-crown text-xs mr-1"></i> Premium</a>
-                </nav>
+<main class="page">
+<section class="hero">
+  <div><div class="eyebrow">AXOMPREP MOCK TESTS</div><h1>Practice like the real exam.</h1><p>Choose a test, answer timed questions and see your score immediately. Published questions from your AxomPrep question bank are used whenever Supabase is available.</p></div>
+  <div class="hero-stat"><b id="poolCount">—</b><span>published questions available</span></div>
+</section>
 
-                <!-- CTA & Mobile Toggle -->
-                <div class="flex items-center gap-4">
-                    <div class="hidden md:flex items-center gap-3">
-                        <a href="#" class="text-sm font-medium text-slate-600 hover:text-axom-dark transition-colors">Login</a>
-                        <a href="#" class="bg-axom-blue hover:bg-blue-700 text-white text-sm font-medium px-5 py-2 rounded-lg shadow-sm transition-all duration-200">Get Started</a>
-                    </div>
-                    <!-- Hamburger Menu -->
-                    <button id="mobile-menu-btn" class="lg:hidden text-slate-500 hover:text-axom-dark focus:outline-none">
-                        <i class="fa-solid fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
+<section id="testList">
+  <div class="controls">
+    <select id="examSelect"><option value="all">All exam tracks</option></select>
+    <select id="sizeSelect"><option value="20">20 Questions</option><option value="30">30 Questions</option><option value="50">50 Questions</option></select>
+    <button class="control-btn" id="refreshTests">Refresh Tests</button>
+  </div>
+  <div id="tests" class="tests"><div class="empty">Loading mock tests…</div></div>
+</section>
 
-        <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200">
-            <div class="px-4 pt-2 pb-6 space-y-1">
-                <a href="practice.html" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-axom-blue hover:bg-slate-50">Practice</a>
-                <a href="daily-quiz.html" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-axom-blue hover:bg-slate-50">Daily Quiz</a>
-                <a href="mock-tests.html" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-axom-blue hover:bg-slate-50">Mock Tests</a>
-                <a href="current-affairs.html" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-axom-blue hover:bg-slate-50">Current Affairs</a>
-                <a href="current-jobs.html" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-axom-blue hover:bg-slate-50">Jobs</a>
-                <a href="books.html" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-axom-blue hover:bg-slate-50">Books</a>
-                <a href="premium.html" class="block px-3 py-2 rounded-md text-base font-medium text-amber-600 hover:bg-amber-50">Premium</a>
-                <div class="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-2 px-3">
-                    <a href="#" class="text-center text-slate-600 font-medium py-2 border border-slate-200 rounded-lg">Login</a>
-                    <a href="#" class="text-center bg-axom-blue text-white font-medium py-2 rounded-lg">Get Started</a>
-                </div>
-            </div>
-        </div>
-    </header>
+<section id="quiz" class="quiz">
+  <div class="quiz-head"><div><strong id="testTitle">Mock Test</strong><div class="muted" id="testMeta"></div></div><div class="timer" id="timer">30:00</div></div>
+  <div class="progress"><div id="progress"></div></div>
+  <div class="question-card">
+    <div class="qmeta" id="qNumber"></div><div class="question" id="question"></div><div id="options"></div>
+    <div class="quiz-actions"><button class="control-btn" id="prevBtn" style="background:#fff;color:#1e293b;border:1px solid #d8e1ec">Previous</button><button class="control-btn" id="nextBtn">Next</button></div>
+  </div>
+</section>
 
-    <style>
-        @keyframes axomprep-alert-blink {
-            0%, 45% { opacity: 1; }
-            50%, 100% { opacity: 0.18; }
-        }
-        .axomprep-development-alert-text {
-            animation: axomprep-alert-blink 1.2s ease-in-out infinite;
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .axomprep-development-alert-text { animation: none; }
-        }
-    </style>
+<section id="result" class="result">
+  <div class="eyebrow" style="color:#1A56DB">TEST COMPLETED</div><div class="score" id="score"></div><h2 id="resultTitle">Mock Test Complete</h2><p class="muted" id="resultText"></p><button class="control-btn" id="againBtn">Back to Mock Tests</button>
+</section>
+</main>
+<footer>AxomPrep • Prepare Today. Rank Tomorrow.</footer>
 
-    <!-- Development Alert -->
-    <div role="alert" class="w-full bg-red-50 border-y border-red-200 text-red-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[82px] flex items-center justify-center text-center">
-            <p class="axomprep-development-alert-text text-base sm:text-lg md:text-xl font-semibold tracking-wide">
-                The website is under development and will be back with new and exciting features!
-            </p>
-        </div>
-    </div>
-
-    <main>
-        <!-- Hero Section -->
-        <section class="bg-white overflow-hidden relative border-b border-slate-200">
-            <!-- Decorative background elements -->
-            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-blue-50 opacity-50 blur-3xl"></div>
-            <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-red-50 opacity-50 blur-3xl"></div>
-
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-10">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                    <!-- Hero Content -->
-                    <div class="max-w-2xl">
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-axom-blue text-sm font-medium mb-6">
-                            <span class="w-2 h-2 rounded-full bg-axom-blue"></span> ADRE 2.0 Updates Available
-                        </div>
-                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-axom-dark tracking-tight leading-tight mb-6">
-                            Your next exam <br/>
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-axom-blue to-blue-400">starts here.</span>
-                        </h1>
-                        <p class="text-lg text-slate-600 mb-8 leading-relaxed max-w-lg">
-                            The most trusted platform for Assam competitive exams. Practice with curated mock tests, daily quizzes, and stay updated with the latest job notifications.
-                        </p>
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="#" class="bg-axom-blue hover:bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-xl shadow-md shadow-blue-200 flex justify-center items-center gap-2 transition-all">
-                                Start Practicing Free <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                            <a href="#" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold px-8 py-3.5 rounded-xl shadow-sm flex justify-center items-center gap-2 transition-all">
-                                Explore Exams
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Hero Visual: Assam Image -->
-                    <div class="relative hidden sm:block">
-                        <div class="bg-slate-100 rounded-3xl p-3 md:p-4 relative z-10 border border-slate-200 shadow-xl overflow-hidden aspect-[4/3]">
-                            <div class="relative w-full h-full rounded-2xl overflow-hidden bg-white">
-                                <img src="assets/axomprep-assam-hero.png" alt="Assam-themed AxomPrep preparation visual" class="absolute inset-0 w-full h-full object-cover" loading="eager">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Quick Stats -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 -mt-6 relative z-20">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 divide-x-0 md:divide-x divide-slate-100">
-                    <div class="flex flex-col items-center text-center px-4">
-                        <i class="fa-solid fa-clipboard-question text-axom-blue text-2xl mb-2"></i>
-                        <h3 class="text-2xl font-bold text-axom-dark">25k+</h3>
-                        <p class="text-sm text-slate-500 font-medium">Practice Questions</p>
-                    </div>
-                    <div class="flex flex-col items-center text-center px-4">
-                        <i class="fa-solid fa-layer-group text-axom-green text-2xl mb-2"></i>
-                        <h3 class="text-2xl font-bold text-axom-dark">12+</h3>
-                        <p class="text-sm text-slate-500 font-medium">Exam Tracks</p>
-                    </div>
-                    <div class="flex flex-col items-center text-center px-4">
-                        <i class="fa-solid fa-bell text-amber-500 text-2xl mb-2"></i>
-                        <h3 class="text-2xl font-bold text-axom-dark">Daily</h3>
-                        <p class="text-sm text-slate-500 font-medium">Job Alerts</p>
-                    </div>
-                    <div class="flex flex-col items-center text-center px-4">
-                        <i class="fa-solid fa-newspaper text-axom-red text-2xl mb-2"></i>
-                        <h3 class="text-2xl font-bold text-axom-dark">365</h3>
-                        <p class="text-sm text-slate-500 font-medium">Current Affairs</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Main Dashboard Section -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                <!-- Column 1: Job Alerts -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col overflow-hidden h-full">
-                    <div class="bg-slate-50 px-5 py-4 border-b border-slate-200 flex justify-between items-center">
-                        <h2 class="font-bold text-axom-dark flex items-center gap-2">
-                            <i class="fa-solid fa-briefcase text-axom-blue"></i> Latest Job Alerts
-                        </h2>
-                        <a href="current-jobs.html" class="text-xs font-semibold text-axom-blue hover:underline">View All</a>
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col gap-4">
-                        <!-- Job Item: 28 Sep 2026 -->
-                        <a href="current-jobs.html" class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white">
-                            <div class="flex justify-between items-start mb-2 gap-2">
-                                <span class="bg-orange-50 text-orange-700 text-xs font-bold px-2 py-1 rounded">IOCL</span>
-                                <span class="text-xs text-slate-400 whitespace-nowrap"><i class="fa-regular fa-clock"></i> 1d ago</span>
-                            </div>
-                            <h3 class="font-semibold text-slate-800 group-hover:text-axom-blue transition-colors text-sm leading-tight mb-1">IOCL Apprentice Recruitment 2026</h3>
-                            <p class="text-xs text-slate-500">58 Posts • Graduate/Diploma</p>
-                            <p class="text-xs text-slate-400 mt-1">Last Date: 18 Oct 2026</p>
-                        </a>
-                        <!-- Job Item: 28 Sep 2026 -->
-                        <a href="current-jobs.html" class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white">
-                            <div class="flex justify-between items-start mb-2 gap-2">
-                                <span class="bg-blue-50 text-axom-blue text-xs font-bold px-2 py-1 rounded">IIT Guwahati</span>
-                                <span class="text-xs text-slate-400 whitespace-nowrap"><i class="fa-regular fa-clock"></i> 1d ago</span>
-                            </div>
-                            <h3 class="font-semibold text-slate-800 group-hover:text-axom-blue transition-colors text-sm leading-tight mb-1">IIT Guwahati JRF Recruitment 2026</h3>
-                            <p class="text-xs text-slate-500">1 Post • B.Tech/B.E</p>
-                            <p class="text-xs text-slate-400 mt-1">Last Date: 29 Sep 2026</p>
-                        </a>
-                        <!-- Job Item: 28 Sep 2026 -->
-                        <a href="current-jobs.html" class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white">
-                            <div class="flex justify-between items-start mb-2 gap-2">
-                                <span class="bg-green-50 text-axom-green text-xs font-bold px-2 py-1 rounded">AIIMS Guwahati</span>
-                                <span class="text-xs text-slate-400 whitespace-nowrap"><i class="fa-regular fa-clock"></i> 1d ago</span>
-                            </div>
-                            <h3 class="font-semibold text-slate-800 group-hover:text-axom-blue transition-colors text-sm leading-tight mb-1">AIIMS Guwahati Project Associate I</h3>
-                            <p class="text-xs text-slate-500">1 Post • M.Sc</p>
-                            <p class="text-xs text-slate-400 mt-1">Last Date: 08 Oct 2026</p>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Column 2: Today's Focus / Daily Q -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col overflow-hidden h-full md:col-span-1 lg:col-span-1">
-                    <div class="bg-axom-blue px-5 py-4 border-b border-blue-700 flex justify-between items-center text-white">
-                        <h2 class="font-bold flex items-center gap-2">
-                            <i class="fa-solid fa-target text-white"></i> Today's Focus
-                        </h2>
-                        <span id="dailyQuizDate" class="text-xs font-semibold bg-white/20 px-2 py-1 rounded">29 Sep</span>
-                    </div>
-
-                    <div class="p-6 flex-1 flex flex-col justify-between">
-                        <div>
-                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Daily Challenge</div>
-                            <h3 id="dailyQuizQuestion" class="text-lg font-bold text-slate-800 mb-4 leading-snug">
-                                Loading today's question...
-                            </h3>
-
-                            <div id="dailyQuizOptions" class="space-y-3"></div>
-                        </div>
-
-                        <div id="dailyQuizFeedback" class="hidden mt-4 rounded-lg px-4 py-3 text-sm font-medium"></div>
-                        <button id="submitDailyAnswer" type="button" class="w-full mt-6 bg-slate-800 hover:bg-slate-700 text-white font-medium py-2.5 rounded-lg transition-colors">
-                            Submit Answer
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Column 3: Current Affairs -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col overflow-hidden h-full md:col-span-2 lg:col-span-1">
-                    <div class="bg-slate-50 px-5 py-4 border-b border-slate-200 flex justify-between items-center">
-                        <h2 class="font-bold text-axom-dark flex items-center gap-2">
-                            <i class="fa-solid fa-globe text-axom-green"></i> Current Affairs
-                        </h2>
-                        <a href="current-affairs.html" class="text-xs font-semibold text-axom-blue hover:underline">Read All</a>
-                    </div>
-                    <div class="p-0 flex-1 flex flex-col divide-y divide-slate-100">
-                        <!-- CA Item -->
-                        <a href="#" class="p-5 flex gap-4 hover:bg-slate-50 transition-colors group">
-                            <div class="w-12 h-12 rounded-lg bg-green-50 flex-shrink-0 flex flex-col items-center justify-center border border-green-100 text-axom-green">
-                                <span class="text-xs font-bold">SEP</span>
-                                <span class="text-lg font-black leading-none">28</span>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-slate-800 text-sm mb-1 group-hover:text-axom-blue transition-colors line-clamp-2">Assam Government launches new initiative for rural development</h3>
-                                <p class="text-xs text-slate-500">State Govt. schemes | 3 min read</p>
-                            </div>
-                        </a>
-                        <!-- CA Item -->
-                        <a href="#" class="p-5 flex gap-4 hover:bg-slate-50 transition-colors group">
-                            <div class="w-12 h-12 rounded-lg bg-blue-50 flex-shrink-0 flex flex-col items-center justify-center border border-blue-100 text-axom-blue">
-                                <span class="text-xs font-bold">SEP</span>
-                                <span class="text-lg font-black leading-none">27</span>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-slate-800 text-sm mb-1 group-hover:text-axom-blue transition-colors line-clamp-2">India's new space mission details announced by ISRO</h3>
-                                <p class="text-xs text-slate-500">National | Science & Tech</p>
-                            </div>
-                        </a>
-                        <!-- CA Item -->
-                        <a href="#" class="p-5 flex gap-4 hover:bg-slate-50 transition-colors group">
-                            <div class="w-12 h-12 rounded-lg bg-orange-50 flex-shrink-0 flex flex-col items-center justify-center border border-orange-100 text-orange-500">
-                                <span class="text-xs font-bold">SEP</span>
-                                <span class="text-lg font-black leading-none">26</span>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-slate-800 text-sm mb-1 group-hover:text-axom-blue transition-colors line-clamp-2">Economy expected to grow by 7% this fiscal: RBI Report</h3>
-                                <p class="text-xs text-slate-500">Economy | Finance</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Quick Actions -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h2 class="text-xl font-bold text-slate-800 mb-6">Quick Actions</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <a href="#" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-blue-200 transition-all group">
-                    <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-axom-blue group-hover:text-white text-axom-blue transition-colors">
-                        <i class="fa-solid fa-pen-to-square text-xl"></i>
-                    </div>
-                    <h3 class="font-semibold text-slate-800 text-sm md:text-base">Practice</h3>
-                    <p class="text-xs text-slate-500 mt-1">Topic-wise MCQs</p>
-                </a>
-                <a href="#" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-amber-200 transition-all group">
-                    <div class="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-amber-500 group-hover:text-white text-amber-500 transition-colors">
-                        <i class="fa-solid fa-clock text-xl"></i>
-                    </div>
-                    <h3 class="font-semibold text-slate-800 text-sm md:text-base">Daily Quiz</h3>
-                    <p class="text-xs text-slate-500 mt-1">Live everyday</p>
-                </a>
-                <a href="#" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-red-200 transition-all group">
-                    <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-axom-red group-hover:text-white text-axom-red transition-colors">
-                        <i class="fa-solid fa-file-signature text-xl"></i>
-                    </div>
-                    <h3 class="font-semibold text-slate-800 text-sm md:text-base">Mock Tests</h3>
-                    <p class="text-xs text-slate-500 mt-1">Full length sets</p>
-                </a>
-                <a href="#" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-green-200 transition-all group">
-                    <div class="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-axom-green group-hover:text-white text-axom-green transition-colors">
-                        <i class="fa-solid fa-book-open text-xl"></i>
-                    </div>
-                    <h3 class="font-semibold text-slate-800 text-sm md:text-base">Study by Subject</h3>
-                    <p class="text-xs text-slate-500 mt-1">Syllabus covered</p>
-                </a>
-            </div>
-        </section>
-
-        <!-- Study Streak & Premium Zone -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Premium Card -->
-                <div class="lg:col-span-2 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl shadow-lg border border-slate-700 overflow-hidden relative">
-                    <!-- Decor -->
-                    <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500 opacity-10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
-                    
-                    <div class="p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 relative z-10">
-                        <div class="flex-1 text-center md:text-left">
-                            <div class="inline-flex items-center gap-1.5 bg-amber-500/20 text-amber-400 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-4">
-                                <i class="fa-solid fa-crown"></i> AxomPrep Pro
-                            </div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">Unlock Your Full Potential</h2>
-                            <p class="text-slate-300 text-sm md:text-base mb-6">Get unlimited access to all Mock Tests, Previous Year Papers, and Ad-free experience.</p>
-                            <ul class="text-slate-300 text-sm space-y-2 mb-6 md:mb-0 flex flex-col items-center md:items-start">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-400"></i> 100+ Premium Mocks</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-400"></i> Detailed Analytics</li>
-                            </ul>
-                        </div>
-                        <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                            <!-- 1 Month -->
-                            <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-xl text-center min-w-[140px] hover:bg-white/20 transition-colors cursor-pointer">
-                                <div class="text-slate-300 text-xs font-medium mb-1">1 Month</div>
-                                <div class="text-2xl font-bold text-white mb-2">₹49</div>
-                                <button class="w-full bg-white text-slate-900 font-semibold text-sm py-1.5 rounded-lg hover:bg-slate-100">Select</button>
-                            </div>
-                            <!-- 3 Months -->
-                            <div class="bg-amber-500/10 backdrop-blur-md border border-amber-500/30 p-4 rounded-xl text-center min-w-[140px] relative hover:bg-amber-500/20 transition-colors cursor-pointer">
-                                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-amber-500 text-slate-900 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase whitespace-nowrap">Best Value</div>
-                                <div class="text-amber-200 text-xs font-medium mb-1 mt-1">3 Months</div>
-                                <div class="text-2xl font-bold text-white mb-2">₹129</div>
-                                <button class="w-full bg-amber-500 text-slate-900 font-semibold text-sm py-1.5 rounded-lg hover:bg-amber-400 shadow-lg shadow-amber-500/20">Select</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Study Streak -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col items-center justify-center text-center">
-                    <div class="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mb-4 relative">
-                        <i class="fa-solid fa-fire text-4xl text-orange-500"></i>
-                        <div class="absolute -bottom-2 bg-white border border-slate-200 text-slate-700 text-xs font-bold px-2 py-1 rounded-full shadow-sm">
-                            Lv. 1
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-1">Study Streak</h3>
-                    <p class="text-slate-500 text-sm mb-4">You haven't practiced today.</p>
-                    <div class="flex gap-2 mb-6">
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">M</div>
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">T</div>
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">W</div>
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400 ring-2 ring-orange-200">T</div>
-                        <div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">F</div>
-                        <div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">S</div>
-                        <div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">S</div>
-                    </div>
-                    <button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 rounded-lg text-sm transition-colors">
-                        Take a Quiz to Start
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Choose Your Exam -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="flex justify-between items-end mb-6">
-                <h2 class="text-xl font-bold text-slate-800">Choose Your Exam</h2>
-                <a href="#" class="text-sm font-medium text-axom-blue hover:underline">View All</a>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <a href="#" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
-                    <div class="w-12 h-12 bg-red-50 text-axom-red rounded-lg flex items-center justify-center font-bold text-lg">A</div>
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-sm">ADRE</h3>
-                        <p class="text-xs text-slate-500">Grade III & IV</p>
-                    </div>
-                </a>
-                <a href="#" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
-                    <div class="w-12 h-12 bg-blue-50 text-axom-blue rounded-lg flex items-center justify-center font-bold text-lg">P</div>
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-sm">APSC</h3>
-                        <p class="text-xs text-slate-500">CCE Prelims</p>
-                    </div>
-                </a>
-                <a href="#" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
-                    <div class="w-12 h-12 bg-green-50 text-axom-green rounded-lg flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-shield-halved"></i></div>
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-sm">Assam Police</h3>
-                        <p class="text-xs text-slate-500">SI & Constable</p>
-                    </div>
-                </a>
-                <a href="#" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
-                    <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center font-bold text-lg">S</div>
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-sm">SSC</h3>
-                        <p class="text-xs text-slate-500">CGL / CHSL</p>
-                    </div>
-                </a>
-            </div>
-        </section>
-
-        <!-- Study by Subject -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h2 class="text-xl font-bold text-slate-800 mb-6">Study by Subject</h2>
-            <div class="flex flex-wrap gap-3">
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Assam History</a>
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Indian Polity</a>
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">General Science</a>
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Quantitative Aptitude</a>
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Logical Reasoning</a>
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Assam Geography</a>
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">English Grammar</a>
-            </div>
-        </section>
-
-        <!-- Books for Aspirants -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-8">
-            <div class="flex justify-between items-end mb-6">
-                <h2 class="text-xl font-bold text-slate-800">Recommended Books</h2>
-                <a href="#" class="text-sm font-medium text-axom-blue hover:underline">See All Books</a>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Book Card -->
-                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group">
-                    <div class="h-48 bg-slate-100 flex items-center justify-center p-4">
-                        <div class="w-28 h-36 bg-blue-800 rounded shadow-md border-l-4 border-slate-300 flex items-center justify-center text-center p-2 text-white font-bold text-xs relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSI+PC9yZWN0Pgo8L3N2Zz4=')]"></div>
-                            Assam Year Book 2026
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-slate-800 text-sm mb-1 truncate">Assam Year Book 2026</h3>
-                        <p class="text-xs text-slate-500 mb-3">By Shantanu Kaushik</p>
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-axom-dark">₹350</span>
-                            <button class="text-xs font-semibold bg-blue-50 text-axom-blue px-3 py-1.5 rounded hover:bg-axom-blue hover:text-white transition-colors">Buy Now</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Book Card -->
-                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group">
-                    <div class="h-48 bg-slate-100 flex items-center justify-center p-4">
-                        <div class="w-28 h-36 bg-red-800 rounded shadow-md border-l-4 border-slate-300 flex items-center justify-center text-center p-2 text-white font-bold text-xs relative overflow-hidden">
-                             <div class="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSI+PC9yZWN0Pgo8L3N2Zz4=')]"></div>
-                            ADRE Grade III Guide
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-slate-800 text-sm mb-1 truncate">ADRE Grade III Guide</h3>
-                        <p class="text-xs text-slate-500 mb-3">AxomPrep Publications</p>
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-axom-dark">₹280</span>
-                            <button class="text-xs font-semibold bg-blue-50 text-axom-blue px-3 py-1.5 rounded hover:bg-axom-blue hover:text-white transition-colors">Buy Now</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Book Card -->
-                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group hidden sm:block">
-                    <div class="h-48 bg-slate-100 flex items-center justify-center p-4">
-                        <div class="w-28 h-36 bg-green-800 rounded shadow-md border-l-4 border-slate-300 flex items-center justify-center text-center p-2 text-white font-bold text-xs relative overflow-hidden">
-                             <div class="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSI+PC9yZWN0Pgo8L3N2Zz4=')]"></div>
-                            Quantitative Aptitude
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-slate-800 text-sm mb-1 truncate">Quant. Aptitude</h3>
-                        <p class="text-xs text-slate-500 mb-3">R.S. Aggarwal</p>
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-axom-dark">₹450</span>
-                            <button class="text-xs font-semibold bg-blue-50 text-axom-blue px-3 py-1.5 rounded hover:bg-axom-blue hover:text-white transition-colors">Buy Now</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Book Card -->
-                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group hidden lg:block">
-                    <div class="h-48 bg-slate-100 flex items-center justify-center p-4">
-                        <div class="w-28 h-36 bg-purple-800 rounded shadow-md border-l-4 border-slate-300 flex items-center justify-center text-center p-2 text-white font-bold text-xs relative overflow-hidden">
-                             <div class="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSI+PC9yZWN0Pgo8L3N2Zz4=')]"></div>
-                            Indian Polity
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-slate-800 text-sm mb-1 truncate">Indian Polity 7th Ed</h3>
-                        <p class="text-xs text-slate-500 mb-3">M. Laxmikanth</p>
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-axom-dark">₹620</span>
-                            <button class="text-xs font-semibold bg-blue-50 text-axom-blue px-3 py-1.5 rounded hover:bg-axom-blue hover:text-white transition-colors">Buy Now</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Final CTA -->
-        <section class="bg-axom-blue py-12 md:py-16">
-            <div class="max-w-4xl mx-auto px-4 text-center">
-                <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">Ready to crack your dream job?</h2>
-                <p class="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">Join thousands of successful aspirants from Assam who trusted AxomPrep for their preparation.</p>
-                <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="#" class="bg-white text-axom-blue font-bold px-8 py-3.5 rounded-xl shadow-lg hover:bg-slate-50 transition-colors">Sign Up for Free</a>
-                    <a href="#" class="bg-blue-700 text-white border border-blue-600 font-bold px-8 py-3.5 rounded-xl hover:bg-blue-800 transition-colors">Download App</a>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-300 py-12 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-                <!-- Branding -->
-                <div>
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-8 h-8 bg-axom-blue rounded-lg flex items-center justify-center text-white font-bold text-lg">A</div>
-                        <span class="font-bold text-xl tracking-tight text-white">Axom<span class="text-axom-blue">Prep</span></span>
-                    </div>
-                    <p class="text-sm text-slate-400 mb-6 line-clamp-3">
-                        The ultimate destination for competitive exam preparation in Assam. Providing quality mocks, current affairs, and guidance.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors"><i class="fa-brands fa-facebook-f text-sm"></i></a>
-                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors"><i class="fa-brands fa-twitter text-sm"></i></a>
-                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors"><i class="fa-brands fa-youtube text-sm"></i></a>
-                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors"><i class="fa-brands fa-telegram text-sm"></i></a>
-                    </div>
-                </div>
-                
-                <!-- Links -->
-                <div>
-                    <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Exams</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">ADRE Grade III & IV</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">APSC CCE</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Assam Police (SI/AB/UB)</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">TET Assam</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">SSC & Railway</a></li>
-                    </ul>
-                </div>
-
-                <!-- Resources -->
-                <div>
-                    <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Resources</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Daily Current Affairs</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Free Mock Tests</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Previous Year Papers</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Job Notifications</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Recommended Books</a></li>
-                    </ul>
-                </div>
-
-                <!-- Support -->
-                <div>
-                    <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Company</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">About Us</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Contact Support</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Terms of Service</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500">
-                <p>&copy; 2026 AxomPrep. All rights reserved.</p>
-                <p class="mt-2 md:mt-0">Made with ❤️ in Assam</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Basic JS for mobile menu toggle -->
-    <script>
-        const btn = document.getElementById('mobile-menu-btn');
-        const menu = document.getElementById('mobile-menu');
-
-        btn.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
-    </script>
-
-    <script>
-        (function () {
-            const dateEl = document.getElementById('dailyQuizDate');
-            const questionEl = document.getElementById('dailyQuizQuestion');
-            const optionsEl = document.getElementById('dailyQuizOptions');
-            const submitBtn = document.getElementById('submitDailyAnswer');
-            const feedback = document.getElementById('dailyQuizFeedback');
-
-            const fallbackQuestions = [
-                {
-                    question: 'Which famous sanctuary of Assam is known for the conservation of the Golden Langur?',
-                    options: ['Kaziranga National Park', 'Chakrashila Wildlife Sanctuary', 'Manas National Park', 'Pobitora Wildlife Sanctuary'],
-                    answer: 'Chakrashila Wildlife Sanctuary',
-                    explanation: 'Chakrashila Wildlife Sanctuary is well known for Golden Langur conservation.'
-                },
-                {
-                    question: 'What is the capital of Assam?',
-                    options: ['Guwahati', 'Dispur', 'Jorhat', 'Dibrugarh'],
-                    answer: 'Dispur',
-                    explanation: 'Dispur is the capital of Assam.'
-                },
-                {
-                    question: 'Which river is closely associated with Assam and flows through Guwahati?',
-                    options: ['Ganga', 'Yamuna', 'Brahmaputra', 'Godavari'],
-                    answer: 'Brahmaputra',
-                    explanation: 'The Brahmaputra flows through Assam and Guwahati.'
-                },
-                {
-                    question: 'Which national park in Assam is famous for the one-horned rhinoceros?',
-                    options: ['Kaziranga National Park', 'Nanda Devi National Park', 'Sundarbans National Park', 'Gir National Park'],
-                    answer: 'Kaziranga National Park',
-                    explanation: 'Kaziranga is internationally known for its population of one-horned rhinoceroses.'
-                },
-                {
-                    question: 'Which city is known as the gateway to Northeast India and is located on the Brahmaputra?',
-                    options: ['Guwahati', 'Silchar', 'Tezpur', 'Sivasagar'],
-                    answer: 'Guwahati',
-                    explanation: 'Guwahati is a major gateway to Northeast India and lies on the Brahmaputra.'
-                }
-            ];
-
-            let questionBank = [];
-            let currentQuestion = null;
-            let supabaseClient = null;
-
-            const STORAGE_KEY = 'axomprep_today_focus_answered_v1';
-
-            function indiaDate() {
-                return new Intl.DateTimeFormat('en-IN', {
-                    day: '2-digit',
-                    month: 'short',
-                    timeZone: 'Asia/Kolkata'
-                }).format(new Date());
-            }
-
-            function getAnsweredIds() {
-                try {
-                    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-                } catch (_) {
-                    return [];
-                }
-            }
-
-            function markAnswered(id) {
-                try {
-                    const ids = getAnsweredIds();
-                    if (id && !ids.includes(id)) ids.push(id);
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(ids.slice(-100)));
-                } catch (_) {}
-            }
-
-            function shuffle(items) {
-                const a = [...items];
-                for (let i = a.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [a[i], a[j]] = [a[j], a[i]];
-                }
-                return a;
-            }
-
-            function normalizeQuestion(row, index) {
-                const options = shuffle([
-                    row.option_a,
-                    row.option_b,
-                    row.option_c,
-                    row.option_d
-                ].filter(Boolean));
-
-                let answer = row.answer;
-                if (typeof answer === 'string') {
-                    const key = answer.trim().toUpperCase();
-                    if (['A', 'B', 'C', 'D'].includes(key)) {
-                        const original = [row.option_a, row.option_b, row.option_c, row.option_d];
-                        answer = original[['A','B','C','D'].indexOf(key)];
-                    }
-                }
-
-                return {
-                    id: row.id || `fallback-${index}`,
-                    question: row.question,
-                    options,
-                    answer,
-                    explanation: row.explanation || ''
-                };
-            }
-
-            function showFeedback(type, html) {
-                feedback.className = 'mt-4 rounded-lg px-4 py-3 text-sm font-medium ' +
-                    (type === 'correct'
-                        ? 'bg-green-50 text-green-700 border border-green-200'
-                        : 'bg-red-50 text-red-700 border border-red-200');
-                feedback.innerHTML = html;
-                feedback.classList.remove('hidden');
-            }
-
-            function renderQuestion(question) {
-                currentQuestion = question;
-                questionEl.textContent = question.question;
-                optionsEl.innerHTML = '';
-                feedback.className = 'hidden mt-4 rounded-lg px-4 py-3 text-sm font-medium';
-                feedback.innerHTML = '';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit Answer';
-                submitBtn.className = 'w-full mt-6 bg-slate-800 hover:bg-slate-700 text-white font-medium py-2.5 rounded-lg transition-colors';
-
-                question.options.forEach((option, index) => {
-                    const label = document.createElement('label');
-                    label.className = 'flex items-center gap-3 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors';
-                    label.innerHTML = `
-                        <input type="radio" name="daily_q" value="${String(option).replace(/"/g, '&quot;')}" class="daily-option w-4 h-4 text-axom-blue focus:ring-axom-blue">
-                        <span class="text-sm font-medium text-slate-700">${option}</span>
-                    `;
-                    optionsEl.appendChild(label);
-                });
-            }
-
-            async function loadSupabase() {
-                try {
-                    const config = window.AXOMPREP_CONFIG;
-                    if (!config || !config.supabaseUrl || !config.supabasePublishableKey) return null;
-                    if (!window.supabase || !window.supabase.createClient) return null;
-                    return window.supabase.createClient(config.supabaseUrl, config.supabasePublishableKey);
-                } catch (_) {
-                    return null;
-                }
-            }
-
-            async function loadQuestionBank() {
-                questionBank = fallbackQuestions.map(normalizeQuestion);
-                supabaseClient = await loadSupabase();
-
-                if (!supabaseClient) return;
-
-                try {
-                    const { data, error } = await supabaseClient
-                        .from('questions')
-                        .select('id,question,option_a,option_b,option_c,option_d,answer,explanation,status')
-                        .eq('status', 'published')
-                        .limit(100);
-
-                    if (!error && Array.isArray(data) && data.length) {
-                        questionBank = data
-                            .filter(q => q.question && q.option_a && q.option_b && q.option_c && q.option_d && q.answer)
-                            .map(normalizeQuestion);
-                    }
-                } catch (_) {}
-            }
-
-            function getNextQuestion() {
-                const answered = getAnsweredIds();
-                let available = questionBank.filter(q => !answered.includes(q.id));
-
-                // If the visitor has answered the whole bank, start a fresh cycle.
-                if (!available.length) {
-                    try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
-                    available = [...questionBank];
-                }
-
-                return available[Math.floor(Math.random() * available.length)] || questionBank[0];
-            }
-
-            async function nextQuestionAfterAnswer() {
-                markAnswered(currentQuestion && currentQuestion.id);
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Loading Next Question...';
-
-                // Give the feedback a moment to be visible, then immediately load another question.
-                setTimeout(() => {
-                    const next = getNextQuestion();
-                    renderQuestion(next);
-                }, 900);
-            }
-
-            if (dateEl) dateEl.textContent = indiaDate();
-
-            if (submitBtn) {
-                submitBtn.addEventListener('click', async function () {
-                    const selected = document.querySelector('.daily-option:checked');
-                    if (!selected || !currentQuestion) {
-                        feedback.className = 'mt-4 rounded-lg px-4 py-3 text-sm font-medium bg-amber-50 text-amber-700 border border-amber-200';
-                        feedback.textContent = 'Please select an answer first.';
-                        feedback.classList.remove('hidden');
-                        return;
-                    }
-
-                    const isCorrect = selected.value === currentQuestion.answer;
-                    showFeedback(
-                        isCorrect ? 'correct' : 'wrong',
-                        isCorrect
-                            ? `<strong>Correct!</strong> ${currentQuestion.explanation || 'Well done.'}`
-                            : `<strong>Incorrect.</strong> Correct answer: ${currentQuestion.answer}.`
-                    );
-
-                    await nextQuestionAfterAnswer();
-                });
-            }
-
-            // Load Supabase client only if config.js is available; fallback questions keep the card working.
-            const supabaseScript = document.createElement('script');
-            supabaseScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-            supabaseScript.onload = async function () {
-                await loadQuestionBank();
-                renderQuestion(getNextQuestion());
-            };
-            supabaseScript.onerror = function () {
-                questionBank = fallbackQuestions.map(normalizeQuestion);
-                renderQuestion(getNextQuestion());
-            };
-            document.head.appendChild(supabaseScript);
-
-            // config.js is loaded after the page starts so existing homepage structure remains unchanged.
-            const configScript = document.createElement('script');
-            configScript.src = 'config.js';
-            configScript.onload = async function () {
-                if (window.supabase && window.supabase.createClient) {
-                    await loadQuestionBank();
-                    renderQuestion(getNextQuestion());
-                }
-            };
-            document.head.appendChild(configScript);
-        })();
-    </script>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+let allQuestions=[], testQuestions=[], answers={}, pos=0, remaining=1800, timerId=null, currentExam="all";
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function normalize(q){
+ const letters=["A","B","C","D"];
+ const opts=letters.map(l=>({letter:l,text:q["option_"+l.toLowerCase()]}));
+ return {...q,options:shuffle(opts),correctText:opts.find(o=>o.letter===String(q.answer||"A").toUpperCase())?.text};
+}
+async function getSupabase(){
+ const c=window.AXOMPREP_CONFIG||{};
+ if(!c.supabaseUrl||!c.supabasePublishableKey) return null;
+ return window.supabase.createClient(c.supabaseUrl,c.supabasePublishableKey);
+}
+async function load(){
+ try{
+  const sb=await getSupabase();
+  if(!sb) throw new Error("No Supabase config");
+  const {data,error}=await sb.from("questions").select("id,question,option_a,option_b,option_c,option_d,answer,explanation,difficulty,year,tags,exam_id,exams(name)").eq("status","published").limit(500);
+  if(error) throw error;
+  allQuestions=(data||[]).filter(q=>q.question&&q.option_a&&q.option_b&&q.option_c&&q.option_d).map(normalize);
+ }catch(e){allQuestions=[]}
+ $("poolCount").textContent=allQuestions.length||"—";
+ renderTests();
+}
+function renderTests(){
+ const exams=[...new Map(allQuestions.filter(q=>q.exams?.name).map(q=>[q.exam_id,q.exams.name])).entries()];
+ $("examSelect").innerHTML='<option value="all">All exam tracks</option>'+exams.map(([id,n])=>'<option value="'+esc(id)+'">'+esc(n)+'</option>').join("");
+ const pool=currentExam==="all"?allQuestions:allQuestions.filter(q=>String(q.exam_id)===String(currentExam));
+ const size=Number($("sizeSelect").value);
+ const sets=[];
+ if(pool.length) {
+   const names=exams.length?exams.map(x=>x[1]):["General Mock Test"];
+   names.slice(0,Math.max(3,Math.min(6,names.length))).forEach((name,i)=>{
+     const ep=exams.find(x=>x[1]===name)?.[0];
+     const p=ep?allQuestions.filter(q=>String(q.exam_id)===String(ep)):pool;
+     if(p.length) sets.push({name,count:Math.min(size,p.length),pool:p});
+   });
+   if(!sets.length) sets.push({name:"General Mock Test",count:Math.min(size,pool.length),pool});
+ }
+ $("tests").innerHTML=sets.length?sets.map((s,i)=>'<article class="card"><span class="badge">'+esc(s.name)+'</span><h3>'+esc(s.name)+' Mock Test</h3><p class="muted">'+s.count+' questions • Timed test • Instant result</p><button data-i="'+i+'">Start Test</button></article>').join(""):'<div class="empty">No published questions are currently available for mock tests. Publish questions in the admin panel first.</div>';
+ [...$("tests").querySelectorAll("button")].forEach(b=>b.onclick=()=>start(sets[Number(b.dataset.i)]));
+}
+function start(set){
+ testQuestions=shuffle(set.pool).slice(0,Math.min(Number($("sizeSelect").value),set.pool.length));
+ answers={};pos=0;remaining=Math.max(60,testQuestions.length*90);
+ $("testList").style.display="none";$("result").classList.remove("active");$("quiz").classList.add("active");
+ $("testTitle").textContent=set.name+" Mock Test";$("testMeta").textContent=testQuestions.length+" questions";
+ clearInterval(timerId);timerId=setInterval(()=>{remaining--;drawTimer();if(remaining<=0)finish()},1000);drawTimer();renderQ();
+}
+function drawTimer(){const m=Math.floor(remaining/60).toString().padStart(2,"0"),s=(remaining%60).toString().padStart(2,"0");$("timer").textContent=m+":"+s}
+function renderQ(){
+ const q=testQuestions[pos]; if(!q)return;
+ $("qNumber").textContent="Question "+(pos+1)+" of "+testQuestions.length;
+ $("question").textContent=q.question;
+ $("progress").style.width=((pos+1)/testQuestions.length*100)+"%";
+ $("options").innerHTML=q.options.map((o,i)=>'<label class="option"><input type="radio" name="opt" value="'+i+'" '+(answers[pos]===i?"checked":"")+'> <strong>'+String.fromCharCode(65+i)+'.</strong> '+esc(o.text)+'</label>').join("");
+ $("options").querySelectorAll("input").forEach(x=>x.onchange=()=>answers[pos]=Number(x.value));
+ $("prevBtn").disabled=pos===0;$("nextBtn").textContent=pos===testQuestions.length-1?"Submit Test":"Next";
+}
+function finish(){
+ clearInterval(timerId);
+ let correct=0;testQuestions.forEach((q,i)=>{if(answers[i]!=null&&q.options[answers[i]].text===q.correctText)correct++});
+ $("quiz").classList.remove("active");$("result").classList.add("active");
+ $("score").textContent=correct+" / "+testQuestions.length;
+ $("resultText").textContent="You answered "+Object.keys(answers).length+" of "+testQuestions.length+" questions. Correct answers: "+correct+".";
+}
+$("nextBtn").onclick=()=>pos===testQuestions.length-1?finish():(pos++,renderQ());
+$("prevBtn").onclick=()=>{if(pos>0){pos--;renderQ()}};
+$("againBtn").onclick=()=>{$("result").classList.remove("active");$("testList").style.display="block"};
+$("examSelect").onchange=e=>{currentExam=e.target.value;renderTests()};
+$("sizeSelect").onchange=renderTests;
+$("refreshTests").onclick=load;
+$("menuBtn").onclick=()=>{$("mobileNav").classList.toggle("open")};
+load();
+</script>
 </body>
 </html>
