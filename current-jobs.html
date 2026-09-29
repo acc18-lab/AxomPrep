@@ -9,6 +9,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Assamese:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="brand-logo.css"><link rel="stylesheet" href="current-jobs.css">
 <style>.job-nav{display:flex;gap:18px;align-items:center}.job-nav a{text-decoration:none;color:#21456f;font-weight:700;font-size:14px}.job-head{max-width:1180px;margin:0 auto;padding:18px 14px 0}.job-brand img{width:142px;max-height:40px}.job-head-inner{display:flex;align-items:center;justify-content:space-between}.job-menu{display:none}@media(max-width:760px){.job-nav{display:none}.job-menu{display:block;border:1px solid #d8e1ec;background:#fff;border-radius:10px;padding:8px 10px}}</style>
+
+<style>
+  .cj-midnight-status {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #64748b;
+  }
+</style>
 </head>
 <body>
 <header class="job-head"><div class="job-head-inner"><a class="job-brand" href="index.html"><img src="axomprep-logo.png" alt="AxomPrep"></a><nav class="job-nav"><a href="index.html">Home</a><a href="practice.html">Practice</a><a href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="books.html">Books</a><a href="premium.html">Premium</a></nav><button class="job-menu" onclick="location.href='index.html'">Home</button></div></header>
@@ -16,5 +24,70 @@
 <section class="cj-hero"><div><div class="cj-eyebrow">CAREER ALERTS</div><h1>Current Jobs & Recruitments</h1><p>Find active recruitment updates, important deadlines and official application links for Assam, railways, banking and other government-exam opportunities.</p><div class="cj-hero-actions"><a class="cj-btn-orange" href="#jobs">Browse active jobs ↓</a><a class="cj-btn-white" href="index.html">Back to AxomPrep</a></div></div><div class="cj-hero-side"><strong>Built for job seekers</strong><div class="cj-stat"><b>Assam + India</b><span>Recruitment coverage</span></div><div class="cj-stat"><b>Daily</b><span>Automatic refresh</span></div><div class="cj-stat"><b>Official links</b><span>When available</span></div></div></section>
 <section class="cj-container" id="jobs"><div class="cj-toolbar"><input id="jobSearch" type="search" placeholder="Search jobs, post, organization or qualification…"><select id="jobCategory"><option value="all">All categories</option></select><select id="jobQualification"><option value="all">All qualifications</option><option value="10th">10th</option><option value="10+2">10+2</option><option value="graduate">Graduate</option><option value="diploma">Diploma</option><option value="iti">ITI</option><option value="mbbs">MBBS</option></select><label class="cj-toggle"><input id="closingSoon" type="checkbox"> <span>Closing ≤ 7 days</span></label></div><div class="cj-meta"><strong id="jobResultCount">Loading…</strong><span id="jobUpdateTime">Auto-updated daily</span></div><div id="jobsGrid" class="cj-grid"></div><div class="cj-disclaimer"><strong>Important:</strong> AxomPrep aggregates job information to make opportunities easier to discover. Always open the official notification/official recruitment portal and verify eligibility, dates, fees and instructions before applying.</div></section><div class="cj-footer">AxomPrep • Prepare Today. Rank Tomorrow.</div>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="current-jobs.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script>
+(function () {
+  // AxomPrep jobs page: refresh at exactly 12:00 AM Asia/Kolkata.
+  // The date-based cache key ensures the browser requests the newest JS/data each day.
+  const TZ = "Asia/Kolkata";
+
+  function indiaDateKey() {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit"
+    }).formatToParts(new Date());
+    const get = t => parts.find(p => p.type === t)?.value || "";
+    return get("year") + get("month") + get("day");
+  }
+
+  function nextIndiaMidnightMs() {
+    const now = new Date();
+    const key = indiaDateKey();
+    // Find the next local midnight by using an explicit IST timestamp.
+    const candidate = new Date(
+      new Intl.DateTimeFormat("en-US", {
+        timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit"
+      }).format(now) + " 00:00:00 GMT+0530"
+    );
+    candidate.setDate(candidate.getDate() + 1);
+    return Math.max(1000, candidate.getTime() - now.getTime());
+  }
+
+  const currentKey = indiaDateKey();
+  const lastKey = sessionStorage.getItem("axomprep_jobs_date");
+
+  // If the visitor's tab has crossed midnight, reload immediately.
+  if (lastKey && lastKey !== currentKey) {
+    sessionStorage.setItem("axomprep_jobs_date", currentKey);
+    location.reload();
+    return;
+  }
+  sessionStorage.setItem("axomprep_jobs_date", currentKey);
+
+  // Add the date as a cache key to current-jobs.js.
+  const script = document.createElement("script");
+  script.src = "current-jobs.js?v=" + currentKey;
+  script.defer = true;
+  document.body.appendChild(script);
+
+  // Refresh the page at the next 12:00 AM IST.
+  setTimeout(function () {
+    sessionStorage.setItem("axomprep_jobs_date", indiaDateKey());
+    location.reload();
+  }, nextIndiaMidnightMs());
+})();
+</script>
+
+<script>
+(function () {
+  const el = document.getElementById("jobUpdateTime");
+  if (!el) return;
+  const now = new Date();
+  const date = new Intl.DateTimeFormat("en-IN", {
+    day: "2-digit", month: "short", year: "numeric",
+    timeZone: "Asia/Kolkata"
+  }).format(now);
+  el.textContent = "Updated " + date + " • Next refresh: 12:00 AM IST";
+  el.classList.add("cj-midnight-status");
+})();
+</script>
+
 </body></html>
