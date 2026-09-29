@@ -1,26 +1,186 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mock Tests — AxomPrep</title>
-<meta name="description" content="Timed mock tests for ADRE, APSC, SSC and Assam competitive exams.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Assamese:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mock Tests | AxomPrep</title>
+<meta name="description" content="Take full-length competitive exam mock tests on AxomPrep.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Assamese:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="brand-logo.css">
-  <link rel="icon" type="image/png" href="axomprep-mark.png">
+<link rel="stylesheet" href="homepage.css">
+<link rel="stylesheet" href="brand-logo.css">
+<link rel="stylesheet" href="axomprep-mobile-optimized.css">
+<style>
+:root{--blue:#1A56DB;--dark:#1e293b;--red:#E02424;--green:#057A55;--light:#f8fafc}
+body{margin:0;background:#f8fafc;color:#1e293b;font-family:Inter,system-ui,sans-serif}
+.ax-header{position:sticky;top:0;z-index:1000;background:#fff;border-bottom:1px solid #e2e8f0}
+.ax-header-inner{max-width:1280px;margin:auto;min-height:72px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.ax-brand{text-decoration:none;display:flex;align-items:center;flex-shrink:0}
+.ax-nav{display:flex;align-items:center;justify-content:center;gap:25px;flex:1}
+.ax-nav a{color:#1e293b;text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+.ax-nav a:hover,.ax-nav a.active{color:var(--blue)}
+.ax-actions{display:flex;gap:10px;align-items:center}
+.ax-btn{border:0;border-radius:9px;padding:9px 17px;font-size:14px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.ax-btn-light{color:#1e293b;background:#fff;border:1px solid #e2e8f0}
+.ax-btn-primary{color:#fff;background:var(--blue)}
+.ax-menu{display:none;border:0;background:transparent;font-size:24px;cursor:pointer}
+.ax-mobile-nav{display:none}
+.page{max-width:1180px;margin:0 auto;padding:42px 20px 70px}
+.hero{background:linear-gradient(135deg,#0f4380,#1A56DB);border-radius:22px;padding:42px;color:#fff;display:flex;justify-content:space-between;gap:30px;align-items:center;box-shadow:0 18px 40px rgba(30,64,175,.18)}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:1.5px;color:#bfdbfe;text-transform:uppercase}
+h1{font-size:42px;line-height:1.1;margin:10px 0 12px}
+.hero p{max-width:650px;color:#dbeafe;line-height:1.7;margin:0}
+.hero-stat{min-width:190px;border:1px solid rgba(255,255,255,.25);border-radius:16px;padding:20px;background:rgba(255,255,255,.08)}
+.hero-stat b{display:block;font-size:28px}.hero-stat span{font-size:12px;color:#dbeafe}
+.controls{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:18px;margin-top:22px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+select,.control-btn{height:44px;border:1px solid #d8e1ec;border-radius:10px;padding:0 14px;font:inherit;background:#fff;color:#1e293b}
+.control-btn{background:var(--blue);color:#fff;border:none;font-weight:700;cursor:pointer}
+.tests{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:22px}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:22px;box-shadow:0 4px 16px rgba(15,23,42,.04)}
+.card h3{margin:0 0 8px;font-size:19px}.muted{color:#64748b;font-size:13px;line-height:1.6}
+.badge{display:inline-block;background:#eff6ff;color:#1d4ed8;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800;margin-bottom:12px}
+.card button{width:100%;margin-top:18px;padding:11px;border:0;border-radius:9px;background:#1A56DB;color:#fff;font-weight:700;cursor:pointer}
+.empty{grid-column:1/-1;text-align:center;padding:35px;color:#64748b}
+.quiz{display:none;margin-top:22px}.quiz.active{display:block}
+.quiz-head{display:flex;justify-content:space-between;gap:20px;align-items:center;background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:18px}
+.timer{font-weight:800;color:#E02424}.progress{height:7px;background:#e2e8f0;border-radius:10px;overflow:hidden;margin-top:14px}.progress>div{height:100%;background:#1A56DB;width:0}
+.question-card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:24px;margin-top:18px}
+.qmeta{font-size:12px;color:#64748b;font-weight:700}.question{font-size:21px;font-weight:800;line-height:1.45;margin:10px 0 20px}
+.option{display:block;border:2px solid #e2e8f0;border-radius:12px;padding:13px 15px;margin:10px 0;cursor:pointer}
+.option:hover{border-color:#93c5fd;background:#eff6ff}.option input{margin-right:10px}
+.quiz-actions{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+.result{display:none;margin-top:22px;background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:32px;text-align:center}.result.active{display:block}
+.score{font-size:52px;font-weight:900;color:#1A56DB}
+footer{background:#0f172a;color:#cbd5e1;padding:28px;text-align:center;font-size:13px}
+@media(max-width:900px){.ax-header-inner{padding:0 18px;min-height:64px}.ax-nav,.ax-actions{display:none}.ax-menu{display:block}.ax-mobile-nav{padding:8px 18px 16px;background:#fff;border-top:1px solid #eef2f7}.ax-mobile-nav.open{display:block}.ax-mobile-nav a{display:block;padding:11px 4px;color:#1e293b;text-decoration:none;font-weight:600}.hero{flex-direction:column;align-items:flex-start}.tests{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.page{padding:25px 14px 50px}.hero{padding:28px 22px}.hero h1{font-size:32px}.tests{grid-template-columns:1fr}.controls{align-items:stretch}.controls>*{width:100%}.question{font-size:18px}}
+</style>
 </head>
-<body class="mock-page">
-<header class="topbar">
-<a class="brand" href="index.html#home"><img class="brand-logo-img" src="axomprep-logo.png" alt="AxomPrep"></a>
-<nav><a href="index.html#practice">Practice</a><a href="index.html#quiz">Daily Quiz</a><a class="active" href="mock-tests.html">Mock Tests</a><a href="index.html#current">Current Affairs</a><a href="index.html#books">Books</a><a href="index.html#pricing">Premium</a></nav>
-<div class="nav-actions"><button class="btn light" id="dashboardBtn">Dashboard</button><button class="btn primary" id="logoutBtn">Logout</button></div><button class="menu" id="menuBtn">☰</button>
+<body>
+<header class="ax-header">
+  <div class="ax-header-inner">
+    <a class="ax-brand" href="index.html" aria-label="AxomPrep home">
+      <span style="display:flex;align-items:center;gap:9px"><span style="width:32px;height:32px;background:#1A56DB;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px">A</span><span style="font-weight:800;font-size:20px;color:#1e293b">Axom<span style="color:#1A56DB">Prep</span></span></span>
+    </a>
+    <nav class="ax-nav">
+      <a href="index.html">Home</a><a href="practice.html">Practice</a><a href="daily-quiz.html">Daily Quiz</a><a class="active" href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="current-jobs.html">Jobs</a><a href="books.html">Books</a><a href="premium.html">Premium</a>
+    </nav>
+    <div class="ax-actions"><a class="ax-btn ax-btn-light" href="index.html">Home</a><a class="ax-btn ax-btn-primary" href="premium.html">Premium</a></div>
+    <button class="ax-menu" id="menuBtn" aria-label="Open menu">☰</button>
+  </div>
+  <div class="ax-mobile-nav" id="mobileNav"><a href="index.html">Home</a><a href="practice.html">Practice</a><a href="daily-quiz.html">Daily Quiz</a><a href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="current-jobs.html">Jobs</a><a href="books.html">Books</a><a href="premium.html">Premium</a></div>
 </header>
-<main class="mock-main">
-<section class="mock-hero"><div><div class="eyebrow">EXAM SIMULATION</div><h1>Mock tests built for serious practice.</h1><p>Timed question sets, instant scoring and detailed review. Choose your target exam and test yourself under pressure.</p></div><div class="mock-hero-card"><span>SIMULATION MODE</span><strong>Real exam rhythm</strong><small>Navigate • Answer • Review • Submit</small></div></section>
-<section class="mock-filters"><button class="mock-filter active" data-exam="all">All</button><button class="mock-filter" data-exam="ADRE">ADRE</button><button class="mock-filter" data-exam="APSC">APSC</button><button class="mock-filter" data-exam="SSC">SSC</button><button class="mock-filter" data-exam="Assam Police">Assam Police</button></section>
-<section id="mockCatalogue" class="mock-catalogue"><div class="loading">Loading mock tests…</div></section>
-<section id="mockPanel" class="mock-run hidden"></section>
+
+<main class="page">
+<section class="hero">
+  <div><div class="eyebrow">AXOMPREP MOCK TESTS</div><h1>Practice like the real exam.</h1><p>Choose a test, answer timed questions and see your score immediately. Published questions from your AxomPrep question bank are used whenever Supabase is available.</p></div>
+  <div class="hero-stat"><b id="poolCount">—</b><span>published questions available</span></div>
+</section>
+
+<section id="testList">
+  <div class="controls">
+    <select id="examSelect"><option value="all">All exam tracks</option></select>
+    <select id="sizeSelect"><option value="20">20 Questions</option><option value="30">30 Questions</option><option value="50">50 Questions</option></select>
+    <button class="control-btn" id="refreshTests">Refresh Tests</button>
+  </div>
+  <div id="tests" class="tests"><div class="empty">Loading mock tests…</div></div>
+</section>
+
+<section id="quiz" class="quiz">
+  <div class="quiz-head"><div><strong id="testTitle">Mock Test</strong><div class="muted" id="testMeta"></div></div><div class="timer" id="timer">30:00</div></div>
+  <div class="progress"><div id="progress"></div></div>
+  <div class="question-card">
+    <div class="qmeta" id="qNumber"></div><div class="question" id="question"></div><div id="options"></div>
+    <div class="quiz-actions"><button class="control-btn" id="prevBtn" style="background:#fff;color:#1e293b;border:1px solid #d8e1ec">Previous</button><button class="control-btn" id="nextBtn">Next</button></div>
+  </div>
+</section>
+
+<section id="result" class="result">
+  <div class="eyebrow" style="color:#1A56DB">TEST COMPLETED</div><div class="score" id="score"></div><h2 id="resultTitle">Mock Test Complete</h2><p class="muted" id="resultText"></p><button class="control-btn" id="againBtn">Back to Mock Tests</button>
+</section>
 </main>
-<footer><div class="brand"><img class="brand-logo-img" src="axomprep-logo.png" alt="AxomPrep"></div><p>Prepare Today. Rank Tomorrow.</p><small>© 2026 AxomPrep. All rights reserved.</small></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="mock-tests.js"></script>
-</body></html>
+<footer>AxomPrep • Prepare Today. Rank Tomorrow.</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+let allQuestions=[], testQuestions=[], answers={}, pos=0, remaining=1800, timerId=null, currentExam="all";
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function normalize(q){
+ const letters=["A","B","C","D"];
+ const opts=letters.map(l=>({letter:l,text:q["option_"+l.toLowerCase()]}));
+ return {...q,options:shuffle(opts),correctText:opts.find(o=>o.letter===String(q.answer||"A").toUpperCase())?.text};
+}
+async function getSupabase(){
+ const c=window.AXOMPREP_CONFIG||{};
+ if(!c.supabaseUrl||!c.supabasePublishableKey) return null;
+ return window.supabase.createClient(c.supabaseUrl,c.supabasePublishableKey);
+}
+async function load(){
+ try{
+  const sb=await getSupabase();
+  if(!sb) throw new Error("No Supabase config");
+  const {data,error}=await sb.from("questions").select("id,question,option_a,option_b,option_c,option_d,answer,explanation,difficulty,year,tags,exam_id,exams(name)").eq("status","published").limit(500);
+  if(error) throw error;
+  allQuestions=(data||[]).filter(q=>q.question&&q.option_a&&q.option_b&&q.option_c&&q.option_d).map(normalize);
+ }catch(e){allQuestions=[]}
+ $("poolCount").textContent=allQuestions.length||"—";
+ renderTests();
+}
+function renderTests(){
+ const exams=[...new Map(allQuestions.filter(q=>q.exams?.name).map(q=>[q.exam_id,q.exams.name])).entries()];
+ $("examSelect").innerHTML='<option value="all">All exam tracks</option>'+exams.map(([id,n])=>'<option value="'+esc(id)+'">'+esc(n)+'</option>').join("");
+ const pool=currentExam==="all"?allQuestions:allQuestions.filter(q=>String(q.exam_id)===String(currentExam));
+ const size=Number($("sizeSelect").value);
+ const sets=[];
+ if(pool.length) {
+   const names=exams.length?exams.map(x=>x[1]):["General Mock Test"];
+   names.slice(0,Math.max(3,Math.min(6,names.length))).forEach((name,i)=>{
+     const ep=exams.find(x=>x[1]===name)?.[0];
+     const p=ep?allQuestions.filter(q=>String(q.exam_id)===String(ep)):pool;
+     if(p.length) sets.push({name,count:Math.min(size,p.length),pool:p});
+   });
+   if(!sets.length) sets.push({name:"General Mock Test",count:Math.min(size,pool.length),pool});
+ }
+ $("tests").innerHTML=sets.length?sets.map((s,i)=>'<article class="card"><span class="badge">'+esc(s.name)+'</span><h3>'+esc(s.name)+' Mock Test</h3><p class="muted">'+s.count+' questions • Timed test • Instant result</p><button data-i="'+i+'">Start Test</button></article>').join(""):'<div class="empty">No published questions are currently available for mock tests. Publish questions in the admin panel first.</div>';
+ [...$("tests").querySelectorAll("button")].forEach(b=>b.onclick=()=>start(sets[Number(b.dataset.i)]));
+}
+function start(set){
+ testQuestions=shuffle(set.pool).slice(0,Math.min(Number($("sizeSelect").value),set.pool.length));
+ answers={};pos=0;remaining=Math.max(60,testQuestions.length*90);
+ $("testList").style.display="none";$("result").classList.remove("active");$("quiz").classList.add("active");
+ $("testTitle").textContent=set.name+" Mock Test";$("testMeta").textContent=testQuestions.length+" questions";
+ clearInterval(timerId);timerId=setInterval(()=>{remaining--;drawTimer();if(remaining<=0)finish()},1000);drawTimer();renderQ();
+}
+function drawTimer(){const m=Math.floor(remaining/60).toString().padStart(2,"0"),s=(remaining%60).toString().padStart(2,"0");$("timer").textContent=m+":"+s}
+function renderQ(){
+ const q=testQuestions[pos]; if(!q)return;
+ $("qNumber").textContent="Question "+(pos+1)+" of "+testQuestions.length;
+ $("question").textContent=q.question;
+ $("progress").style.width=((pos+1)/testQuestions.length*100)+"%";
+ $("options").innerHTML=q.options.map((o,i)=>'<label class="option"><input type="radio" name="opt" value="'+i+'" '+(answers[pos]===i?"checked":"")+'> <strong>'+String.fromCharCode(65+i)+'.</strong> '+esc(o.text)+'</label>').join("");
+ $("options").querySelectorAll("input").forEach(x=>x.onchange=()=>answers[pos]=Number(x.value));
+ $("prevBtn").disabled=pos===0;$("nextBtn").textContent=pos===testQuestions.length-1?"Submit Test":"Next";
+}
+function finish(){
+ clearInterval(timerId);
+ let correct=0;testQuestions.forEach((q,i)=>{if(answers[i]!=null&&q.options[answers[i]].text===q.correctText)correct++});
+ $("quiz").classList.remove("active");$("result").classList.add("active");
+ $("score").textContent=correct+" / "+testQuestions.length;
+ $("resultText").textContent="You answered "+Object.keys(answers).length+" of "+testQuestions.length+" questions. Correct answers: "+correct+".";
+}
+$("nextBtn").onclick=()=>pos===testQuestions.length-1?finish():(pos++,renderQ());
+$("prevBtn").onclick=()=>{if(pos>0){pos--;renderQ()}};
+$("againBtn").onclick=()=>{$("result").classList.remove("active");$("testList").style.display="block"};
+$("examSelect").onchange=e=>{currentExam=e.target.value;renderTests()};
+$("sizeSelect").onchange=renderTests;
+$("refreshTests").onclick=load;
+$("menuBtn").onclick=()=>{$("mobileNav").classList.toggle("open")};
+load();
+</script>
+</body>
+</html>
