@@ -148,41 +148,102 @@ button,input{font:inherit}
 'use strict';
 const $=id=>document.getElementById(id);
 let rows=[];let cat='all';
-const fallback=[];
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
-function dateText(v){if(!v)return '';const d=new Date(v+'T00:00:00');if(Number.isNaN(d.getTime()))return esc(v);return new Intl.DateTimeFormat('en-IN',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}).format(d);}
-function norm(x){return {title:x.title||'',content:x.content||x.summary||'',category:x.category||'India',published_date:x.published_date||'',source_name:x.source_name||x.source||''};}
+
+function esc(v){
+  return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+function dateText(v){
+  if(!v)return '';
+  const d=new Date(String(v).length===10 ? v+'T00:00:00' : v);
+  if(Number.isNaN(d.getTime()))return esc(v);
+  return new Intl.DateTimeFormat('en-IN',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}).format(d);
+}
+function norm(x){
+  return {
+    title:x.title||'',
+    content:x.content||x.summary||'',
+    category:x.category||'India',
+    published_date:x.published_date||'',
+    source_name:x.source_name||x.source||''
+  };
+}
 function render(){
- const q=$('caSearch').value.trim().toLowerCase();
- const list=rows.filter(x=>(cat==='all'||String(x.category).toLowerCase()===cat.toLowerCase()||(cat==='International'&&['world','international'].includes(String(x.category).toLowerCase()))) && (!q||`${x.title} ${x.content} ${x.category}`.toLowerCase().includes(q)));
- $('caCount').textContent=`${list.length} update${list.length===1?'':'s'}`;
- $('caUpdated').textContent=list.length?`Latest published date: ${dateText(list[0].published_date)}`:'No matching published updates';
- $('caGrid').innerHTML=list.length?list.map(x=>`<article class="ca-card"><div class="ca-top"><span class="ca-cat">${esc(x.category)}</span><span class="ca-date">${dateText(x.published_date)}</span></div><h2>${esc(x.title)}</h2><p>${esc(x.content)}</p>${x.source_name?`<div class="ca-source">Source: ${esc(x.source_name)}</div>`:''}</article>`).join(''):`<div class="ca-empty">No published current-affairs updates match this filter or search.</div>`;
+  const q=$('caSearch').value.trim().toLowerCase();
+  const list=rows.filter(x=>{
+    const c=String(x.category||'').toLowerCase();
+    const categoryMatch=cat==='all'||c===cat.toLowerCase()||(cat==='International'&&(c==='world'||c==='international'));
+    return categoryMatch && (!q||`${x.title} ${x.content} ${x.category}`.toLowerCase().includes(q));
+  });
+  $('caCount').textContent=`${list.length} update${list.length===1?'':'s'}`;
+  $('caUpdated').textContent=list.length
+    ? `Latest published date: ${dateText(list[0].published_date)}`
+    : 'No matching published updates';
+  $('caGrid').innerHTML=list.length
+    ? list.map(x=>`<article class="ca-card"><div class="ca-top"><span class="ca-cat">${esc(x.category)}</span><span class="ca-date">${dateText(x.published_date)}</span></div><h2>${esc(x.title)}</h2><p>${esc(x.content)}</p>${x.source_name?`<div class="ca-source">Source: ${esc(x.source_name)}</div>`:''}</article>`).join('')
+    : '<div class="ca-empty">No published current-affairs updates match this filter or search.</div>';
+}
+async function fetchJson(url, options={}){
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),8000);
+  try{
+    const r=await fetch(url,{...options,signal:controller.signal,cache:'no-store'});
+    const text=await r.text();
+    let data=null;
+    try{data=JSON.parse(text)}catch(_){}
+    if(!r.ok) throw new Error((data&&data.message)||`HTTP ${r.status}`);
+    return data;
+  }finally{clearTimeout(timer);}
 }
 async function load(){
- rows=fallback;
- try{
-  const cfg=window.AXOMPREP_CONFIG;
-  if(!cfg?.supabaseUrl||!cfg?.supabasePublishableKey||!window.supabase?.createClient){render();return;}
-  const sb=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
-  // Primary table used by the AxomPrep admin panel.
-  const a=await sb.from('current_affairs').select('title,content,category,published_date,is_published').eq('is_published',true).order('published_date',{ascending:false}).limit(100);
-  if(!a.error && Array.isArray(a.data) && a.data.length){rows=a.data.map(norm);render();return;}
-  // Compatibility fallback for the existing automated RSS ingestion table.
-  const b=await sb.from('current_affairs_v1').select('title,summary,content,category,published_date,source_name,status').eq('status','published').order('published_date',{ascending:false}).limit(100);
-  if(!b.error && Array.isArray(b.data) && b.data.length) rows=b.data.map(norm);
-  render();
- }catch(e){
-  $('caGrid').innerHTML=`<div class="ca-error"><strong>Current affairs could not be loaded.</strong><br><span>${esc(e?.message||'Please check the Supabase configuration and table permissions.')}</span></div>`;
-  $('caCount').textContent='Load error';$('caUpdated').textContent='';
- }
+  try{
+    const cfg=window.AXOMPREP_CONFIG||{};
+    const base=String(cfg.supabaseUrl||'').replace(/\/$/,'');
+    const key=cfg.supabasePublishableKey||cfg.supabaseAnonKey||'';
+    if(!base||!key){
+      throw new Error('Supabase configuration could not be loaded.');
+    }
+    const headers={apikey:key,Authorization:`Bearer ${key}`};
+
+    // First use the same current_affairs table used by the admin panel.
+    // Do not require is_published=true: existing records may use a different
+    // publication flag while still being valid current-affairs entries.
+    let data=[];
+    try{
+      data=await fetchJson(
+        `${base}/rest/v1/current_affairs?select=title,content,category,published_date,is_published&order=published_date.desc&limit=100`,
+        {headers}
+      );
+    }catch(_){}
+
+    // If the primary table is empty/unavailable, use the automated ingestion table.
+    if(!Array.isArray(data)||!data.length){
+      data=await fetchJson(
+        `${base}/rest/v1/current_affairs_v1?select=title,summary,content,category,published_date,source_name,status&status=eq.published&order=published_date.desc&limit=100`,
+        {headers}
+      );
+    }
+
+    rows=(Array.isArray(data)?data:[]).map(norm);
+    render();
+  }catch(e){
+    $('caCount').textContent='Unable to load current affairs';
+    $('caUpdated').textContent='Please refresh the page';
+    $('caGrid').innerHTML=`<div class="ca-error"><strong>Current affairs could not be loaded.</strong><br><span>${esc(e?.message||'Please check the connection.')}</span></div>`;
+  }
 }
 $('caSearch').addEventListener('input',render);
-document.querySelectorAll('#caFilters .ca-chip').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#caFilters .ca-chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');cat=b.dataset.cat;render();}));
-$('caMenu').addEventListener('click',()=>{const n=$('caMobileNav');const open=n.classList.toggle('open');n.setAttribute('aria-hidden',String(!open));});
+document.querySelectorAll('#caFilters .ca-chip').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#caFilters .ca-chip').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  cat=b.dataset.cat;
+  render();
+}));
+$('caMenu').addEventListener('click',()=>{
+  const n=$('caMobileNav');
+  const open=n.classList.toggle('open');
+  n.setAttribute('aria-hidden',String(!open));
+});
 load();
-})();
-
 })();
 </script>
 </body>
