@@ -1,596 +1,322 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>AxomPrep - Your Next Exam Starts Here</title>
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- FontAwesome Icons -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-<!-- Tailwind Configuration -->
-<script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        axom: {
-                            blue: '#1A56DB', // Primary Blue
-                            dark: '#1e293b',
-                            red: '#E02424', // Subtle Assam Red accent
-                            orange: '#F05252',
-                            green: '#057A55',
-                            light: '#f8fafc',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-<style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            overflow-x: hidden;
-        }
-        /* Custom scrollbar for a premium feel */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AxomPrep — Practice Today. Prepare for Tomorrow.</title>
+  <meta name="description" content="AxomPrep helps Assam and national competitive-exam aspirants practise MCQs, take daily quizzes, read current affairs, track jobs and use study resources.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Assamese:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="homepage.css">
+  <link rel="stylesheet" href="brand-logo.css">
+  <link rel="stylesheet" href="axomprep-mobile-optimized.css">
 </head>
-<body class="text-slate-800 antialiased">
-<header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex justify-between h-16 items-center">
-<!-- Logo -->
-<div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
-<div class="w-8 h-8 bg-axom-blue rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-sm">A</div>
-<span class="font-bold text-xl tracking-tight text-axom-dark">Axom<span class="text-axom-blue">Prep</span></span>
-</div>
-<!-- Desktop Nav -->
-<nav class="hidden lg:flex space-x-6 items-center">
-<a class="text-sm font-medium text-slate-600 hover:text-axom-blue transition-colors" href="practice.html">Practice</a>
-<a class="text-sm font-medium text-slate-600 hover:text-axom-blue transition-colors" href="daily-quiz.html">Daily Quiz</a>
-<a class="text-sm font-medium text-slate-600 hover:text-axom-blue transition-colors" href="mock-tests.html">Mock Tests</a>
-<a class="text-sm font-medium text-slate-600 hover:text-axom-blue transition-colors" href="current-affairs.html">Current Affairs</a>
-<a class="text-sm font-medium text-slate-600 hover:text-axom-blue transition-colors" href="current-jobs.html">Jobs</a>
-<a class="text-sm font-medium text-slate-600 hover:text-axom-blue transition-colors" href="books.html">Books</a>
-<a class="text-sm font-medium text-amber-600 bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100 transition-colors" href="premium.html"><i class="fa-solid fa-crown text-xs mr-1"></i> Premium</a>
-</nav>
-<!-- CTA & Mobile Toggle -->
-<div class="flex items-center gap-4">
-<div class="hidden md:flex items-center gap-3">
-<a class="text-sm font-medium text-slate-600 hover:text-axom-dark transition-colors" href="index.html">Login</a>
-<a class="bg-axom-blue hover:bg-blue-700 text-white text-sm font-medium px-5 py-2 rounded-lg shadow-sm transition-all duration-200" href="index.html">Get Started</a>
-</div>
-<!-- Hamburger Menu -->
-<button class="lg:hidden text-slate-500 hover:text-axom-dark focus:outline-none" id="mobile-menu-btn">
-<i class="fa-solid fa-bars text-xl"></i>
-</button>
-</div>
-</div>
-</div>
-<!-- Mobile Menu Panel -->
-<div class="hidden lg:hidden bg-white border-b border-slate-200" id="mobile-menu">
-<div class="px-4 pt-2 pb-6 space-y-1">
-<a class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-axom-blue hover:bg-slate-50" href="practice.html">Practice</a>
-<a class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-axom-blue hover:bg-slate-50" href="daily-quiz.html">Daily Quiz</a>
-<a class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-axom-blue hover:bg-slate-50" href="mock-tests.html">Mock Tests</a>
-<a class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-axom-blue hover:bg-slate-50" href="current-affairs.html">Current Affairs</a>
-<a class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-axom-blue hover:bg-slate-50" href="current-jobs.html">Jobs</a>
-<a class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-axom-blue hover:bg-slate-50" href="books.html">Books</a>
-<a class="block px-3 py-2 rounded-md text-base font-medium text-amber-600 hover:bg-amber-50" href="premium.html">Premium</a>
-<div class="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-2 px-3">
-<a class="text-center text-slate-600 font-medium py-2 border border-slate-200 rounded-lg" href="index.html">Login</a>
-<a class="text-center bg-axom-blue text-white font-medium py-2 rounded-lg" href="index.html">Get Started</a>
-</div>
-</div>
-</div>
+<body class="ax-home">
+<header class="ax-header">
+  <div class="ax-header-inner">
+    <a class="ax-brand" href="index.html" aria-label="AxomPrep home">
+      <img src="axomprep-logo.png" alt="AxomPrep" class="ax-logo">
+    </a>
+    <nav class="ax-nav" aria-label="Primary navigation">
+      <a href="practice.html">Practice</a>
+      <a href="daily-quiz.html">Daily Quiz</a>
+      <a href="mock-tests.html">Mock Tests</a>
+      <a href="current-affairs.html">Current Affairs</a>
+      <a href="current-jobs.html">Jobs</a>
+      <a href="books.html">Books</a>
+      <a href="premium.html">Premium</a>
+    </nav>
+    <div class="ax-actions">
+      <button class="ax-search" id="homeSearchBtn" type="button" aria-label="Search AxomPrep">⌕</button>
+      <button class="ax-btn ax-btn-light" id="loginBtn">Login</button>
+      <button class="ax-btn ax-btn-primary" id="signupBtn">Get Started</button>
+    </div>
+    <button class="ax-menu" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+  </div>
+  <div class="ax-mobile-nav" id="mobileNav" aria-hidden="true">
+    <a href="practice.html">Practice</a>
+    <a href="daily-quiz.html">Daily Quiz</a>
+    <a href="mock-tests.html">Mock Tests</a>
+    <a href="current-affairs.html">Current Affairs</a>
+    <a href="current-jobs.html">Current Jobs</a>
+    <a href="books.html">Books</a>
+    <a href="premium.html">Premium</a>
+  </div>
 </header>
 <main>
-<!-- Hero Section -->
-<section class="bg-white overflow-hidden relative border-b border-slate-200">
-<!-- Decorative background elements -->
-<div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-blue-50 opacity-50 blur-3xl"></div>
-<div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-red-50 opacity-50 blur-3xl"></div>
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-10">
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-<!-- Hero Content -->
-<div class="max-w-2xl">
-<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-axom-blue text-sm font-medium mb-6">
-<span class="w-2 h-2 rounded-full bg-axom-blue"></span> ADRE 2.0 Updates Available
-                        </div>
-<h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-axom-dark tracking-tight leading-tight mb-6">
-                            Your next exam <br/>
-<span class="text-transparent bg-clip-text bg-gradient-to-r from-axom-blue to-blue-400">starts here.</span>
-</h1>
-<p class="text-lg text-slate-600 mb-8 leading-relaxed max-w-lg">
-                            The most trusted platform for Assam competitive exams. Practice with curated mock tests, daily quizzes, and stay updated with the latest job notifications.
-                        </p>
-<div class="flex flex-col sm:flex-row gap-4">
-<a class="bg-axom-blue hover:bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-xl shadow-md shadow-blue-200 flex justify-center items-center gap-2 transition-all" href="practice.html">
-                                Start Practicing Free <i class="fa-solid fa-arrow-right"></i>
-</a>
-<a class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold px-8 py-3.5 rounded-xl shadow-sm flex justify-center items-center gap-2 transition-all" href="#exams">
-                                Explore Exams
-                            </a>
-</div>
-</div>
-<!-- Hero Visual: Assam Image -->
-<div class="relative hidden sm:block">
-<div class="relative z-10 overflow-hidden rounded-3xl border border-slate-200 shadow-xl bg-slate-100 aspect-[4/3]">
-<img alt="Assam landscape representing AxomPrep" class="w-full h-full object-cover" loading="eager" src="assets/axomprep-assam-hero.png"/>
-</div>
-<!-- Accent dots -->
-<div class="absolute -bottom-6 -left-6 w-24 h-24 bg-[radial-gradient(circle,#cbd5e1_2px,transparent_2px)] [background-size:12px_12px] opacity-70 z-0"></div>
-<div class="absolute -top-6 -right-6 w-24 h-24 bg-[radial-gradient(circle,#cbd5e1_2px,transparent_2px)] [background-size:12px_12px] opacity-70 z-0"></div>
-</div>
-</div>
-</div>
-</section>
-<!-- Quick Stats -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 -mt-6 relative z-20">
-<div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
-<div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 divide-x-0 md:divide-x divide-slate-100">
-<div class="flex flex-col items-center text-center px-4">
-<i class="fa-solid fa-clipboard-question text-axom-blue text-2xl mb-2"></i>
-<h3 class="text-2xl font-bold text-axom-dark">25k+</h3>
-<p class="text-sm text-slate-500 font-medium">Practice Questions</p>
-</div>
-<div class="flex flex-col items-center text-center px-4">
-<i class="fa-solid fa-layer-group text-axom-green text-2xl mb-2"></i>
-<h3 class="text-2xl font-bold text-axom-dark">12+</h3>
-<p class="text-sm text-slate-500 font-medium">Exam Tracks</p>
-</div>
-<div class="flex flex-col items-center text-center px-4">
-<i class="fa-solid fa-bell text-amber-500 text-2xl mb-2"></i>
-<h3 class="text-2xl font-bold text-axom-dark">Daily</h3>
-<p class="text-sm text-slate-500 font-medium">Job Alerts</p>
-</div>
-<div class="flex flex-col items-center text-center px-4">
-<i class="fa-solid fa-newspaper text-axom-red text-2xl mb-2"></i>
-<h3 class="text-2xl font-bold text-axom-dark">365</h3>
-<p class="text-sm text-slate-500 font-medium">Current Affairs</p>
-</div>
-</div>
-</div>
-</section>
-<!-- Main Dashboard Section -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-<!-- Column 1: Job Alerts -->
-<div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col overflow-hidden h-full">
-<div class="bg-slate-50 px-5 py-4 border-b border-slate-200 flex justify-between items-center">
-<h2 class="font-bold text-axom-dark flex items-center gap-2">
-<i class="fa-solid fa-briefcase text-axom-blue"></i> Latest Job Alerts
-                        </h2>
-<a class="text-xs font-semibold text-axom-blue hover:underline" href="current-jobs.html">View All</a>
-</div>
-<div class="p-5 flex-1 flex flex-col gap-4">
-<!-- Job Item -->
-<a class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white" href="current-jobs.html">
-<div class="flex justify-between items-start mb-2">
-<span class="bg-red-50 text-axom-red text-xs font-bold px-2 py-1 rounded">ADRE</span>
-<span class="text-xs text-slate-400"><i class="fa-regular fa-clock"></i> 2h ago</span>
-</div>
-<h3 class="font-semibold text-slate-800 group-hover:text-axom-blue transition-colors text-sm leading-tight mb-1">Assam Direct Recruitment 2.0 (Grade III &amp; IV)</h3>
-<p class="text-xs text-slate-500">12,600+ Vacancies • 10th/12th/Graduate</p>
-</a>
-<!-- Job Item -->
-<a class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white" href="current-jobs.html">
-<div class="flex justify-between items-start mb-2">
-<span class="bg-blue-50 text-axom-blue text-xs font-bold px-2 py-1 rounded">APSC</span>
-<span class="text-xs text-slate-400"><i class="fa-regular fa-clock"></i> 1d ago</span>
-</div>
-<h3 class="font-semibold text-slate-800 group-hover:text-axom-blue transition-colors text-sm leading-tight mb-1">APSC CCE Prelims Notification 2026</h3>
-<p class="text-xs text-slate-500">235 Vacancies • Any Graduate</p>
-</a>
-<!-- Job Item -->
-<a class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white" href="current-jobs.html">
-<div class="flex justify-between items-start mb-2">
-<span class="bg-green-50 text-axom-green text-xs font-bold px-2 py-1 rounded">Police</span>
-<span class="text-xs text-slate-400"><i class="fa-regular fa-clock"></i> 2d ago</span>
-</div>
-<h3 class="font-semibold text-slate-800 group-hover:text-axom-blue transition-colors text-sm leading-tight mb-1">Assam Police SI Recruitment</h3>
-<p class="text-xs text-slate-500">300+ Vacancies • Graduate</p>
-</a>
-</div>
-</div>
-<!-- Column 2: Today's Focus / Daily Q -->
-<div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col overflow-hidden h-full md:col-span-1 lg:col-span-1">
-<div class="bg-axom-blue px-5 py-4 border-b border-blue-700 flex justify-between items-center text-white">
-<h2 class="font-bold flex items-center gap-2">
-<i class="fa-solid fa-target text-white"></i> Today's Focus
-                        </h2>
-<span class="text-xs font-semibold bg-white/20 px-2 py-1 rounded">28 Sep</span>
-</div>
-<div class="p-6 flex-1 flex flex-col justify-between">
-<div>
-<div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Daily Challenge</div>
-<h3 class="text-lg font-bold text-slate-800 mb-4 leading-snug">
-                                Which famous sanctuary of Assam is known exclusively for the conservation of the Golden Langur?
-                            </h3>
-<div class="space-y-3">
-<label class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
-<input class="w-4 h-4 text-axom-blue focus:ring-axom-blue" name="daily_q" type="radio"/>
-<span class="text-sm font-medium text-slate-700">Kaziranga National Park</span>
-</label>
-<label class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
-<input class="w-4 h-4 text-axom-blue focus:ring-axom-blue" name="daily_q" type="radio"/>
-<span class="text-sm font-medium text-slate-700">Chakrashila Wildlife Sanctuary</span>
-</label>
-<label class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
-<input class="w-4 h-4 text-axom-blue focus:ring-axom-blue" name="daily_q" type="radio"/>
-<span class="text-sm font-medium text-slate-700">Manas National Park</span>
-</label>
-<label class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
-<input class="w-4 h-4 text-axom-blue focus:ring-axom-blue" name="daily_q" type="radio"/>
-<span class="text-sm font-medium text-slate-700">Pobitora Wildlife Sanctuary</span>
-</label>
-</div>
-</div>
-<button class="w-full mt-6 bg-slate-800 hover:bg-slate-700 text-white font-medium py-2.5 rounded-lg transition-colors">
-                            Submit Answer
-                        </button>
-</div>
-</div>
-<!-- Column 3: Current Affairs -->
-<div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col overflow-hidden h-full md:col-span-2 lg:col-span-1">
-<div class="bg-slate-50 px-5 py-4 border-b border-slate-200 flex justify-between items-center">
-<h2 class="font-bold text-axom-dark flex items-center gap-2">
-<i class="fa-solid fa-globe text-axom-green"></i> Current Affairs
-                        </h2>
-<a class="text-xs font-semibold text-axom-blue hover:underline" href="current-affairs.html">Read All</a>
-</div>
-<div class="p-0 flex-1 flex flex-col divide-y divide-slate-100">
-<!-- CA Item -->
-<a class="p-5 flex gap-4 hover:bg-slate-50 transition-colors group" href="index.html">
-<div class="w-12 h-12 rounded-lg bg-green-50 flex-shrink-0 flex flex-col items-center justify-center border border-green-100 text-axom-green">
-<span class="text-xs font-bold">SEP</span>
-<span class="text-lg font-black leading-none">28</span>
-</div>
-<div>
-<h3 class="font-semibold text-slate-800 text-sm mb-1 group-hover:text-axom-blue transition-colors line-clamp-2">Assam Government launches new initiative for rural development</h3>
-<p class="text-xs text-slate-500">State Govt. schemes | 3 min read</p>
-</div>
-</a>
-<!-- CA Item -->
-<a class="p-5 flex gap-4 hover:bg-slate-50 transition-colors group" href="index.html">
-<div class="w-12 h-12 rounded-lg bg-blue-50 flex-shrink-0 flex flex-col items-center justify-center border border-blue-100 text-axom-blue">
-<span class="text-xs font-bold">SEP</span>
-<span class="text-lg font-black leading-none">27</span>
-</div>
-<div>
-<h3 class="font-semibold text-slate-800 text-sm mb-1 group-hover:text-axom-blue transition-colors line-clamp-2">India's new space mission details announced by ISRO</h3>
-<p class="text-xs text-slate-500">National | Science &amp; Tech</p>
-</div>
-</a>
-<!-- CA Item -->
-<a class="p-5 flex gap-4 hover:bg-slate-50 transition-colors group" href="index.html">
-<div class="w-12 h-12 rounded-lg bg-orange-50 flex-shrink-0 flex flex-col items-center justify-center border border-orange-100 text-orange-500">
-<span class="text-xs font-bold">SEP</span>
-<span class="text-lg font-black leading-none">26</span>
-</div>
-<div>
-<h3 class="font-semibold text-slate-800 text-sm mb-1 group-hover:text-axom-blue transition-colors line-clamp-2">Economy expected to grow by 7% this fiscal: RBI Report</h3>
-<p class="text-xs text-slate-500">Economy | Finance</p>
-</div>
-</a>
-</div>
-</div>
-</div>
-</section>
-<!-- Quick Actions -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-<h2 class="text-xl font-bold text-slate-800 mb-6">Quick Actions</h2>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-<a class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-blue-200 transition-all group" href="practice.html">
-<div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-axom-blue group-hover:text-white text-axom-blue transition-colors">
-<i class="fa-solid fa-pen-to-square text-xl"></i>
-</div>
-<h3 class="font-semibold text-slate-800 text-sm md:text-base">Practice</h3>
-<p class="text-xs text-slate-500 mt-1">Topic-wise MCQs</p>
-</a>
-<a class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-amber-200 transition-all group" href="daily-quiz.html">
-<div class="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-amber-500 group-hover:text-white text-amber-500 transition-colors">
-<i class="fa-solid fa-clock text-xl"></i>
-</div>
-<h3 class="font-semibold text-slate-800 text-sm md:text-base">Daily Quiz</h3>
-<p class="text-xs text-slate-500 mt-1">Live everyday</p>
-</a>
-<a class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-red-200 transition-all group" href="mock-tests.html">
-<div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-axom-red group-hover:text-white text-axom-red transition-colors">
-<i class="fa-solid fa-file-signature text-xl"></i>
-</div>
-<h3 class="font-semibold text-slate-800 text-sm md:text-base">Mock Tests</h3>
-<p class="text-xs text-slate-500 mt-1">Full length sets</p>
-</a>
-<a class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-green-200 transition-all group" href="practice.html">
-<div class="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-axom-green group-hover:text-white text-axom-green transition-colors">
-<i class="fa-solid fa-book-open text-xl"></i>
-</div>
-<h3 class="font-semibold text-slate-800 text-sm md:text-base">Study by Subject</h3>
-<p class="text-xs text-slate-500 mt-1">Syllabus covered</p>
-</a>
-</div>
-</section>
-<!-- Study Streak & Premium Zone -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-<!-- Premium Card -->
-<div class="lg:col-span-2 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl shadow-lg border border-slate-700 overflow-hidden relative">
-<!-- Decor -->
-<div class="absolute top-0 right-0 w-64 h-64 bg-amber-500 opacity-10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
-<div class="p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 relative z-10">
-<div class="flex-1 text-center md:text-left">
-<div class="inline-flex items-center gap-1.5 bg-amber-500/20 text-amber-400 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-4">
-<i class="fa-solid fa-crown"></i> AxomPrep Pro
-                            </div>
-<h2 class="text-2xl md:text-3xl font-bold text-white mb-3">Unlock Your Full Potential</h2>
-<p class="text-slate-300 text-sm md:text-base mb-6">Get unlimited access to all Mock Tests, Previous Year Papers, and Ad-free experience.</p>
-<ul class="text-slate-300 text-sm space-y-2 mb-6 md:mb-0 flex flex-col items-center md:items-start">
-<li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-400"></i> 100+ Premium Mocks</li>
-<li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-400"></i> Detailed Analytics</li>
-</ul>
-</div>
-<div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-<!-- 1 Month -->
-<div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-xl text-center min-w-[140px] hover:bg-white/20 transition-colors cursor-pointer">
-<div class="text-slate-300 text-xs font-medium mb-1">1 Month</div>
-<div class="text-2xl font-bold text-white mb-2">₹49</div>
-<button class="w-full bg-white text-slate-900 font-semibold text-sm py-1.5 rounded-lg hover:bg-slate-100">Select</button>
-</div>
-<!-- 3 Months -->
-<div class="bg-amber-500/10 backdrop-blur-md border border-amber-500/30 p-4 rounded-xl text-center min-w-[140px] relative hover:bg-amber-500/20 transition-colors cursor-pointer">
-<div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-amber-500 text-slate-900 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase whitespace-nowrap">Best Value</div>
-<div class="text-amber-200 text-xs font-medium mb-1 mt-1">3 Months</div>
-<div class="text-2xl font-bold text-white mb-2">₹129</div>
-<button class="w-full bg-amber-500 text-slate-900 font-semibold text-sm py-1.5 rounded-lg hover:bg-amber-400 shadow-lg shadow-amber-500/20">Select</button>
-</div>
-</div>
-</div>
-</div>
-<!-- Study Streak -->
-<div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col items-center justify-center text-center">
-<div class="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mb-4 relative">
-<i class="fa-solid fa-fire text-4xl text-orange-500"></i>
-<div class="absolute -bottom-2 bg-white border border-slate-200 text-slate-700 text-xs font-bold px-2 py-1 rounded-full shadow-sm">
-                            Lv. 1
-                        </div>
-</div>
-<h3 class="text-xl font-bold text-slate-800 mb-1">Study Streak</h3>
-<p class="text-slate-500 text-sm mb-4">You haven't practiced today.</p>
-<div class="flex gap-2 mb-6">
-<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">M</div>
-<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">T</div>
-<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">W</div>
-<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400 ring-2 ring-orange-200">T</div>
-<div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">F</div>
-<div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">S</div>
-<div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">S</div>
-</div>
-<button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 rounded-lg text-sm transition-colors">
-                        Take a Quiz to Start
-                    </button>
-</div>
-</div>
-</section>
-<!-- Choose Your Exam -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-<div class="flex justify-between items-end mb-6">
-<h2 class="text-xl font-bold text-slate-800">Choose Your Exam</h2>
-<a class="text-sm font-medium text-axom-blue hover:underline" href="books.html">View All</a>
-</div>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-<a class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all" href="practice.html?exam=ADRE">
-<div class="w-12 h-12 bg-red-50 text-axom-red rounded-lg flex items-center justify-center font-bold text-lg">A</div>
-<div>
-<h3 class="font-bold text-slate-800 text-sm">ADRE</h3>
-<p class="text-xs text-slate-500">Grade III &amp; IV</p>
-</div>
-</a>
-<a class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all" href="practice.html?exam=APSC">
-<div class="w-12 h-12 bg-blue-50 text-axom-blue rounded-lg flex items-center justify-center font-bold text-lg">P</div>
-<div>
-<h3 class="font-bold text-slate-800 text-sm">APSC</h3>
-<p class="text-xs text-slate-500">CCE Prelims</p>
-</div>
-</a>
-<a class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all" href="practice.html?exam=Assam%20Police">
-<div class="w-12 h-12 bg-green-50 text-axom-green rounded-lg flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-shield-halved"></i></div>
-<div>
-<h3 class="font-bold text-slate-800 text-sm">Assam Police</h3>
-<p class="text-xs text-slate-500">SI &amp; Constable</p>
-</div>
-</a>
-<a class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all" href="practice.html?exam=SSC">
-<div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center font-bold text-lg">S</div>
-<div>
-<h3 class="font-bold text-slate-800 text-sm">SSC</h3>
-<p class="text-xs text-slate-500">CGL / CHSL</p>
-</div>
-</a>
-</div>
-</section>
-<!-- Study by Subject -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-<h2 class="text-xl font-bold text-slate-800 mb-6">Study by Subject</h2>
-<div class="flex flex-wrap gap-3">
-<a class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all" href="practice.html?subject=Assam%20History">Assam History</a>
-<a class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all" href="practice.html?subject=Indian%20Polity">Indian Polity</a>
-<a class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all" href="practice.html?subject=General%20Science">General Science</a>
-<a class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all" href="practice.html?subject=Quantitative%20Aptitude">Quantitative Aptitude</a>
-<a class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all" href="practice.html?subject=Logical%20Reasoning">Logical Reasoning</a>
-<a class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all" href="practice.html?subject=Assam%20Geography">Assam Geography</a>
-<a class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all" href="practice.html?subject=English%20Grammar">English Grammar</a>
-</div>
-</section>
-<!-- Books for Aspirants -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-8">
-<div class="flex justify-between items-end mb-6">
-<h2 class="text-xl font-bold text-slate-800">Recommended Books</h2>
-<a class="text-sm font-medium text-axom-blue hover:underline" href="books.html">See All Books</a>
-</div>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-<!-- Book Card -->
-<div class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group">
-<div class="h-48 bg-slate-100 flex items-center justify-center p-4">
-<div class="w-28 h-36 bg-blue-800 rounded shadow-md border-l-4 border-slate-300 flex items-center justify-center text-center p-2 text-white font-bold text-xs relative overflow-hidden">
-<div class="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSI+PC9yZWN0Pgo8L3N2Zz4=')]"></div>
-                            Assam Year Book 2026
-                        </div>
-</div>
-<div class="p-4">
-<h3 class="font-bold text-slate-800 text-sm mb-1 truncate">Assam Year Book 2026</h3>
-<p class="text-xs text-slate-500 mb-3">By Shantanu Kaushik</p>
-<div class="flex justify-between items-center">
-<span class="font-bold text-axom-dark">₹350</span>
-<button class="text-xs font-semibold bg-blue-50 text-axom-blue px-3 py-1.5 rounded hover:bg-axom-blue hover:text-white transition-colors">Buy Now</button>
-</div>
-</div>
-</div>
-<!-- Book Card -->
-<div class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group">
-<div class="h-48 bg-slate-100 flex items-center justify-center p-4">
-<div class="w-28 h-36 bg-red-800 rounded shadow-md border-l-4 border-slate-300 flex items-center justify-center text-center p-2 text-white font-bold text-xs relative overflow-hidden">
-<div class="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSI+PC9yZWN0Pgo8L3N2Zz4=')]"></div>
-                            ADRE Grade III Guide
-                        </div>
-</div>
-<div class="p-4">
-<h3 class="font-bold text-slate-800 text-sm mb-1 truncate">ADRE Grade III Guide</h3>
-<p class="text-xs text-slate-500 mb-3">AxomPrep Publications</p>
-<div class="flex justify-between items-center">
-<span class="font-bold text-axom-dark">₹280</span>
-<button class="text-xs font-semibold bg-blue-50 text-axom-blue px-3 py-1.5 rounded hover:bg-axom-blue hover:text-white transition-colors">Buy Now</button>
-</div>
-</div>
-</div>
-<!-- Book Card -->
-<div class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group hidden sm:block">
-<div class="h-48 bg-slate-100 flex items-center justify-center p-4">
-<div class="w-28 h-36 bg-green-800 rounded shadow-md border-l-4 border-slate-300 flex items-center justify-center text-center p-2 text-white font-bold text-xs relative overflow-hidden">
-<div class="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSI+PC9yZWN0Pgo8L3N2Zz4=')]"></div>
-                            Quantitative Aptitude
-                        </div>
-</div>
-<div class="p-4">
-<h3 class="font-bold text-slate-800 text-sm mb-1 truncate">Quant. Aptitude</h3>
-<p class="text-xs text-slate-500 mb-3">R.S. Aggarwal</p>
-<div class="flex justify-between items-center">
-<span class="font-bold text-axom-dark">₹450</span>
-<button class="text-xs font-semibold bg-blue-50 text-axom-blue px-3 py-1.5 rounded hover:bg-axom-blue hover:text-white transition-colors">Buy Now</button>
-</div>
-</div>
-</div>
-<!-- Book Card -->
-<div class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group hidden lg:block">
-<div class="h-48 bg-slate-100 flex items-center justify-center p-4">
-<div class="w-28 h-36 bg-purple-800 rounded shadow-md border-l-4 border-slate-300 flex items-center justify-center text-center p-2 text-white font-bold text-xs relative overflow-hidden">
-<div class="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSI+PC9yZWN0Pgo8L3N2Zz4=')]"></div>
-                            Indian Polity
-                        </div>
-</div>
-<div class="p-4">
-<h3 class="font-bold text-slate-800 text-sm mb-1 truncate">Indian Polity 7th Ed</h3>
-<p class="text-xs text-slate-500 mb-3">M. Laxmikanth</p>
-<div class="flex justify-between items-center">
-<span class="font-bold text-axom-dark">₹620</span>
-<button class="text-xs font-semibold bg-blue-50 text-axom-blue px-3 py-1.5 rounded hover:bg-axom-blue hover:text-white transition-colors">Buy Now</button>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Final CTA -->
-<section class="bg-axom-blue py-12 md:py-16">
-<div class="max-w-4xl mx-auto px-4 text-center">
-<h2 class="text-2xl md:text-4xl font-bold text-white mb-4">Ready to crack your dream job?</h2>
-<p class="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">Join thousands of successful aspirants from Assam who trusted AxomPrep for their preparation.</p>
-<div class="flex flex-col sm:flex-row justify-center gap-4">
-<a class="bg-white text-axom-blue font-bold px-8 py-3.5 rounded-xl shadow-lg hover:bg-slate-50 transition-colors" href="premium.html">Sign Up for Free</a>
-<a class="bg-blue-700 text-white border border-blue-600 font-bold px-8 py-3.5 rounded-xl hover:bg-blue-800 transition-colors" href="#download-app">Download App</a>
-</div>
-</div>
-</section>
+  <section class="ax-hero">
+    <div class="ax-hero-copy">
+      <div class="ax-eyebrow">ASSAM'S TRUSTED EXAM PREPARATION PLATFORM</div>
+      <h1>Your next exam <span>starts here.</span></h1>
+      <p>Practice smarter, stay updated, and apply on time. AxomPrep brings together focused MCQs, daily quizzes, mock tests, current affairs, books and recruitment alerts for serious aspirants.</p>
+      <div class="ax-hero-pills">
+        <span>◉ MCQs with explanations</span>
+        <span>▣ Latest job alerts</span>
+        <span>◫ Daily current affairs</span>
+        <span>▤ Study resources</span>
+      </div>
+      <div class="ax-hero-actions">
+        <a class="ax-btn ax-btn-primary ax-btn-lg" href="practice.html">Start Practising <span>→</span></a>
+        <a class="ax-btn ax-btn-white ax-btn-lg" href="current-jobs.html">View Jobs <span>→</span></a>
+      </div>
+      <div class="ax-trust-row">
+        <span><b id="homeQuestionCount">10k+</b> practice questions</span>
+        <span><b>10 min</b> daily quiz</span>
+        <span><b>4+</b> exam tracks</span>
+        <span><b id="heroJobsCount">Live</b> job alerts</span>
+      </div>
+    </div>
+    <div class="ax-hero-art">
+      <img src="assam-exam-hero.png" alt="Students preparing for competitive exams in Assam" loading="eager">
+      <div class="ax-hero-badge ax-badge-top"><strong>Daily practice</strong><small>Small steps every day</small></div>
+      <div class="ax-hero-badge ax-badge-bottom"><strong>Today's focus</strong><small>Read • Answer • Improve</small></div>
+    </div>
+  </section>
+  <section class="ax-statbar">
+    <div><strong id="statQuestions">10k+</strong><span>Practice Questions</span></div>
+    <div><strong>ADRE • APSC • SSC</strong><span>Core Exam Tracks</span></div>
+    <div><strong id="statJobs">Live</strong><span>Job Alerts</span></div>
+    <div><strong>Daily</strong><span>Current Affairs</span></div>
+  </section>
+  <section class="ax-dashboard-grid ax-section-pad">
+    <article class="ax-card ax-job-panel">
+      <div class="ax-card-head">
+        <div class="ax-card-title"><span class="ax-title-icon orange">▣</span><h2>Job Alerts</h2></div>
+        <a href="current-jobs.html">View all jobs →</a>
+      </div>
+      <div class="ax-chip-row" id="jobFilters">
+        <button class="active" data-cat="all">All</button>
+        <button data-cat="Assam">Assam</button>
+        <button data-cat="Central Govt">Central Govt</button>
+        <button data-cat="State Govt">State Govt</button>
+        <button data-cat="Defence">Defence</button>
+      </div>
+      <div id="homeJobsList" class="ax-list-stack"><div class="ax-skeleton">Loading current jobs…</div></div>
+      <div class="ax-panel-foot"><span id="homeJobsUpdated">Auto-updated daily</span><a href="current-jobs.html">Explore Current Jobs →</a></div>
+    </article>
+    <div class="ax-center-stack">
+      <article class="ax-card ax-focus-card">
+        <div class="ax-card-head">
+          <div class="ax-card-title"><span class="ax-title-icon red">◎</span><h2>Today's Focus</h2></div>
+          <a href="practice.html">View more questions →</a>
+        </div>
+        <div id="focusQuestion" class="ax-focus-inner"><div class="ax-skeleton">Loading a practice question…</div></div>
+      </article>
+      <div class="ax-quick-grid">
+        <a href="practice.html" class="ax-quick-card"><span class="qicon purple">▣</span><strong>Practice</strong><small>Topic-wise MCQs</small><b>→</b></a>
+        <a href="daily-quiz.html" class="ax-quick-card"><span class="qicon blue">◫</span><strong>Daily Quiz</strong><small>Test your knowledge</small><b>→</b></a>
+        <a href="mock-tests.html" class="ax-quick-card"><span class="qicon green">◉</span><strong>Mock Tests</strong><small>Exam-like experience</small><b>→</b></a>
+        <a href="#subjects" class="ax-quick-card"><span class="qicon orange">Aa</span><strong>Study by Subject</strong><small>All major subjects</small><b>→</b></a>
+      </div>
+      <article class="ax-premium-banner">
+        <div class="ax-premium-copy"><div class="ax-premium-icon">♛</div><div><strong>Go Premium</strong><small>More practice, mocks and detailed explanations</small></div></div>
+        <div class="ax-price-pair"><div><strong>₹49</strong><span>1 Month</span></div><div class="popular"><strong>₹129</strong><span>3 Months</span></div></div>
+        <a class="ax-btn ax-btn-primary" href="premium.html">Upgrade Now →</a>
+      </article>
+      <article class="ax-streak-card">
+        <div class="ax-streak-left"><span class="ax-streak-icon">🔥</span><div><strong>Your Study Streak</strong><small>Keep your routine going.</small></div></div>
+        <div class="ax-streak-days"><strong id="streakDays">0</strong><span>days</span></div>
+        <div id="streakWeek" class="ax-week"></div>
+      </article>
+    </div>
+    <article class="ax-card ax-news-panel">
+      <div class="ax-card-head">
+        <div class="ax-card-title"><span class="ax-title-icon green">▤</span><h2>Current Affairs</h2><span class="ax-live-dot" id="newsUpdatedLabel">Updated</span></div>
+        <a href="current-affairs.html">See all →</a>
+      </div>
+      <div class="ax-chip-row" id="newsFilters">
+        <button class="active" data-cat="all">All</button>
+        <button data-cat="Assam">Assam</button>
+        <button data-cat="India">India</button>
+        <button data-cat="International">World</button>
+        <button data-cat="Economy">Economy</button>
+        <button data-cat="Sports">Sports</button>
+      </div>
+      <div id="homeNewsList" class="ax-news-list"><div class="ax-skeleton">Loading current affairs…</div></div>
+    </article>
+  </section>
+  <section class="ax-lower-grid ax-section-pad">
+    <article class="ax-card ax-lower-card" id="exams">
+      <div class="ax-card-head"><div class="ax-card-title"><span class="ax-title-icon red">◎</span><h2>Choose Your Exam</h2></div><a href="practice.html">View all exams →</a></div>
+      <div class="ax-exam-grid">
+        <a href="practice.html?exam=ADRE" class="ax-exam-card adre"><span>AD</span><div><strong>ADRE</strong><small>Assam Direct Recruitment</small></div></a>
+        <a href="practice.html?exam=APSC" class="ax-exam-card apsc"><span>AP</span><div><strong>APSC</strong><small>Assam Public Service</small></div></a>
+        <a href="practice.html?exam=SSC" class="ax-exam-card ssc"><span>SC</span><div><strong>SSC</strong><small>Staff Selection Commission</small></div></a>
+        <a href="practice.html?exam=Assam%20Police" class="ax-exam-card police"><span>AS</span><div><strong>ASSAM POLICE</strong><small>Constable & other posts</small></div></a>
+      </div>
+    </article>
+    <article class="ax-card ax-lower-card" id="subjects">
+      <div class="ax-card-head"><div class="ax-card-title"><span class="ax-title-icon blue">▤</span><h2>Study by Subject</h2></div><a href="practice.html">View all subjects →</a></div>
+      <div class="ax-subject-grid">
+        <a href="practice.html?subject=Assam%20GK" class="ax-subject-card s-assam"><span>⌁</span><strong>Assam GK</strong></a>
+        <a href="practice.html?subject=Mathematics" class="ax-subject-card s-math"><span>∑</span><strong>Mathematics</strong></a>
+        <a href="practice.html?subject=Reasoning" class="ax-subject-card s-reason"><span>◎</span><strong>Reasoning</strong></a>
+        <a href="practice.html?subject=English" class="ax-subject-card s-english"><span>Aa</span><strong>English</strong></a>
+        <a href="practice.html?subject=General%20Knowledge" class="ax-subject-card s-gk"><span>◈</span><strong>General Knowledge</strong></a>
+        <a href="practice.html?subject=General%20Science" class="ax-subject-card s-science"><span>⚗</span><strong>General Science</strong></a>
+        <a href="practice.html?subject=Computer" class="ax-subject-card s-computer"><span>▣</span><strong>Computer</strong></a>
+        <a href="current-affairs.html" class="ax-subject-card s-ca"><span>▤</span><strong>Current Affairs</strong></a>
+      </div>
+    </article>
+    <article class="ax-card ax-lower-card ax-books-panel" id="books">
+      <div class="ax-card-head"><div class="ax-card-title"><span class="ax-title-icon orange">▤</span><h2>Books for Aspirants</h2></div><a href="books.html">View all books →</a></div>
+      <div id="homeBooksShelf" class="ax-books-shelf"><div class="ax-skeleton">Loading recommended books…</div></div>
+      <div class="ax-disclosure">Some purchase links may be affiliate links. AxomPrep may earn a commission on eligible purchases.</div>
+    </article>
+  </section>
+  <section class="ax-exam-banner ax-section-pad">
+    <div><div class="ax-eyebrow">ONE FOCUSED SESSION AT A TIME</div><h2>Build your preparation habit with AxomPrep.</h2><p>Practice today. Review your weak areas. Come back tomorrow.</p></div>
+    <a class="ax-btn ax-btn-white ax-btn-lg" href="practice.html">Start Practising →</a>
+  </section>
 </main>
-<!-- Footer -->
-<footer class="bg-slate-900 text-slate-300 py-12 border-t border-slate-800">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-<!-- Branding -->
-<div>
-<div class="flex items-center gap-2 mb-4">
-<div class="w-8 h-8 bg-axom-blue rounded-lg flex items-center justify-center text-white font-bold text-lg">A</div>
-<span class="font-bold text-xl tracking-tight text-white">Axom<span class="text-axom-blue">Prep</span></span>
-</div>
-<p class="text-sm text-slate-400 mb-6 line-clamp-3">
-                        The ultimate destination for competitive exam preparation in Assam. Providing quality mocks, current affairs, and guidance.
-                    </p>
-<div class="flex space-x-4">
-<a class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors" href="index.html"><i class="fa-brands fa-facebook-f text-sm"></i></a>
-<a class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors" href="index.html"><i class="fa-brands fa-twitter text-sm"></i></a>
-<a class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors" href="index.html"><i class="fa-brands fa-youtube text-sm"></i></a>
-<a class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors" href="index.html"><i class="fa-brands fa-telegram text-sm"></i></a>
-</div>
-</div>
-<!-- Links -->
-<div>
-<h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Exams</h4>
-<ul class="space-y-2 text-sm">
-<li><a class="hover:text-axom-blue transition-colors" href="practice.html?exam=ADRE">ADRE Grade III &amp; IV</a></li>
-<li><a class="hover:text-axom-blue transition-colors" href="index.html">APSC CCE</a></li>
-<li><a class="hover:text-axom-blue transition-colors" href="index.html">Assam Police (SI/AB/UB)</a></li>
-<li><a class="hover:text-axom-blue transition-colors" href="index.html">TET Assam</a></li>
-<li><a class="hover:text-axom-blue transition-colors" href="index.html">SSC &amp; Railway</a></li>
-</ul>
-</div>
-<!-- Resources -->
-<div>
-<h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Resources</h4>
-<ul class="space-y-2 text-sm">
-<li><a class="hover:text-axom-blue transition-colors" href="current-affairs.html">Daily Current Affairs</a></li>
-<li><a class="hover:text-axom-blue transition-colors" href="mock-tests.html">Free Mock Tests</a></li>
-<li><a class="hover:text-axom-blue transition-colors" href="practice.html">Previous Year Papers</a></li>
-<li><a class="hover:text-axom-blue transition-colors" href="current-jobs.html">Job Notifications</a></li>
-<li><a class="hover:text-axom-blue transition-colors" href="books.html">Recommended Books</a></li>
-</ul>
-</div>
-<!-- Support -->
-<div>
-<h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Company</h4>
-<ul class="space-y-2 text-sm">
-<li><a class="hover:text-axom-blue transition-colors" href="about.html">About Us</a></li>
-<li><a class="hover:text-axom-blue transition-colors" href="about.html#contact">Contact Support</a></li>
-<li><a class="hover:text-axom-blue transition-colors" href="privacy.html">Privacy Policy</a></li>
-<li><a class="hover:text-axom-blue transition-colors" href="terms.html">Terms of Service</a></li>
-</ul>
-</div>
-</div>
-<div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500">
-<p>© 2026 AxomPrep. All rights reserved.</p>
-<p class="mt-2 md:mt-0">Made with ❤️ in Assam</p>
-</div>
-</div>
+<footer class="ax-footer">
+  <div class="ax-footer-main">
+    <div class="ax-footer-brand"><img src="axomprep-logo.png" alt="AxomPrep"><p>Prepare Today. Rank Tomorrow.</p></div>
+    <div><h4>Quick Links</h4><div class="ax-footer-links"><a href="practice.html">Practice</a><a href="daily-quiz.html">Daily Quiz</a><a href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="current-jobs.html">Current Jobs</a><a href="books.html">Books</a><a href="premium.html">Premium</a></div></div>
+    <div><h4>Important</h4><div class="ax-footer-links"><a href="about.html">About Us</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="disclaimer.html">Disclaimer</a></div></div>
+  </div>
+  <div class="ax-footer-bottom"><span>© 2026 AxomPrep. All rights reserved.</span><span>An Assam-focused platform for competitive-exam aspirants.</span></div>
 </footer>
-<!-- Basic JS for mobile menu toggle -->
-<script>
-        const btn = document.getElementById('mobile-menu-btn');
-        const menu = document.getElementById('mobile-menu');
+<div class="modal hidden" id="authModal">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal()">×</button>
+    <div class="auth-tabs"><button class="active" id="tabLogin">Login</button><button id="tabSignup">Create account</button></div>
+    <form id="authForm">
+      <label>Email<input type="email" id="email" required></label>
+      <label>Password<input type="password" id="password" required minlength="6"></label>
+      <label id="nameWrap" class="hidden">Full name<input type="text" id="fullName"></label>
+      <button class="btn primary full" id="authSubmit">Login</button>
+      <p id="authMsg"></p>
+    </form>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="homepage-live.js"></script>
 
-        btn.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
-    </script>
+<script id="axomprep-home-books-db">
+(function () {
+  "use strict";
+
+  const shelf = document.getElementById("homeBooksShelf");
+  if (!shelf) return;
+
+  function esc(value) {
+    return String(value ?? "").replace(/[&<>"']/g, function (m) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[m];
+    });
+  }
+
+  function fallbackCover(title) {
+    return `
+      <div class="ax-book-fallback">
+        <small>AxomPrep Books</small>
+        <strong>${esc(title)}</strong>
+      </div>`;
+  }
+
+  function renderBook(book) {
+    const title = book.title || "Book";
+    const cover = String(book.cover_url || "").trim();
+    const amazon = String(book.amazon_url || "").trim();
+    const flipkart = String(book.flipkart_url || "").trim();
+
+    const coverHtml = cover
+      ? `<img src="${esc(cover)}" alt="${esc(title)}" loading="lazy"
+           onerror="this.outerHTML='${fallbackCover(title).replace(/'/g, "\\'")}'">`
+      : fallbackCover(title);
+
+    const author = book.author
+      ? `<div class="ax-book-author">${esc(book.author)}</div>`
+      : "";
+
+    return `
+      <article class="ax-book-mini">
+        <a href="books.html" aria-label="View ${esc(title)} on AxomPrep Books">
+          <div class="ax-book-cover">${coverHtml}</div>
+        </a>
+        <h3 title="${esc(title)}">${esc(title)}</h3>
+        ${author}
+        <div class="ax-book-buttons">
+          ${amazon ? `<a class="ax-amz" href="${esc(amazon)}" target="_blank" rel="noopener noreferrer sponsored">Amazon</a>` : ""}
+          ${flipkart ? `<a class="ax-flip" href="${esc(flipkart)}" target="_blank" rel="noopener noreferrer sponsored">Flipkart</a>` : ""}
+        </div>
+      </article>`;
+  }
+
+  async function loadBooks() {
+    try {
+      const cfg = window.AXOMPREP_CONFIG || {};
+
+      if (!cfg.supabaseUrl || !cfg.supabasePublishableKey) {
+        throw new Error("Supabase configuration is missing.");
+      }
+
+      if (!window.supabase || !window.supabase.createClient) {
+        throw new Error("Supabase library is unavailable.");
+      }
+
+      const client = window.supabase.createClient(
+        cfg.supabaseUrl,
+        cfg.supabasePublishableKey
+      );
+
+      // Use the same real books_v1 database used by books.html.
+      let result = await client
+        .from("books_v1")
+        .select("title,author,publisher,description,exam_name,category,cover_url,amazon_url,flipkart_url,featured,status")
+        .eq("status", "published")
+        .eq("featured", true)
+        .order("title", { ascending: true })
+        .limit(4);
+
+      if (result.error) throw result.error;
+
+      let books = Array.isArray(result.data) ? result.data : [];
+
+      // If fewer than four books are featured, fill the shelf from all published books.
+      if (books.length < 4) {
+        const allResult = await client
+          .from("books_v1")
+          .select("title,author,publisher,description,exam_name,category,cover_url,amazon_url,flipkart_url,featured,status")
+          .eq("status", "published")
+          .order("featured", { ascending: false })
+          .order("title", { ascending: true })
+          .limit(4);
+
+        if (allResult.error) throw allResult.error;
+        books = Array.isArray(allResult.data) ? allResult.data : [];
+      }
+
+      if (!books.length) {
+        shelf.innerHTML = '<div class="ax-empty"><strong>No books available</strong><span>Published books will appear here automatically.</span></div>';
+        return;
+      }
+
+      shelf.innerHTML = books.slice(0, 4).map(renderBook).join("");
+    } catch (error) {
+      console.error("AxomPrep homepage books:", error);
+      shelf.innerHTML = `
+        <div class="ax-empty">
+          <strong>Books are temporarily unavailable.</strong>
+          <span><a href="books.html">Open the Books page →</a></span>
+        </div>`;
+    }
+  }
+
+  // config.js and Supabase are already loaded by index.html before this script.
+  loadBooks();
+})();
+</script>
+
 </body>
 </html>
