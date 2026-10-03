@@ -1,13 +1,14 @@
-AXOMPREP LINK REPAIR PACK
+AxomPrep Link Repair Pack v2
 
-Purpose:
-- Repairs the missing homepage destinations: Practice, Mock Tests, Current Affairs, Books and Premium.
-- Adds working extensionless route aliases (/practice/, /mock-tests/, /current-affairs/, /books/, /premium/).
-- Also includes About, Privacy, Terms and Disclaimer destinations so these links are available if used by the site footer.
+IMPORTANT
+- This package fixes the broken current-affairs page and provides route aliases for the missing pages.
+- The new current-affairs.html is dynamic: it reads published records from current_affairs, then falls back to current_affairs_v1.
+- Do NOT replace your existing index.html, config.js, styles.css, homepage.css, brand-logo.css, axomprep-mobile-optimized.css, app.js or homepage-live.js with files from this pack.
+- Upload the HTML files/folders to the website ROOT.
+- If your deployment uses extensionless routes such as /current-affairs or /mock-tests, upload the matching folders too.
+- This pack does not invent current-affairs facts when the database is empty.
 
-Upload the files/folders in this package to the same root as index.html.
-Do not replace your existing config.js or existing CSS files.
+Supabase tables used by current affairs
+1) current_affairs: title, content, category, published_date, is_published
+2) current_affairs_v1 compatibility: title, summary/content, category, published_date, source_name, status
 
-Important:
-- The live AxomPrep URL could not be fetched by the verification service during this check (cache/network fetch failure), so live HTTP status codes could not be independently confirmed.
-- The supplied homepage source was checked locally. Its internal navigation targets were repaired in this package.

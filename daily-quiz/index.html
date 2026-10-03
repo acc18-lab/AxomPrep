@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily Quiz — AxomPrep</title>
+<meta name="description" content="Take today's AxomPrep daily quiz and test your preparation.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="homepage.css">
+<link rel="stylesheet" href="brand-logo.css">
+<link rel="stylesheet" href="axomprep-mobile-optimized.css">
+<style>
+:root{--blue:#1A56DB;--dark:#1e293b;--red:#E02424;--green:#057A55;--light:#f8fafc}
+body{font-family:Inter,system-ui,sans-serif;background:#f8fafc;color:#1e293b}
+.ax-header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #e2e8f0}
+.quiz-option{transition:.18s;border:2px solid #e2e8f0}
+.quiz-option:hover{border-color:#93c5fd;background:#eff6ff}
+.quiz-option.selected{border-color:#1A56DB;background:#eff6ff}
+.quiz-option.correct{border-color:#057A55;background:#ecfdf5}
+.quiz-option.wrong{border-color:#E02424;background:#fef2f2}
+.progress{transition:width .25s ease}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<header class="ax-header">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="h-16 flex items-center justify-between gap-5">
+      <a href="index.html" class="flex items-center shrink-0" aria-label="AxomPrep home">
+        <img src="axomprep-logo.png" alt="AxomPrep" class="h-10 w-auto">
+      </a>
+      <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-600">
+        <a href="practice.html" class="hover:text-blue-600">Practice</a>
+        <a href="daily-quiz.html" class="text-blue-600">Daily Quiz</a>
+        <a href="mock-tests.html" class="hover:text-blue-600">Mock Tests</a>
+        <a href="current-affairs.html" class="hover:text-blue-600">Current Affairs</a>
+        <a href="current-jobs.html" class="hover:text-blue-600">Jobs</a>
+        <a href="books.html" class="hover:text-blue-600">Books</a>
+        <a href="premium.html" class="text-amber-600">Premium</a>
+      </nav>
+      <div class="hidden md:flex items-center gap-3">
+        <a href="index.html#login" class="px-4 py-2 rounded-lg border border-slate-200 text-sm font-semibold">Login</a>
+        <a href="index.html#signup" class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold">Get Started</a>
+      </div>
+      <button id="menuBtn" class="lg:hidden text-2xl" aria-label="Menu">☰</button>
+    </div>
+    <div id="mobileNav" class="hidden lg:hidden pb-4 border-t border-slate-100">
+      <div class="pt-3 grid gap-1">
+        <a href="practice.html" class="px-3 py-2 rounded-lg hover:bg-slate-50">Practice</a>
+        <a href="daily-quiz.html" class="px-3 py-2 rounded-lg bg-blue-50 text-blue-600">Daily Quiz</a>
+        <a href="mock-tests.html" class="px-3 py-2 rounded-lg hover:bg-slate-50">Mock Tests</a>
+        <a href="current-affairs.html" class="px-3 py-2 rounded-lg hover:bg-slate-50">Current Affairs</a>
+        <a href="current-jobs.html" class="px-3 py-2 rounded-lg hover:bg-slate-50">Jobs</a>
+        <a href="books.html" class="px-3 py-2 rounded-lg hover:bg-slate-50">Books</a>
+        <a href="premium.html" class="px-3 py-2 rounded-lg hover:bg-slate-50">Premium</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="bg-white border-b border-slate-200">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12 md:py-16 text-center">
+    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-sm font-semibold">
+      <span class="w-2 h-2 rounded-full bg-blue-600"></span> DAILY PRACTICE
+    </span>
+    <h1 class="mt-5 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">Today's Daily Quiz</h1>
+    <p id="quizDate" class="mt-3 text-slate-500"></p>
+    <p class="mt-2 text-slate-600 max-w-2xl mx-auto">Test your knowledge with 10 questions from the AxomPrep question bank.</p>
+  </div>
+</section>
+
+<section class="max-w-4xl mx-auto px-4 sm:px-6 py-8 md:py-10">
+  <div id="loading" class="bg-white rounded-2xl border border-slate-200 p-10 text-center shadow-sm">
+    <div class="text-blue-600 text-3xl mb-3">⟳</div>
+    <h2 class="font-bold text-lg">Loading today's quiz…</h2>
+    <p class="text-sm text-slate-500 mt-2">Preparing questions from the published question bank.</p>
+  </div>
+
+  <div id="errorBox" class="hidden bg-white rounded-2xl border border-red-200 p-8 text-center shadow-sm">
+    <div class="text-red-600 text-3xl mb-3">!</div>
+    <h2 class="font-bold text-lg">Quiz could not be loaded</h2>
+    <p id="errorText" class="text-sm text-slate-500 mt-2"></p>
+    <button id="retryBtn" class="mt-5 px-5 py-2.5 rounded-lg bg-blue-600 text-white font-semibold">Try Again</button>
+  </div>
+
+  <div id="quizApp" class="hidden">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 mb-5">
+      <div class="flex items-center justify-between text-sm font-semibold">
+        <span id="questionCounter">Question 1 of 10</span>
+        <span id="scorePreview" class="text-slate-500">Score: 0</span>
+      </div>
+      <div class="mt-3 h-2 bg-slate-100 rounded-full overflow-hidden">
+        <div id="progress" class="progress h-full bg-blue-600 rounded-full" style="width:10%"></div>
+      </div>
+    </div>
+
+    <article class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-5 sm:p-8">
+        <div class="flex flex-wrap items-center gap-2 mb-5">
+          <span id="category" class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold">General</span>
+          <span id="difficulty" class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">Practice</span>
+        </div>
+        <h2 id="questionText" class="text-xl sm:text-2xl font-bold leading-relaxed"></h2>
+        <div id="options" class="mt-7 grid gap-3"></div>
+
+        <div id="feedback" class="hidden mt-5 rounded-xl p-4 text-sm leading-relaxed"></div>
+
+        <div class="mt-7 flex flex-col sm:flex-row gap-3 sm:justify-between">
+          <button id="hintBtn" type="button" class="px-5 py-3 rounded-xl border border-slate-200 font-semibold text-slate-700 hover:bg-slate-50">Show Hint</button>
+          <div class="flex gap-3">
+            <button id="submitBtn" type="button" class="px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 disabled:opacity-50">Submit Answer</button>
+            <button id="nextBtn" type="button" class="hidden px-6 py-3 rounded-xl bg-slate-900 text-white font-semibold hover:bg-slate-800">Next Question →</button>
+          </div>
+        </div>
+        <div id="hint" class="hidden mt-4 rounded-xl bg-amber-50 border border-amber-100 p-4 text-sm text-amber-900"></div>
+      </div>
+    </article>
+  </div>
+
+  <div id="result" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm p-7 sm:p-10 text-center">
+    <div class="w-20 h-20 mx-auto rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-3xl font-black" id="finalScore">0/10</div>
+    <h2 class="mt-5 text-2xl font-extrabold">Quiz Complete</h2>
+    <p id="resultMessage" class="mt-2 text-slate-600"></p>
+    <div class="mt-7 flex flex-col sm:flex-row justify-center gap-3">
+      <button id="restartBtn" class="px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold">Try Again</button>
+      <a href="practice.html" class="px-6 py-3 rounded-xl border border-slate-200 font-semibold">Practice More →</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="bg-slate-900 text-slate-300 mt-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div class="flex flex-col md:flex-row justify-between gap-8">
+      <div>
+        <img src="axomprep-logo.png" alt="AxomPrep" class="h-10 w-auto brightness-0 invert">
+        <p class="mt-3 text-sm text-slate-400">Prepare Today. Rank Tomorrow.</p>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-3 text-sm">
+        <a href="practice.html">Practice</a><a href="daily-quiz.html">Daily Quiz</a>
+        <a href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a>
+        <a href="current-jobs.html">Jobs</a><a href="books.html">Books</a>
+        <a href="premium.html">Premium</a><a href="index.html">Home</a>
+      </div>
+    </div>
+    <div class="border-t border-slate-700 mt-8 pt-5 text-xs text-slate-500">© 2026 AxomPrep. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const fallbackQuestions = [
+  {question:"Which wildlife sanctuary in Assam is well known for conservation of the Golden Langur?",option_a:"Pobitora Wildlife Sanctuary",option_b:"Chakrashila Wildlife Sanctuary",option_c:"Orang National Park",option_d:"Hollongapar Gibbon Wildlife Sanctuary",answer:"B",explanation:"Chakrashila Wildlife Sanctuary is an important habitat for the Golden Langur.",subject:"Assam GK",difficulty:"easy",tags:["Assam"]},
+  {question:"Which organelle is commonly called the powerhouse of the cell?",option_a:"Ribosome",option_b:"Nucleus",option_c:"Mitochondrion",option_d:"Golgi apparatus",answer:"C",explanation:"Mitochondria generate most of the cell's ATP through cellular respiration.",subject:"General Science",difficulty:"easy",tags:["Science"]},
+  {question:"What is the capital of Assam?",option_a:"Guwahati",option_b:"Jorhat",option_c:"Silchar",option_d:"Dispur",answer:"D",explanation:"Dispur is the capital of Assam.",subject:"Assam GK",difficulty:"easy",tags:["Assam"]},
+  {question:"Which of the following is the largest organ in the human body?",option_a:"Heart",option_b:"Liver",option_c:"Skin",option_d:"Lungs",answer:"C",explanation:"Skin is the largest organ of the human body by surface area and weight.",subject:"General Science",difficulty:"easy",tags:["Science"]}
+];
+
+let questions=[], current=0, score=0, answered=false, selected=null;
+
+const $=id=>document.getElementById(id);
+$("quizDate").textContent=new Intl.DateTimeFormat("en-IN",{dateStyle:"full"}).format(new Date());
+
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+function normalizeQuestion(q){
+  const letters=["A","B","C","D"];
+  const original=letters.map(l=>({letter:l,text:q["option_"+l.toLowerCase()]}));
+  const answer=String(q.answer||"A").trim().toUpperCase();
+  const shuffled=shuffle(original);
+  return {...q, options:shuffled, correctText:(original.find(x=>x.letter===answer)||original[0]).text};
+}
+
+async function loadQuiz(){
+  $("loading").classList.remove("hidden"); $("errorBox").classList.add("hidden"); $("quizApp").classList.add("hidden"); $("result").classList.add("hidden");
+  try{
+    let loaded=[];
+    if(window.AXOMPREP_CONFIG?.supabaseUrl && window.AXOMPREP_CONFIG?.supabasePublishableKey){
+      const client=window.supabase.createClient(window.AXOMPREP_CONFIG.supabaseUrl,window.AXOMPREP_CONFIG.supabasePublishableKey);
+      const {data,error}=await client.from("questions")
+        .select("question,option_a,option_b,option_c,option_d,answer,explanation,difficulty,tags,subjects(name),exams(name)")
+        .eq("status","published")
+        .limit(80);
+      if(!error && data?.length) loaded=data;
+    }
+    if(!loaded.length) loaded=fallbackQuestions;
+    questions=shuffle(loaded).slice(0,10).map(normalizeQuestion);
+    while(questions.length<10) questions.push(...fallbackQuestions.map(normalizeQuestion).slice(0,10-questions.length));
+    current=0;score=0;answered=false;selected=null;
+    $("loading").classList.add("hidden");$("quizApp").classList.remove("hidden");
+    render();
+  }catch(e){
+    $("loading").classList.add("hidden");$("errorBox").classList.remove("hidden");
+    $("errorText").textContent=e?.message||"Please try again.";
+  }
+}
+
+function render(){
+  const q=questions[current]; answered=false;selected=null;
+  $("questionCounter").textContent=`Question ${current+1} of ${questions.length}`;
+  $("scorePreview").textContent=`Score: ${score}`;
+  $("progress").style.width=`${((current+1)/questions.length)*100}%`;
+  $("category").textContent=q.subjects?.name||q.subject||"General";
+  $("difficulty").textContent=(q.difficulty||"practice").toString().replace(/^./,x=>x.toUpperCase());
+  $("questionText").textContent=q.question;
+  $("feedback").className="hidden mt-5 rounded-xl p-4 text-sm leading-relaxed";
+  $("hint").classList.add("hidden"); $("hint").textContent="";
+  $("submitBtn").classList.remove("hidden");$("submitBtn").disabled=false;
+  $("nextBtn").classList.add("hidden");
+  $("hintBtn").classList.remove("hidden");
+  $("options").innerHTML=q.options.map((o,i)=>`
+    <button type="button" class="quiz-option w-full text-left p-4 rounded-xl flex items-start gap-4" data-i="${i}">
+      <span class="w-8 h-8 shrink-0 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-600">${String.fromCharCode(65+i)}</span>
+      <span class="pt-1 font-medium text-slate-800">${esc(o.text)}</span>
+    </button>`).join("");
+  document.querySelectorAll(".quiz-option").forEach(btn=>btn.onclick=()=>selectOption(btn));
+}
+
+function selectOption(btn){
+  if(answered)return;
+  document.querySelectorAll(".quiz-option").forEach(x=>x.classList.remove("selected"));
+  btn.classList.add("selected"); selected=Number(btn.dataset.i);
+}
+
+$("submitBtn").onclick=()=>{
+  if(selected===null){alert("Please select an answer first.");return}
+  answered=true;
+  const q=questions[current];
+  const buttons=[...document.querySelectorAll(".quiz-option")];
+  const chosen=q.options[selected];
+  const correct=chosen.text===q.correctText;
+  if(correct)score++;
+  buttons.forEach((b,i)=>{
+    const isCorrect=q.options[i].text===q.correctText;
+    if(isCorrect)b.classList.add("correct");
+    if(i===selected&&!isCorrect)b.classList.add("wrong");
+  });
+  $("feedback").className=`mt-5 rounded-xl p-4 text-sm leading-relaxed ${correct?"bg-emerald-50 border border-emerald-200 text-emerald-800":"bg-red-50 border border-red-200 text-red-800"}`;
+  $("feedback").innerHTML=correct?`<strong>Correct.</strong> ${esc(q.explanation||"Your answer is correct.")}`:`<strong>Not quite.</strong> The correct answer is <strong>${esc(q.correctText)}</strong>. ${esc(q.explanation||"Review this topic and try again.")}`;
+  $("scorePreview").textContent=`Score: ${score}`;
+  $("submitBtn").classList.add("hidden");
+  $("nextBtn").classList.remove("hidden");
+  $("hintBtn").classList.add("hidden");
+};
+
+$("nextBtn").onclick=()=>{
+  if(current<questions.length-1){current++;render()}
+  else{
+    $("quizApp").classList.add("hidden");$("result").classList.remove("hidden");
+    $("finalScore").textContent=`${score}/${questions.length}`;
+    const pct=Math.round(score/questions.length*100);
+    $("resultMessage").textContent=`You scored ${pct}%. ${pct>=80?"Excellent work.":"Keep practising and try the quiz again."}`;
+  }
+};
+$("hintBtn").onclick=()=>{
+  const q=questions[current];
+  $("hint").textContent="Use the question's subject and compare each option carefully before deciding.";
+  $("hint").classList.toggle("hidden");
+};
+$("restartBtn").onclick=loadQuiz;
+$("retryBtn").onclick=loadQuiz;
+$("menuBtn").onclick=()=>$("mobileNav").classList.toggle("hidden");
+
+const cfg=document.createElement("script");
+cfg.src="config.js";
+cfg.onload=loadQuiz;
+cfg.onerror=loadQuiz;
+document.head.appendChild(cfg);
+</script>
+</body>
+</html>
