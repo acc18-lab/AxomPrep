@@ -8,8 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Assamese:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Self-contained homepage styling restore -->
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="homepage.css">
+  <link rel="stylesheet" href="brand-logo.css">
+  <link rel="stylesheet" href="axomprep-mobile-optimized.css">
 </head>
 <body class="ax-home">
 <header class="ax-header">
@@ -194,5 +196,127 @@
 <script src="config.js"></script>
 <script src="app.js"></script>
 <script src="homepage-live.js"></script>
+
+<script id="axomprep-home-books-db">
+(function () {
+  "use strict";
+
+  const shelf = document.getElementById("homeBooksShelf");
+  if (!shelf) return;
+
+  function esc(value) {
+    return String(value ?? "").replace(/[&<>"']/g, function (m) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[m];
+    });
+  }
+
+  function fallbackCover(title) {
+    return `
+      <div class="ax-book-fallback">
+        <small>AxomPrep Books</small>
+        <strong>${esc(title)}</strong>
+      </div>`;
+  }
+
+  function renderBook(book) {
+    const title = book.title || "Book";
+    const cover = String(book.cover_url || "").trim();
+    const amazon = String(book.amazon_url || "").trim();
+    const flipkart = String(book.flipkart_url || "").trim();
+
+    const coverHtml = cover
+      ? `<img src="${esc(cover)}" alt="${esc(title)}" loading="lazy"
+           onerror="this.outerHTML='${fallbackCover(title).replace(/'/g, "\\'")}'">`
+      : fallbackCover(title);
+
+    const author = book.author
+      ? `<div class="ax-book-author">${esc(book.author)}</div>`
+      : "";
+
+    return `
+      <article class="ax-book-mini">
+        <a href="books.html" aria-label="View ${esc(title)} on AxomPrep Books">
+          <div class="ax-book-cover">${coverHtml}</div>
+        </a>
+        <h3 title="${esc(title)}">${esc(title)}</h3>
+        ${author}
+        <div class="ax-book-buttons">
+          ${amazon ? `<a class="ax-amz" href="${esc(amazon)}" target="_blank" rel="noopener noreferrer sponsored">Amazon</a>` : ""}
+          ${flipkart ? `<a class="ax-flip" href="${esc(flipkart)}" target="_blank" rel="noopener noreferrer sponsored">Flipkart</a>` : ""}
+        </div>
+      </article>`;
+  }
+
+  async function loadBooks() {
+    try {
+      const cfg = window.AXOMPREP_CONFIG || {};
+
+      if (!cfg.supabaseUrl || !cfg.supabasePublishableKey) {
+        throw new Error("Supabase configuration is missing.");
+      }
+
+      if (!window.supabase || !window.supabase.createClient) {
+        throw new Error("Supabase library is unavailable.");
+      }
+
+      const client = window.supabase.createClient(
+        cfg.supabaseUrl,
+        cfg.supabasePublishableKey
+      );
+
+      // Use the same real books_v1 database used by books.html.
+      let result = await client
+        .from("books_v1")
+        .select("title,author,publisher,description,exam_name,category,cover_url,amazon_url,flipkart_url,featured,status")
+        .eq("status", "published")
+        .eq("featured", true)
+        .order("title", { ascending: true })
+        .limit(4);
+
+      if (result.error) throw result.error;
+
+      let books = Array.isArray(result.data) ? result.data : [];
+
+      // If fewer than four books are featured, fill the shelf from all published books.
+      if (books.length < 4) {
+        const allResult = await client
+          .from("books_v1")
+          .select("title,author,publisher,description,exam_name,category,cover_url,amazon_url,flipkart_url,featured,status")
+          .eq("status", "published")
+          .order("featured", { ascending: false })
+          .order("title", { ascending: true })
+          .limit(4);
+
+        if (allResult.error) throw allResult.error;
+        books = Array.isArray(allResult.data) ? allResult.data : [];
+      }
+
+      if (!books.length) {
+        shelf.innerHTML = '<div class="ax-empty"><strong>No books available</strong><span>Published books will appear here automatically.</span></div>';
+        return;
+      }
+
+      shelf.innerHTML = books.slice(0, 4).map(renderBook).join("");
+    } catch (error) {
+      console.error("AxomPrep homepage books:", error);
+      shelf.innerHTML = `
+        <div class="ax-empty">
+          <strong>Books are temporarily unavailable.</strong>
+          <span><a href="books.html">Open the Books page →</a></span>
+        </div>`;
+    }
+  }
+
+  // config.js and Supabase are already loaded by index.html before this script.
+  loadBooks();
+})();
+</script>
+
 </body>
 </html>
