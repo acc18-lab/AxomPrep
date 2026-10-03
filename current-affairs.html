@@ -207,11 +207,18 @@ async function load(){
     const sb=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
     const result=await sb.from('current_affairs')
       .select('title,content,category,published_date,is_published')
-      .eq('is_published',true)
       .order('published_date',{ascending:false})
       .limit(100);
-    if(result.error) throw result.error;
-    rows=(result.data||[]).map(norm);
+    if(result.error) {
+      const alt=await sb.from('current_affairs_v1')
+        .select('title,content,category,published_date')
+        .order('published_date',{ascending:false})
+        .limit(100);
+      if(alt.error) throw result.error;
+      rows=(alt.data||[]).map(norm);
+    } else {
+      rows=(result.data||[]).map(norm);
+    }
     render();
   }catch(err){
     $('caCount').textContent='Current affairs unavailable';
