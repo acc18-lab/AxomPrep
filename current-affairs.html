@@ -1,44 +1,160 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Current Affairs | AxomPrep</title>
 <meta name="description" content="Latest Assam, India and world current affairs for competitive-exam preparation on AxomPrep.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Assamese:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="brand-logo.css"><link rel="stylesheet" href="axomprep-mobile-optimized.css">
 <style>
 :root{--blue:#1A56DB;--dark:#1e293b;--muted:#64748b;--bg:#f8fafc;--border:#e2e8f0;--green:#057A55;--orange:#F05252}
-body{margin:0;background:var(--bg);color:var(--dark);font-family:Inter,system-ui,sans-serif}.ca-wrap{max-width:1180px;margin:auto;padding:34px 18px 70px}.ca-hero{background:linear-gradient(135deg,#1A56DB,#2563eb);color:#fff;border-radius:22px;padding:36px;margin-bottom:22px}.ca-eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.85}.ca-hero h1{font-size:clamp(30px,5vw,48px);line-height:1.08;margin:8px 0}.ca-hero p{max-width:760px;color:#eaf1ff;line-height:1.7;margin:0}.ca-toolbar{background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px;box-shadow:0 5px 18px rgba(15,23,42,.04)}.ca-search{flex:1 1 280px;min-width:220px;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}.ca-chip{border:1px solid var(--border);background:#f8fafc;color:#475569;padding:9px 13px;border-radius:999px;font-weight:700;cursor:pointer}.ca-chip.active{background:var(--orange);border-color:var(--orange);color:#fff}.ca-meta{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--muted);font-size:13px;margin:0 2px 14px}.ca-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.ca-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:0 6px 20px rgba(15,23,42,.05)}.ca-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}.ca-cat{display:inline-flex;padding:5px 9px;border-radius:999px;background:#eef4ff;color:var(--blue);font-size:11px;font-weight:800}.ca-date{font-size:12px;color:var(--muted);white-space:nowrap}.ca-card h2{font-size:19px;line-height:1.35;margin:0 0 9px;color:#0f172a}.ca-card p{font-size:14px;line-height:1.65;color:#475569;margin:0;white-space:pre-line}.ca-source{margin-top:14px;padding-top:12px;border-top:1px solid #eef2f7;font-size:12px;color:#64748b}.ca-empty,.ca-error{background:#fff;border:1px dashed #cbd5e1;border-radius:16px;padding:28px;text-align:center;color:#64748b;grid-column:1/-1}.ca-error{color:#b91c1c;border-color:#fecaca;background:#fffafa}.ca-foot{margin-top:26px;text-align:center;color:#64748b;font-size:12px}@media(max-width:760px){.ca-wrap{padding:24px 14px 50px}.ca-hero{padding:27px 22px}.ca-grid{grid-template-columns:1fr}.ca-meta{align-items:flex-start;flex-direction:column}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--dark);font-family:Inter,"Noto Sans Assamese",system-ui,sans-serif}
+a{text-decoration:none;color:inherit}
+button,input{font:inherit}
+
+/* AxomPrep header — intentionally self-contained */
+.ax-header{background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:1000;box-shadow:0 1px 4px rgba(15,23,42,.03)}
+.ax-header-inner{max-width:1240px;height:76px;margin:0 auto;padding:0 22px;display:flex;align-items:center;gap:28px}
+.ax-brand{display:flex;align-items:center;flex:0 0 auto}
+.ax-logo{display:block;width:142px;height:auto;max-height:48px;object-fit:contain}
+.ax-nav{display:flex;align-items:center;gap:22px;flex:1;justify-content:center}
+.ax-nav a{font-size:14px;font-weight:650;color:#475569;white-space:nowrap}
+.ax-nav a:hover,.ax-nav a[aria-current="page"]{color:var(--blue)}
+.ax-actions{display:flex;align-items:center;gap:9px;flex:0 0 auto}
+.ax-btn{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:10px 15px;font-size:14px;font-weight:700;border:1px solid transparent;cursor:pointer}
+.ax-btn-light{background:#fff;color:#334155;border-color:#dbe3ed}
+.ax-btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.ax-menu{display:none;border:1px solid #d8e1ec;background:#fff;border-radius:9px;padding:8px 11px;color:#334155;cursor:pointer}
+.ax-mobile-nav{display:none;max-width:1240px;margin:0 auto;padding:0 22px 14px;flex-direction:column;gap:4px}
+.ax-mobile-nav.open{display:flex}
+.ax-mobile-nav a{padding:10px 8px;border-radius:8px;color:#475569;font-weight:650}
+.ax-mobile-nav a:hover{background:#f1f5f9;color:var(--blue)}
+
+.ca-wrap{max-width:1180px;margin:auto;padding:34px 18px 70px}
+.ca-hero{background:linear-gradient(135deg,#1A56DB,#2563eb);color:#fff;border-radius:22px;padding:36px;margin-bottom:22px;box-shadow:0 10px 30px rgba(26,86,219,.12)}
+.ca-eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.88}
+.ca-hero h1{font-size:clamp(30px,5vw,48px);line-height:1.08;margin:8px 0 12px;letter-spacing:-.03em}
+.ca-hero p{max-width:760px;color:#eaf1ff;line-height:1.7;margin:0;font-size:14px}
+.ca-toolbar{background:#fff;border:1px solid var(--border);border-radius:16px;padding:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px;box-shadow:0 5px 18px rgba(15,23,42,.04)}
+.ca-search{flex:1 1 320px;min-width:220px;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;outline:none;color:#0f172a;background:#fff}
+.ca-search:focus{border-color:#7aa2ef;box-shadow:0 0 0 3px rgba(26,86,219,.1)}
+.ca-filter-list{display:flex;gap:7px;flex-wrap:wrap}
+.ca-chip{border:1px solid var(--border);background:#f8fafc;color:#475569;padding:9px 13px;border-radius:999px;font-weight:700;cursor:pointer;font-size:12px}
+.ca-chip:hover{border-color:#b9c8df}
+.ca-chip.active{background:var(--orange);border-color:var(--orange);color:#fff}
+.ca-meta{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--muted);font-size:13px;margin:0 2px 14px}
+.ca-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.ca-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:0 6px 20px rgba(15,23,42,.05);transition:transform .15s,box-shadow .15s}
+.ca-card:hover{transform:translateY(-1px);box-shadow:0 9px 25px rgba(15,23,42,.08)}
+.ca-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
+.ca-cat{display:inline-flex;padding:5px 9px;border-radius:999px;background:#eef4ff;color:var(--blue);font-size:11px;font-weight:800}
+.ca-date{font-size:12px;color:var(--muted);white-space:nowrap}
+.ca-card h2{font-size:19px;line-height:1.35;margin:0 0 9px;color:#0f172a}
+.ca-card p{font-size:14px;line-height:1.65;color:#475569;margin:0;white-space:pre-line}
+.ca-source{margin-top:14px;padding-top:12px;border-top:1px solid #eef2f7;font-size:12px;color:#64748b}
+.ca-empty,.ca-error{background:#fff;border:1px dashed #cbd5e1;border-radius:16px;padding:28px;text-align:center;color:#64748b;grid-column:1/-1}
+.ca-error{color:#b91c1c;border-color:#fecaca;background:#fffafa}
+.ca-foot{margin-top:26px;text-align:center;color:#64748b;font-size:12px}
+@media(max-width:1050px){
+ .ax-nav{gap:13px}
+ .ax-nav a{font-size:13px}
+ .ax-header-inner{gap:16px}
+}
+@media(max-width:800px){
+ .ax-header-inner{height:68px;padding:0 14px;justify-content:space-between}
+ .ax-logo{width:132px;max-height:44px}
+ .ax-nav,.ax-actions{display:none}
+ .ax-menu{display:block}
+ .ca-wrap{padding:24px 14px 50px}
+ .ca-hero{padding:27px 22px}
+ .ca-grid{grid-template-columns:1fr}
+ .ca-meta{align-items:flex-start;flex-direction:column}
+}
 </style>
 </head>
-<body class="ax-home">
-<header class="ax-header"><div class="ax-header-inner">
-<a class="ax-brand" href="index.html" aria-label="AxomPrep home"><img src="axomprep-logo.png" alt="AxomPrep" class="ax-logo"></a>
-<nav class="ax-nav" aria-label="Primary navigation"><a href="practice.html">Practice</a><a href="daily-quiz.html">Daily Quiz</a><a href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="current-jobs.html">Jobs</a><a href="books.html">Books</a><a href="premium.html">Premium</a></nav>
-<div class="ax-actions"><a class="ax-btn ax-btn-light" href="index.html#login">Login</a><a class="ax-btn ax-btn-primary" href="index.html#signup">Get Started</a></div>
-<button class="ax-menu" id="caMenu" type="button" aria-label="Open menu">☰</button></div>
-<div class="ax-mobile-nav" id="caMobileNav" aria-hidden="true"><a href="index.html">Home</a><a href="practice.html">Practice</a><a href="daily-quiz.html">Daily Quiz</a><a href="mock-tests.html">Mock Tests</a><a href="current-affairs.html">Current Affairs</a><a href="current-jobs.html">Jobs</a><a href="books.html">Books</a><a href="premium.html">Premium</a></div></header>
+<body>
+<header class="ax-header">
+  <div class="ax-header-inner">
+    <a class="ax-brand" href="/index.html" aria-label="AxomPrep home">
+      <img src="/axomprep-logo.png" alt="AxomPrep" class="ax-logo">
+    </a>
+    <nav class="ax-nav" aria-label="Primary navigation">
+      <a href="/practice.html">Practice</a>
+      <a href="/daily-quiz.html">Daily Quiz</a>
+      <a href="/mock-tests.html">Mock Tests</a>
+      <a href="/current-affairs.html" aria-current="page">Current Affairs</a>
+      <a href="/current-jobs.html">Jobs</a>
+      <a href="/books.html">Books</a>
+      <a href="/premium.html">Premium</a>
+    </nav>
+    <div class="ax-actions">
+      <a class="ax-btn ax-btn-light" href="/index.html#login">Login</a>
+      <a class="ax-btn ax-btn-primary" href="/index.html#signup">Get Started</a>
+    </div>
+    <button class="ax-menu" id="caMenu" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+  </div>
+  <div class="ax-mobile-nav" id="caMobileNav" aria-hidden="true">
+    <a href="/index.html">Home</a>
+    <a href="/practice.html">Practice</a>
+    <a href="/daily-quiz.html">Daily Quiz</a>
+    <a href="/mock-tests.html">Mock Tests</a>
+    <a href="/current-affairs.html" aria-current="page">Current Affairs</a>
+    <a href="/current-jobs.html">Jobs</a>
+    <a href="/books.html">Books</a>
+    <a href="/premium.html">Premium</a>
+  </div>
+</header>
+
 <main class="ca-wrap">
-<section class="ca-hero"><div class="ca-eyebrow">CURRENT AFFAIRS</div><h1>Latest updates for exam preparation.</h1><p>Read published current-affairs updates by category. The page reads the AxomPrep current-affairs data from Supabase and does not depend on a hard-coded news list.</p></section>
-<section class="ca-toolbar"><input id="caSearch" class="ca-search" type="search" placeholder="Search current affairs…" aria-label="Search current affairs">
-<div id="caFilters"><button class="ca-chip active" data-cat="all">All</button><button class="ca-chip" data-cat="Assam">Assam</button><button class="ca-chip" data-cat="India">India</button><button class="ca-chip" data-cat="International">World</button><button class="ca-chip" data-cat="Economy">Economy</button><button class="ca-chip" data-cat="Sports">Sports</button><button class="ca-chip" data-cat="Science & Technology">Science</button></div></section>
-<div class="ca-meta"><strong id="caCount">Loading current affairs…</strong><span id="caUpdated">Checking latest published updates…</span></div>
-<section id="caGrid" class="ca-grid"><div class="ca-empty">Loading…</div></section>
+<section class="ca-hero">
+  <div class="ca-eyebrow">CURRENT AFFAIRS</div>
+  <h1>Latest updates for exam preparation.</h1>
+  <p>Read published current-affairs updates by category. Updates are loaded directly from the AxomPrep database.</p>
+</section>
+
+<section class="ca-toolbar">
+  <input id="caSearch" class="ca-search" type="search" placeholder="Search current affairs…" aria-label="Search current affairs">
+  <div id="caFilters" class="ca-filter-list">
+    <button class="ca-chip active" data-cat="all">All</button>
+    <button class="ca-chip" data-cat="Assam">Assam</button>
+    <button class="ca-chip" data-cat="India">India</button>
+    <button class="ca-chip" data-cat="International">World</button>
+    <button class="ca-chip" data-cat="Economy">Economy</button>
+    <button class="ca-chip" data-cat="Sports">Sports</button>
+    <button class="ca-chip" data-cat="Science & Technology">Science</button>
+  </div>
+</section>
+
+<div class="ca-meta">
+  <strong id="caCount">Loading current affairs…</strong>
+  <span id="caUpdated">Checking latest published updates…</span>
+</div>
+
+<section id="caGrid" class="ca-grid">
+  <div class="ca-empty">Loading current affairs…</div>
+</section>
+
 <div class="ca-foot">Always verify important facts with the original official source before using them for an examination.</div>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
 <script>
 (function(){
 'use strict';
-const $=id=>document.getElementById(id);let rows=[];let cat='all';
+const $=id=>document.getElementById(id);
+let rows=[];let cat='all';
 const fallback=[];
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 function dateText(v){if(!v)return '';const d=new Date(v+'T00:00:00');if(Number.isNaN(d.getTime()))return esc(v);return new Intl.DateTimeFormat('en-IN',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}).format(d);}
 function norm(x){return {title:x.title||'',content:x.content||x.summary||'',category:x.category||'India',published_date:x.published_date||'',source_name:x.source_name||x.source||''};}
 function render(){
  const q=$('caSearch').value.trim().toLowerCase();
- const list=rows.filter(x=>(cat==='all'||String(x.category).toLowerCase()===cat.toLowerCase()) && (!q||`${x.title} ${x.content} ${x.category}`.toLowerCase().includes(q)));
+ const list=rows.filter(x=>(cat==='all'||String(x.category).toLowerCase()===cat.toLowerCase()||(cat==='International'&&['world','international'].includes(String(x.category).toLowerCase()))) && (!q||`${x.title} ${x.content} ${x.category}`.toLowerCase().includes(q)));
  $('caCount').textContent=`${list.length} update${list.length===1?'':'s'}`;
  $('caUpdated').textContent=list.length?`Latest published date: ${dateText(list[0].published_date)}`:'No matching published updates';
  $('caGrid').innerHTML=list.length?list.map(x=>`<article class="ca-card"><div class="ca-top"><span class="ca-cat">${esc(x.category)}</span><span class="ca-date">${dateText(x.published_date)}</span></div><h2>${esc(x.title)}</h2><p>${esc(x.content)}</p>${x.source_name?`<div class="ca-source">Source: ${esc(x.source_name)}</div>`:''}</article>`).join(''):`<div class="ca-empty">No published current-affairs updates match this filter or search.</div>`;
@@ -66,5 +182,8 @@ document.querySelectorAll('#caFilters .ca-chip').forEach(b=>b.addEventListener('
 $('caMenu').addEventListener('click',()=>{const n=$('caMobileNav');const open=n.classList.toggle('open');n.setAttribute('aria-hidden',String(!open));});
 load();
 })();
+
+})();
 </script>
-</body></html>
+</body>
+</html>
