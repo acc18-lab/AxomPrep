@@ -75,39 +75,45 @@ button,input{font:inherit}
  .ca-meta{align-items:flex-start;flex-direction:column}
 }
 </style>
+
+<style id="axomprep-unified-header-style">
+.axu-header{height:60px;background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:9999;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.axu-inner{height:60px;max-width:1180px;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:28px}
+.axu-brand{display:flex;align-items:center;gap:9px;text-decoration:none!important;flex:0 0 auto}
+.axu-mark{width:32px;height:32px;border-radius:8px;background:#1A56DB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;line-height:1}
+.axu-name{font-size:20px;font-weight:800;letter-spacing:-.02em;color:#1e293b;line-height:1}
+.axu-name span{color:#1A56DB}
+.axu-nav{display:flex;align-items:center;gap:24px;margin-left:auto}
+.axu-nav a{font-size:14px;font-weight:650;color:#334155!important;text-decoration:none!important;white-space:nowrap;line-height:60px}
+.axu-nav a:hover,.axu-nav a.axu-active{color:#1A56DB!important}
+.axu-menu{display:none;width:36px;height:36px;border:1px solid #dbe2ea;background:#fff;border-radius:8px;color:#334155;font-size:20px;align-items:center;justify-content:center;cursor:pointer}
+.axu-mobile{display:none;max-width:1180px;margin:0 auto;padding:8px 18px 12px;background:#fff;border-top:1px solid #f1f5f9}
+.axu-mobile.axu-open{display:grid;gap:2px}
+.axu-mobile a{padding:9px 8px;color:#334155!important;text-decoration:none!important;font-size:14px;font-weight:650;border-radius:7px}
+.axu-mobile a:hover{background:#f8fafc;color:#1A56DB!important}
+@media(max-width:900px){
+  .axu-nav{display:none}
+  .axu-menu{display:flex}
+  .axu-inner{padding:0 14px}
+  .axu-name{font-size:18px}
+}
+</style>
+
 </head>
 <body>
-<header class="ax-header">
-  <div class="ax-header-inner">
-    <a class="ax-brand" href="/index.html" aria-label="AxomPrep home">
-      <img src="/axomprep-logo.png" alt="AxomPrep" class="ax-logo">
+
+<header class="axu-header">
+  <div class="axu-inner">
+    <a class="axu-brand" href="index.html" aria-label="AxomPrep home">
+      <span class="axu-mark">A</span>
+      <span class="axu-name">Axom<span>Prep</span></span>
     </a>
-    <nav class="ax-nav" aria-label="Primary navigation">
-      <a href="/practice.html">Practice</a>
-      <a href="/daily-quiz.html">Daily Quiz</a>
-      <a href="/mock-tests.html">Mock Tests</a>
-      <a href="/current-affairs.html" aria-current="page">Current Affairs</a>
-      <a href="/current-jobs.html">Jobs</a>
-      <a href="/books.html">Books</a>
-      <a href="/premium.html">Premium</a>
-    </nav>
-    <div class="ax-actions">
-      <a class="ax-btn ax-btn-light" href="/index.html#login">Login</a>
-      <a class="ax-btn ax-btn-primary" href="/index.html#signup">Get Started</a>
-    </div>
-    <button class="ax-menu" id="caMenu" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+    <nav class="axu-nav" aria-label="Primary navigation"><a href="index.html" class="">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="axu-active">Current Affairs</a><a href="current-jobs.html" class="">Jobs</a><a href="books.html" class="">Books</a><a href="premium.html" class="">Premium</a></nav>
+    <button id="caMenu" class="axu-menu" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
   </div>
-  <div class="ax-mobile-nav" id="caMobileNav" aria-hidden="true">
-    <a href="/index.html">Home</a>
-    <a href="/practice.html">Practice</a>
-    <a href="/daily-quiz.html">Daily Quiz</a>
-    <a href="/mock-tests.html">Mock Tests</a>
-    <a href="/current-affairs.html" aria-current="page">Current Affairs</a>
-    <a href="/current-jobs.html">Jobs</a>
-    <a href="/books.html">Books</a>
-    <a href="/premium.html">Premium</a>
-  </div>
+  <div id="caMobileNav" class="axu-mobile" aria-hidden="true"><a href="index.html" class="">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="axu-active">Current Affairs</a><a href="current-jobs.html" class="">Jobs</a><a href="books.html" class="">Books</a><a href="premium.html" class="">Premium</a></div>
 </header>
+
 
 <main class="ca-wrap">
 <section class="ca-hero">
@@ -244,6 +250,19 @@ $('caMenu').addEventListener('click',()=>{
   n.setAttribute('aria-hidden',String(!open));
 });
 load();
+})();
+</script>
+<script id="axomprep-unified-header-script">
+(function(){
+  const b=document.getElementById("caMenu");
+  const n=document.getElementById("caMobileNav");
+  if(b&&n){
+    b.addEventListener("click",function(){
+      const open=n.classList.toggle("axu-open");
+      n.setAttribute("aria-hidden",String(!open));
+      b.setAttribute("aria-expanded",String(open));
+    });
+  }
 })();
 </script>
 </body>

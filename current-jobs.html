@@ -17,67 +17,45 @@
     color: #64748b;
   }
 </style>
-<style>
-/* AxomPrep unified site header — matches the master homepage */
-.ax-header{width:100%;background:#fff;border-bottom:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(15,23,42,.04);}
-.ax-header-inner{max-width:1280px;margin:0 auto;min-height:72px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
-.ax-brand{text-decoration:none;display:flex;align-items:center;flex-shrink:0;}
-.ax-nav{display:flex;align-items:center;justify-content:center;gap:25px;flex:1;}
-.ax-nav a{font-family:Inter,sans-serif;text-decoration:none;color:#1e293b;font-size:14px;font-weight:500;white-space:nowrap;}
-.ax-nav a:hover{color:#1A56DB;}
-.ax-actions{display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.ax-btn{font-family:Inter,sans-serif;text-decoration:none;border-radius:9px;padding:9px 17px;font-size:14px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;}
-.ax-btn-light{color:#1e293b;background:#fff;}
-.ax-btn-primary{color:#fff;background:#1A56DB;}
-.ax-btn-primary:hover{background:#1748b8;}
-.ax-menu{display:none;border:0;background:transparent;font-size:24px;color:#1e293b;cursor:pointer;}
-.ax-mobile-nav{display:none;}
+
+<style id="axomprep-unified-header-style">
+.axu-header{height:60px;background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:9999;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.axu-inner{height:60px;max-width:1180px;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:28px}
+.axu-brand{display:flex;align-items:center;gap:9px;text-decoration:none!important;flex:0 0 auto}
+.axu-mark{width:32px;height:32px;border-radius:8px;background:#1A56DB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;line-height:1}
+.axu-name{font-size:20px;font-weight:800;letter-spacing:-.02em;color:#1e293b;line-height:1}
+.axu-name span{color:#1A56DB}
+.axu-nav{display:flex;align-items:center;gap:24px;margin-left:auto}
+.axu-nav a{font-size:14px;font-weight:650;color:#334155!important;text-decoration:none!important;white-space:nowrap;line-height:60px}
+.axu-nav a:hover,.axu-nav a.axu-active{color:#1A56DB!important}
+.axu-menu{display:none;width:36px;height:36px;border:1px solid #dbe2ea;background:#fff;border-radius:8px;color:#334155;font-size:20px;align-items:center;justify-content:center;cursor:pointer}
+.axu-mobile{display:none;max-width:1180px;margin:0 auto;padding:8px 18px 12px;background:#fff;border-top:1px solid #f1f5f9}
+.axu-mobile.axu-open{display:grid;gap:2px}
+.axu-mobile a{padding:9px 8px;color:#334155!important;text-decoration:none!important;font-size:14px;font-weight:650;border-radius:7px}
+.axu-mobile a:hover{background:#f8fafc;color:#1A56DB!important}
 @media(max-width:900px){
-  .ax-header-inner{padding:0 18px;min-height:64px;}
-  .ax-nav,.ax-actions{display:none;}
-  .ax-menu{display:block;}
-  .ax-mobile-nav{padding:8px 18px 16px;background:#fff;border-top:1px solid #eef2f7;}
-  .ax-mobile-nav a{display:block;padding:11px 4px;color:#1e293b;text-decoration:none;font-weight:600;font-size:14px;}
-  .ax-mobile-nav.open{display:block;}
+  .axu-nav{display:none}
+  .axu-menu{display:flex}
+  .axu-inner{padding:0 14px}
+  .axu-name{font-size:18px}
 }
 </style>
+
 </head>
 <body>
-<header class="ax-header" style="position:sticky;top:0;z-index:1000;">
-  <div class="ax-header-inner">
-    <a class="ax-brand" href="index.html" aria-label="AxomPrep home">
-      <span style="display:flex;align-items:center;gap:9px;text-decoration:none;">
-        <span style="width:32px;height:32px;background:#1A56DB;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;line-height:1;">A</span>
-        <span style="font-weight:800;font-size:20px;letter-spacing:-.5px;color:#1e293b;">Axom<span style="color:#1A56DB;">Prep</span></span>
-      </span>
+
+<header class="axu-header">
+  <div class="axu-inner">
+    <a class="axu-brand" href="index.html" aria-label="AxomPrep home">
+      <span class="axu-mark">A</span>
+      <span class="axu-name">Axom<span>Prep</span></span>
     </a>
-    <nav class="ax-nav" aria-label="Primary navigation">
-      <a href="index.html">Home</a>
-      <a href="practice.html">Practice</a>
-      <a href="daily-quiz.html">Daily Quiz</a>
-      <a href="mock-tests.html">Mock Tests</a>
-      <a href="current-affairs.html">Current Affairs</a>
-      <a href="current-jobs.html">Jobs</a>
-      <a href="books.html">Books</a>
-      <a href="premium.html">Premium</a>
-    </nav>
-    <div class="ax-actions">
-      <a class="ax-btn ax-btn-light" href="#jobs">Jobs</a>
-      <a class="ax-btn ax-btn-primary" href="index.html">Back to AxomPrep</a>
-    </div>
-    <button class="ax-menu" id="cjMobileMenu" type="button" aria-label="Open menu">☰</button>
+    <nav class="axu-nav" aria-label="Primary navigation"><a href="index.html" class="">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="">Current Affairs</a><a href="current-jobs.html" class="axu-active">Jobs</a><a href="books.html" class="">Books</a><a href="premium.html" class="">Premium</a></nav>
+    <button id="axUnifiedMenu" class="axu-menu" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
   </div>
-  <div class="ax-mobile-nav" id="cjMobileNav" aria-hidden="true">
-    <a href="index.html">Home</a>
-    <a href="practice.html">Practice</a>
-    <a href="daily-quiz.html">Daily Quiz</a>
-    <a href="mock-tests.html">Mock Tests</a>
-    <a href="current-affairs.html">Current Affairs</a>
-    <a href="current-jobs.html">Jobs</a>
-    <a href="books.html">Books</a>
-    <a href="premium.html">Premium</a>
-  </div>
+  <div id="axUnifiedMobile" class="axu-mobile" aria-hidden="true"><a href="index.html" class="">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="">Current Affairs</a><a href="current-jobs.html" class="axu-active">Jobs</a><a href="books.html" class="">Books</a><a href="premium.html" class="">Premium</a></div>
 </header>
+
 <main class="cj-page">
 <section class="cj-hero"><div><div class="cj-eyebrow">CAREER ALERTS</div><h1>Current Jobs & Recruitments</h1><p>Find active recruitment updates, important deadlines and official application links for Assam, railways, banking and other government-exam opportunities.</p><div class="cj-hero-actions"><a class="cj-btn-orange" href="#jobs">Browse active jobs ↓</a><a class="cj-btn-white" href="index.html">Back to AxomPrep</a></div></div><div class="cj-hero-side"><strong>Built for job seekers</strong><div class="cj-stat"><b>Assam + India</b><span>Recruitment coverage</span></div><div class="cj-stat"><b>Daily</b><span>Automatic refresh</span></div><div class="cj-stat"><b>Official links</b><span>When available</span></div></div></section>
 <section class="cj-container" id="jobs"><div class="cj-toolbar"><input id="jobSearch" type="search" placeholder="Search jobs, post, organization or qualification…"><select id="jobCategory"><option value="all">All categories</option></select><select id="jobQualification"><option value="all">All qualifications</option><option value="10th">10th</option><option value="10+2">10+2</option><option value="graduate">Graduate</option><option value="diploma">Diploma</option><option value="iti">ITI</option><option value="mbbs">MBBS</option></select><label class="cj-toggle"><input id="closingSoon" type="checkbox"> <span>Closing ≤ 7 days</span></label></div><div class="cj-meta"><strong id="jobResultCount">Loading…</strong><span id="jobUpdateTime">Auto-updated daily</span></div><div id="jobsGrid" class="cj-grid"></div><div class="cj-disclaimer"><strong>Important:</strong> AxomPrep aggregates job information to make opportunities easier to discover. Always open the official notification/official recruitment portal and verify eligibility, dates, fees and instructions before applying.</div></section><div class="cj-footer">AxomPrep • Prepare Today. Rank Tomorrow.</div>
@@ -148,14 +126,17 @@
 })();
 </script>
 
-<script>
+<script id="axomprep-unified-header-script">
 (function(){
-  const b=document.getElementById("cjMobileMenu"), n=document.getElementById("cjMobileNav");
-  if(!b||!n)return;
-  b.addEventListener("click",function(){
-    const open=n.classList.toggle("open");
-    n.setAttribute("aria-hidden",String(!open));
-  });
+  const b=document.getElementById("axUnifiedMenu");
+  const n=document.getElementById("axUnifiedMobile");
+  if(b&&n){
+    b.addEventListener("click",function(){
+      const open=n.classList.toggle("axu-open");
+      n.setAttribute("aria-hidden",String(!open));
+      b.setAttribute("aria-expanded",String(open));
+    });
+  }
 })();
 </script>
 </body></html>

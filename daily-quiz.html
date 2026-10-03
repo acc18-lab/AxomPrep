@@ -25,42 +25,45 @@ body{font-family:Inter,system-ui,sans-serif;background:#f8fafc;color:#1e293b}
 .progress{transition:width .25s ease}
 .hidden{display:none!important}
 </style>
+
+<style id="axomprep-unified-header-style">
+.axu-header{height:60px;background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:9999;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.axu-inner{height:60px;max-width:1180px;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:28px}
+.axu-brand{display:flex;align-items:center;gap:9px;text-decoration:none!important;flex:0 0 auto}
+.axu-mark{width:32px;height:32px;border-radius:8px;background:#1A56DB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;line-height:1}
+.axu-name{font-size:20px;font-weight:800;letter-spacing:-.02em;color:#1e293b;line-height:1}
+.axu-name span{color:#1A56DB}
+.axu-nav{display:flex;align-items:center;gap:24px;margin-left:auto}
+.axu-nav a{font-size:14px;font-weight:650;color:#334155!important;text-decoration:none!important;white-space:nowrap;line-height:60px}
+.axu-nav a:hover,.axu-nav a.axu-active{color:#1A56DB!important}
+.axu-menu{display:none;width:36px;height:36px;border:1px solid #dbe2ea;background:#fff;border-radius:8px;color:#334155;font-size:20px;align-items:center;justify-content:center;cursor:pointer}
+.axu-mobile{display:none;max-width:1180px;margin:0 auto;padding:8px 18px 12px;background:#fff;border-top:1px solid #f1f5f9}
+.axu-mobile.axu-open{display:grid;gap:2px}
+.axu-mobile a{padding:9px 8px;color:#334155!important;text-decoration:none!important;font-size:14px;font-weight:650;border-radius:7px}
+.axu-mobile a:hover{background:#f8fafc;color:#1A56DB!important}
+@media(max-width:900px){
+  .axu-nav{display:none}
+  .axu-menu{display:flex}
+  .axu-inner{padding:0 14px}
+  .axu-name{font-size:18px}
+}
+</style>
+
 </head>
 <body>
-<header class="ax-header">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="h-16 flex items-center justify-between gap-5">
-      <a href="index.html" class="flex items-center shrink-0" aria-label="AxomPrep home">
-        <img src="axomprep-logo.png" alt="AxomPrep" class="h-10 w-auto">
-      </a>
-      <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-600">
-        <a href="practice.html" class="hover:text-blue-600">Practice</a>
-        <a href="daily-quiz.html" class="text-blue-600">Daily Quiz</a>
-        <a href="mock-tests.html" class="hover:text-blue-600">Mock Tests</a>
-        <a href="current-affairs.html" class="hover:text-blue-600">Current Affairs</a>
-        <a href="current-jobs.html" class="hover:text-blue-600">Jobs</a>
-        <a href="books.html" class="hover:text-blue-600">Books</a>
-        <a href="premium.html" class="text-amber-600">Premium</a>
-      </nav>
-      <div class="hidden md:flex items-center gap-3">
-        <a href="index.html#login" class="px-4 py-2 rounded-lg border border-slate-200 text-sm font-semibold">Login</a>
-        <a href="index.html#signup" class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold">Get Started</a>
-      </div>
-      <button id="menuBtn" class="lg:hidden text-2xl" aria-label="Menu">☰</button>
-    </div>
-    <div id="mobileNav" class="hidden lg:hidden pb-4 border-t border-slate-100">
-      <div class="pt-3 grid gap-1">
-        <a href="practice.html" class="px-3 py-2 rounded-lg hover:bg-slate-50">Practice</a>
-        <a href="daily-quiz.html" class="px-3 py-2 rounded-lg bg-blue-50 text-blue-600">Daily Quiz</a>
-        <a href="mock-tests.html" class="px-3 py-2 rounded-lg hover:bg-slate-50">Mock Tests</a>
-        <a href="current-affairs.html" class="px-3 py-2 rounded-lg hover:bg-slate-50">Current Affairs</a>
-        <a href="current-jobs.html" class="px-3 py-2 rounded-lg hover:bg-slate-50">Jobs</a>
-        <a href="books.html" class="px-3 py-2 rounded-lg hover:bg-slate-50">Books</a>
-        <a href="premium.html" class="px-3 py-2 rounded-lg hover:bg-slate-50">Premium</a>
-      </div>
-    </div>
+
+<header class="axu-header">
+  <div class="axu-inner">
+    <a class="axu-brand" href="index.html" aria-label="AxomPrep home">
+      <span class="axu-mark">A</span>
+      <span class="axu-name">Axom<span>Prep</span></span>
+    </a>
+    <nav class="axu-nav" aria-label="Primary navigation"><a href="index.html" class="">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="axu-active">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="">Current Affairs</a><a href="current-jobs.html" class="">Jobs</a><a href="books.html" class="">Books</a><a href="premium.html" class="">Premium</a></nav>
+    <button id="menuBtn" class="axu-menu" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
   </div>
+  <div id="mobileNav" class="axu-mobile" aria-hidden="true"><a href="index.html" class="">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="axu-active">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="">Current Affairs</a><a href="current-jobs.html" class="">Jobs</a><a href="books.html" class="">Books</a><a href="premium.html" class="">Premium</a></div>
 </header>
+
 
 <main>
 <section class="bg-white border-b border-slate-200">
@@ -272,6 +275,19 @@ cfg.src="config.js";
 cfg.onload=loadQuiz;
 cfg.onerror=loadQuiz;
 document.head.appendChild(cfg);
+</script>
+<script id="axomprep-unified-header-script">
+(function(){
+  const b=document.getElementById("menuBtn");
+  const n=document.getElementById("mobileNav");
+  if(b&&n){
+    b.addEventListener("click",function(){
+      const open=n.classList.toggle("axu-open");
+      n.setAttribute("aria-hidden",String(!open));
+      b.setAttribute("aria-expanded",String(open));
+    });
+  }
+})();
 </script>
 </body>
 </html>
