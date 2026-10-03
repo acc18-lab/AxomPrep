@@ -22,6 +22,20 @@
 }
 </style>
 
+
+<style id="axomprep-books-db-style">
+.book-cover{height:150px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:16px}
+.book-cover img{width:100%;height:100%;object-fit:cover}
+.book-cover-placeholder{width:92px;height:120px;border-radius:6px;background:linear-gradient(145deg,#1A56DB,#0f3ea8);color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-size:11px;font-weight:800;box-shadow:0 5px 14px rgba(15,23,42,.18)}
+.book-meta{font-size:12px;color:#64748b;line-height:1.5;margin:4px 0}
+.book-exam{font-size:12px;color:#1A56DB;font-weight:700;margin:8px 0}
+.book-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.book-actions a{padding:8px 10px;border-radius:8px;font-size:12px;font-weight:800;text-decoration:none}
+.book-amazon{background:#fff3e8;color:#c2410c;border:1px solid #fed7aa}
+.book-flipkart{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.book-category{display:inline-block;padding:4px 8px;border-radius:999px;background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;margin-bottom:8px}
+.books-error{grid-column:1/-1}
+</style>
 </head><body>
 <header class="axu-header">
   <div class="axu-inner">
@@ -34,7 +48,9 @@
   </div>
   <div id="axUnifiedMobile" class="axu-mobile" aria-hidden="true"><a href="index.html" class="">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="">Current Affairs</a><a href="current-jobs.html" class="">Jobs</a><a href="books.html" class="axu-active">Books</a><a href="premium.html" class="">Premium</a></div>
 </header>
-<main class="main"><section class="hero"><div class="eyebrow">STUDY RESOURCES</div><h1>Books for aspirants.</h1><p>Explore the study resources highlighted across AxomPrep. Purchase links can be connected to the site's configured affiliate destinations.</p></section><section class="grid"><div class="card"><h2>Lucent General Knowledge</h2><p>General knowledge reference for competitive-exam preparation.</p></div><div class="card"><h2>APSC General Studies Manual</h2><p>General studies reference for Assam-focused preparation.</p></div><div class="card"><h2>General Science for Competitive Exams</h2><p>Science revision resource for competitive examinations.</p></div><div class="card"><h2>Assam GK</h2><p>Assam-focused general knowledge and static-GK preparation.</p></div></section></main><footer class="footer">© 2026 AxomPrep. Prepare Today. Rank Tomorrow.</footer><script id="axomprep-unified-header-script">
+<main class="main"><section class="hero"><div class="eyebrow">STUDY RESOURCES</div><h1>Books for aspirants.</h1><p>Explore the study resources highlighted across AxomPrep. Purchase links can be connected to the site's configured affiliate destinations.</p></section><section class="grid" id="booksGrid">
+  <div class="card"><p class="muted">Loading books from AxomPrep database…</p></div>
+</section></main><footer class="footer">© 2026 AxomPrep. Prepare Today. Rank Tomorrow.</footer><script id="axomprep-unified-header-script">
 (function(){
   const b=document.getElementById("axUnifiedMenu");
   const n=document.getElementById("axUnifiedMobile");
@@ -47,4 +63,90 @@
   }
 })();
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script id="axomprep-books-db-loader">
+(function(){
+  'use strict';
+
+  const grid=document.getElementById('booksGrid');
+
+  function esc(v){
+    return String(v ?? '').replace(/[&<>"']/g,m=>({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+    }[m]));
+  }
+
+  function card(book){
+    const title=esc(book.title || 'Untitled book');
+    const author=esc(book.author || '');
+    const publisher=esc(book.publisher || '');
+    const description=esc(book.description || '');
+    const exam=esc(book.exam_name || '');
+    const category=esc(book.category || '');
+    const cover=String(book.cover_url || '').trim();
+    const amazon=String(book.amazon_url || '').trim();
+    const flipkart=String(book.flipkart_url || '').trim();
+
+    const coverHtml=cover
+      ? `<div class="book-cover"><img src="${esc(cover)}" alt="${title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;book-cover-placeholder&quot;>${title}</div>'"></div>`
+      : `<div class="book-cover"><div class="book-cover-placeholder">${title}</div></div>`;
+
+    return `<article class="card">
+      ${coverHtml}
+      ${category ? `<span class="book-category">${category}</span>` : ''}
+      <h2>${title}</h2>
+      ${author ? `<div class="book-meta"><strong>Author:</strong> ${author}</div>` : ''}
+      ${publisher ? `<div class="book-meta"><strong>Publisher:</strong> ${publisher}</div>` : ''}
+      ${exam ? `<div class="book-exam">${exam}</div>` : ''}
+      ${description ? `<p>${description}</p>` : ''}
+      <div class="book-actions">
+        ${amazon ? `<a class="book-amazon" href="${esc(amazon)}" target="_blank" rel="noopener noreferrer sponsored">Amazon</a>` : ''}
+        ${flipkart ? `<a class="book-flipkart" href="${esc(flipkart)}" target="_blank" rel="noopener noreferrer sponsored">Flipkart</a>` : ''}
+      </div>
+    </article>`;
+  }
+
+  async function loadBooks(){
+    try{
+      const cfg=window.AXOMPREP_CONFIG || {};
+      if(!cfg.supabaseUrl || !cfg.supabasePublishableKey){
+        throw new Error('Supabase configuration could not be loaded.');
+      }
+      if(!window.supabase || !window.supabase.createClient){
+        throw new Error('Supabase library could not be loaded.');
+      }
+
+      const client=window.supabase.createClient(
+        cfg.supabaseUrl,
+        cfg.supabasePublishableKey
+      );
+
+      const {data,error}=await client
+        .from('books_v1')
+        .select('title,author,publisher,description,exam_name,category,cover_url,amazon_url,flipkart_url,featured,status')
+        .eq('status','published')
+        .order('featured',{ascending:false})
+        .order('title',{ascending:true})
+        .limit(100);
+
+      if(error) throw error;
+
+      if(!Array.isArray(data) || !data.length){
+        grid.innerHTML='<div class="card books-error"><h2>No books available</h2><p>The published books list is currently empty.</p></div>';
+        return;
+      }
+
+      grid.innerHTML=data.map(card).join('');
+    }catch(err){
+      console.error('AxomPrep books:',err);
+      grid.innerHTML=`<div class="card books-error"><h2>Unable to load books</h2><p>${esc(err?.message || 'Please try again later.')}</p></div>`;
+    }
+  }
+
+  loadBooks();
+})();
+</script>
+
 </body></html>
