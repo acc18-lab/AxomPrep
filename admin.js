@@ -437,7 +437,7 @@ document.querySelectorAll('.admin-nav button').forEach(b=>b.onclick=()=>{
 
 init();
 
-\nclient.auth.onAuthStateChange((_event, session) => {
+client.auth.onAuthStateChange((_event, session) => {
   if (session) init().catch(err => {
     $('authMessage').textContent='Admin panel could not load: '+(err?.message||err);
   });
