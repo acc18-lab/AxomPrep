@@ -1,18 +1,28 @@
-/* AxomPrep unified visual theme: derived from the Admin page */
-:root{--ax-bg:#f4f7fb;--ax-surface:#fff;--ax-ink:#12345b;--ax-muted:#63748b;--ax-border:#e0e7f0;--ax-orange:#f58220;--ax-orange-dark:#e96f0a;--ax-blue:#173f73;--ax-shadow:0 10px 32px rgba(20,45,80,.07)}
-html{background:var(--ax-bg)}
+/* AxomPrep unified site theme — consistent with the Admin dashboard.
+   Intentionally styles shared surfaces and controls without changing page layouts. */
+:root{
+  --ax-bg:#f4f7fb;--ax-surface:#fff;--ax-ink:#12345b;--ax-muted:#63748b;
+  --ax-border:#dfe7f1;--ax-orange:#f58220;--ax-orange-dark:#e96f0a;
+  --ax-blue:#173f73;--ax-link:#2458d3;--ax-shadow:0 10px 32px rgba(20,45,80,.07);
+  color-scheme:light;
+}
+html{background:var(--ax-bg);color:var(--ax-ink)}
 body{background:var(--ax-bg);color:var(--ax-ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-header.topbar,.topbar,.site-header,header nav,.navbar{background:#fff!important;border-bottom:1px solid var(--ax-border)!important;box-shadow:none!important}
-main,.page-wrap,.container,.content-wrap{color:var(--ax-ink)}
-:is(.card,.panel,.section-card,.quiz-card,.question-card,.job-card,.book-card,.affair-card,.mock-card,.premium-card,.feature-card,.auth-card,.modal-content,.content-card){background:var(--ax-surface);border:1px solid var(--ax-border);border-radius:16px;box-shadow:var(--ax-shadow)}
-:is(button,.btn,input[type=submit],input[type=button],a.button){transition:background-color .15s ease,border-color .15s ease,transform .15s ease}
-:is(.btn.primary,.btn-primary,button.primary,button[type=submit],input[type=submit],.cta-button){background:var(--ax-orange)!important;border-color:var(--ax-orange)!important;color:#fff!important;border-radius:10px;font-weight:700}
-:is(.btn.primary,.btn-primary,button.primary,button[type=submit],input[type=submit],.cta-button):hover{background:var(--ax-orange-dark)!important;border-color:var(--ax-orange-dark)!important}
-:is(.btn.ghost,.btn.light,.btn-secondary,.secondary-button){border-radius:10px}
-:is(h1,h2,h3,h4,.section-title){color:var(--ax-ink)}
-:is(input:not([type=checkbox]):not([type=radio]),select,textarea){border-color:#d7e0ec;border-radius:9px}
-:is(input:not([type=checkbox]):not([type=radio]),select,textarea):focus{outline:2px solid #f5822033;outline-offset:1px;border-color:var(--ax-orange)}
-:is(.eyebrow,.badge,.pill,.tag){border-radius:999px}
-:is(.admin-panel,.notice,.stat,.quiz-progress,.progress-card){border-radius:14px}
-footer{background:#fff;border-top:1px solid var(--ax-border)}
-@media(max-width:700px){:is(.card,.panel,.section-card,.quiz-card,.question-card,.job-card,.book-card,.affair-card,.mock-card,.premium-card,.feature-card,.auth-card,.modal-content,.content-card){border-radius:13px}}
+body :is(p,li,label,small,.muted,.subtitle,.description){line-height:1.65}
+body a{transition:color .15s ease,border-color .15s ease}
+body a:not(.btn):not(.button):not([class*="btn-"]){text-underline-offset:3px}
+body :is(header.topbar,.topbar,.site-header,.navbar,.main-header,.app-header,.axu-header){background:#fff!important;border-bottom:1px solid var(--ax-border)!important;box-shadow:none!important;color:var(--ax-ink)}
+body :is(header.topbar,.topbar,.site-header,.navbar,.main-header,.app-header,.axu-header) a{text-decoration:none}
+body :is(main,.page-wrap,.container,.content-wrap,.page-container){color:var(--ax-ink)}
+body :is(.card,.panel,.section-card,.quiz-card,.question-card,.job-card,.book-card,.affair-card,.mock-card,.premium-card,.feature-card,.auth-card,.modal-content,.content-card,.stat-card,.dashboard-card,.admin-card,.job-panel){background:var(--ax-surface);border:1px solid var(--ax-border);border-radius:16px;box-shadow:var(--ax-shadow)}
+body :is(button,.btn,input[type=submit],input[type=button],a.button){font-family:inherit;transition:background-color .15s ease,border-color .15s ease,color .15s ease,transform .15s ease}
+body :is(.btn.primary,.btn-primary,button.primary,button[type=submit],input[type=submit],.cta-button,.btn-orange,.primary-button){background:var(--ax-orange)!important;border-color:var(--ax-orange)!important;color:#fff!important;border-radius:10px;font-weight:700}
+body :is(.btn.primary,.btn-primary,button.primary,button[type=submit],input[type=submit],.cta-button,.btn-orange,.primary-button):hover{background:var(--ax-orange-dark)!important;border-color:var(--ax-orange-dark)!important}
+body :is(.btn.ghost,.btn.light,.btn-secondary,.secondary-button,.btn-outline){border-radius:10px}
+body :is(h1,h2,h3,h4,.section-title,.page-title){color:var(--ax-ink)}
+body :is(input:not([type=checkbox]):not([type=radio]),select,textarea){border-color:#d7e0ec;border-radius:9px;font:inherit}
+body :is(input:not([type=checkbox]):not([type=radio]),select,textarea):focus{outline:2px solid #f5822033;outline-offset:1px;border-color:var(--ax-orange)}
+body :is(.eyebrow,.badge,.pill,.tag,.chip){border-radius:999px}
+body :is(.admin-panel,.notice,.stat,.quiz-progress,.progress-card,.alert){border-radius:14px}
+body footer{background:#fff;border-top:1px solid var(--ax-border);color:var(--ax-ink)}
+@media(max-width:700px){body :is(.card,.panel,.section-card,.quiz-card,.question-card,.job-card,.book-card,.affair-card,.mock-card,.premium-card,.feature-card,.auth-card,.modal-content,.content-card,.stat-card,.dashboard-card,.admin-card,.job-panel){border-radius:13px}}
