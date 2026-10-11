@@ -1,237 +1,477 @@
 ```javascript
 (function () {
+  'use strict';
+
   const grid = document.getElementById('jobsGrid');
-  const resultCount = document.getElementById('jobResultCount');
-  const updateTime = document.getElementById('jobUpdateTime');
-
-  if (!grid) return;
-
-  const showError = (message) => {
-    grid.innerHTML = `
-      <div class="cj-empty">
-        <strong>Current jobs could not be loaded.</strong>
-        <span>${message}</span>
-        <button type="button" id="cjRetry"
-          style="margin-top:12px;padding:9px 14px;border-radius:8px;cursor:pointer">
-          Try again
-        </button>
-      </div>`;
-    document.getElementById('cjRetry')?.addEventListener('click', load);
-  };
-
-  const cfg = window.AXOMPREP_CONFIG;
-
-  if (!cfg || !cfg.supabaseUrl || !cfg.supabasePublishableKey) {
-    showError('Supabase configuration is missing. Check config.js.');
-    return;
-  }
-
-  if (!window.supabase?.createClient) {
-    showError('The Supabase library did not load. Check your internet connection.');
-    return;
-  }
-
-  const db = window.supabase.createClient(
-    cfg.supabaseUrl,
-    cfg.supabasePublishableKey
-  );
-
   const search = document.getElementById('jobSearch');
   const category = document.getElementById('jobCategory');
   const qualification = document.getElementById('jobQualification');
   const closing = document.getElementById('closingSoon');
+  const resultCount = document.getElementById('jobResultCount');
+  const updateTime = document.getElementById('jobUpdateTime');
   const clearBtn = document.getElementById('jobClear');
 
-  const state = { items: [], loading: false };
+  const state = {
+    items: [],
+    loading: false
+  };
 
-  const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;',
-    '"': '&quot;', "'": '&#39;'
-  }[m]));
+  if (!grid) {
+    console.error('AxomPrep: #jobsGrid was not found.');
+    return;
+  }
 
-  const safeUrl = u => {
+  // Escape text before inserting it into HTML.
+  const esc = value =>
+    String(value ?? '').replace(/[&<>"']/g, character => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[character]));
+
+  // Allow only HTTP and HTTPS links.
+  const safeUrl = value => {
     try {
-      const x = new URL(String(u || ''), location.href);
-      return /^https?:$/.test(x.protocol) ? x.href : '';
+      const url = new URL(String(value || ''), window.location.href);
+      return /^https?:$/.test(url.protocol) ? url.href : '';
     } catch (_) {
       return '';
     }
   };
 
-  function daysLeft(d) {
-    if (!d) return null;
-    const end = new Date(d + 'T23:59:59');
-    return Number.isNaN(end.getTime())
-      ? null
-      : Math.ceil((end - new Date()) / 86400000);
+  function showError(message) {
+    grid.innerHTML = `
+      <div class="cj-empty">
+        <strong>Current jobs could not be loaded.</strong>
+        <span>${esc(message)}</span>
+        <button type="button" id="cjRetry"
+          style="margin-top:12px;padding:9px 14px;border-radius:8px;cursor:pointer">
+          Try again
+        </button>
+      </div>
+    `;
+
+    const retryButton = document.getElementById('cjRetry');
+
+    if (retryButton) {
+      retryButton.addEventListener('click', load);
+    }
   }
 
-  function statusFor(j) {
-    const n = daysLeft(j.application_last_date);
-    if (n === null) return { cls: '', label: 'Check notification' };
-    if (n < 0) return { cls: 'red', label: 'Closed' };
-    if (n <= 3) return { cls: 'red', label: 'Closing soon' };
+  // Check configuration and Supabase availability.
+  const cfg = window.AXOMPREP_CONFIG;
+
+  if (
+    !cfg ||
+    !cfg.supabaseUrl ||
+    !cfg.supabasePublishableKey
+  ) {
+    console.error(
+      'AxomPrep: Missing AXOMPREP_CONFIG, supabaseUrl or supabasePublishableKey.'
+    );
+
+    showError('Check config.js and your Supabase configuration.');
+    return;
+  }
+
+  if (!window.supabase || !window.supabase.createClient) {
+    console.error('AxomPrep: The Supabase JavaScript library did not load.');
+    showError('The Supabase library did not load. Check your connection.');
+    return;
+  }
+
+  let db;
+
+  try {
+    db = window.supabase.createClient(
+      cfg.supabaseUrl,
+      cfg.supabasePublishableKey
+    );
+  } catch (error) {
+    console.error('AxomPrep: Could not initialize Supabase.', error);
+    showError('Supabase could not be initialized. Check config.js.');
+    return;
+  }
+
+  // Calculate days remaining until the application deadline.
+  function daysLeft(dateValue) {
+    if (!dateValue) return null;
+
+    const deadline = new Date(`${dateValue}T23:59:59`);
+
+    if (Number.isNaN(deadline.getTime())) return null;
+
+    return Math.ceil(
+      (deadline.getTime() - Date.now()) / 86400000
+    );
+  }
+
+  function statusFor(job) {
+    const remaining = daysLeft(job.application_last_date);
+
+    if (remaining === null) {
+      return { cls: '', label: 'Check notification' };
+    }
+
+    if (remaining < 0) {
+      return { cls: 'red', label: 'Closed' };
+    }
+
+    if (remaining <= 3) {
+      return { cls: 'red', label: 'Closing soon' };
+    }
+
     return { cls: 'orange', label: 'Open' };
   }
 
-  function card(j) {
-    const st = statusFor(j);
-    const n = daysLeft(j.application_last_date);
-    const apply = safeUrl(j.apply_url);
-    const official = safeUrl(j.official_url);
-    const source = safeUrl(j.source_url);
+  // Build a job card using the existing cj-* CSS classes.
+  function card(job) {
+    const status = statusFor(job);
+    const remaining = daysLeft(job.application_last_date);
 
-    return `<article class="cj-card">
-      <div class="cj-top"><div class="cj-badges">
-        <span class="cj-pill">${esc(j.category || 'Current Jobs')}</span>
-        <span class="cj-pill ${st.cls}">${st.label}</span>
-        ${j.featured ? '<span class="cj-pill">Featured</span>' : ''}
-      </div></div>
-      <h2>${esc(j.title)}</h2>
-      <div class="cj-org">${esc(j.organization || 'Organization not specified')}</div>
-      <p class="cj-summary">${esc(j.description || 'Check the official notification for details.')}</p>
-      <div class="cj-info">
-        <div><span>Vacancies</span><b>${esc(j.vacancies || '—')}</b></div>
-        <div><span>Qualification</span><b>${esc(j.qualification || 'See notification')}</b></div>
-        <div><span>Location</span><b>${esc(j.location || 'India')}</b></div>
-        <div><span>Last date</span><b>${esc(j.application_last_date || 'Not specified')}</b></div>
-      </div>
-      <div class="cj-deadline"><strong>${
-        n === null ? 'Check notification' :
-        n < 0 ? 'Applications closed' :
-        n === 0 ? 'Last date: today' :
-        `${n} day${n === 1 ? '' : 's'} left`
-      }</strong>${j.post_name ? `<span class="days">${esc(j.post_name)}</span>` : ''}</div>
-      <div class="cj-actions">
-        ${apply ? `<a class="cj-apply" href="${esc(apply)}" target="_blank" rel="noopener noreferrer">Apply / Portal ↗</a>` : ''}
-        ${official ? `<a class="cj-official" href="${esc(official)}" target="_blank" rel="noopener noreferrer">Official site ↗</a>` : ''}
-        ${source ? `<a class="cj-source" href="${esc(source)}" target="_blank" rel="noopener noreferrer">Details ↗</a>` : ''}
-      </div>
-    </article>`;
+    const apply = safeUrl(job.apply_url);
+    const official = safeUrl(job.official_url);
+    const source = safeUrl(job.source_url);
+
+    let deadlineText = 'Check notification';
+
+    if (remaining !== null) {
+      if (remaining < 0) {
+        deadlineText = 'Applications closed';
+      } else if (remaining === 0) {
+        deadlineText = 'Last date: today';
+      } else {
+        deadlineText =
+          `${remaining} day${remaining === 1 ? '' : 's'} left`;
+      }
+    }
+
+    return `
+      <article class="cj-card">
+        <div class="cj-top">
+          <div class="cj-badges">
+            <span class="cj-pill">
+              ${esc(job.category || 'Current Jobs')}
+            </span>
+
+            <span class="cj-pill ${status.cls}">
+              ${esc(status.label)}
+            </span>
+
+            ${job.featured
+              ? '<span class="cj-pill">Featured</span>'
+              : ''}
+          </div>
+        </div>
+
+        <h2>${esc(job.title || 'Recruitment Notification')}</h2>
+
+        <div class="cj-org">
+          ${esc(job.organization || 'Organization not specified')}
+        </div>
+
+        <p class="cj-summary">
+          ${esc(
+            job.description ||
+            'Check the official notification for complete details and eligibility.'
+          )}
+        </p>
+
+        <div class="cj-info">
+          <div>
+            <span>Vacancies</span>
+            <b>${esc(job.vacancies || '—')}</b>
+          </div>
+
+          <div>
+            <span>Qualification</span>
+            <b>${esc(
+              String(job.qualification || 'See notification').slice(0, 90)
+            )}</b>
+          </div>
+
+          <div>
+            <span>Location</span>
+            <b>${esc(job.location || 'India')}</b>
+          </div>
+
+          <div>
+            <span>Last date</span>
+            <b>${esc(job.application_last_date || 'Not specified')}</b>
+          </div>
+        </div>
+
+        <div class="cj-deadline">
+          <strong>${esc(deadlineText)}</strong>
+
+          ${job.post_name
+            ? `<span class="days">${esc(job.post_name)}</span>`
+            : ''}
+        </div>
+
+        <div class="cj-actions">
+          ${apply
+            ? `<a class="cj-apply"
+                 href="${esc(apply)}"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                 Apply / Portal ↗
+               </a>`
+            : ''}
+
+          ${official
+            ? `<a class="cj-official"
+                 href="${esc(official)}"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                 Official site ↗
+               </a>`
+            : ''}
+
+          ${source
+            ? `<a class="cj-source"
+                 href="${esc(source)}"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                 Details ↗
+               </a>`
+            : ''}
+        </div>
+      </article>
+    `;
   }
 
+  // Apply search and filters.
   function render() {
-    const q = String(search?.value || '').trim().toLowerCase();
-    const cat = category?.value || 'all';
-    const qual = qualification?.value || 'all';
-    const onlyClosing = !!closing?.checked;
+    const query = String(search?.value || '')
+      .trim()
+      .toLowerCase();
 
-    const filtered = state.items.filter(j => {
-      const hay = [
-        j.title, j.organization, j.post_name, j.category,
-        j.qualification, j.location, j.vacancies
-      ].join(' ').toLowerCase();
+    const selectedCategory = category?.value || 'all';
+    const selectedQualification = qualification?.value || 'all';
+    const onlyClosingSoon = Boolean(closing?.checked);
 
-      const qok = !q || hay.includes(q);
-      const cok = cat === 'all' || j.category === cat;
-      const qlok = qual === 'all' ||
-        String(j.qualification || '').toLowerCase().includes(qual.toLowerCase());
+    const filtered = state.items
+      .filter(job => {
+        const searchableText = [
+          job.title,
+          job.organization,
+          job.post_name,
+          job.category,
+          job.qualification,
+          job.location,
+          job.vacancies
+        ]
+          .map(value => String(value || ''))
+          .join(' ')
+          .toLowerCase();
 
-      const n = daysLeft(j.application_last_date);
-      const lok = !onlyClosing || (n !== null && n >= 0 && n <= 7);
+        const matchesSearch =
+          !query || searchableText.includes(query);
 
-      return qok && cok && qlok && lok;
-    }).sort((a, b) => {
-      const da = a.application_last_date || '9999-12-31';
-      const db = b.application_last_date || '9999-12-31';
-      return da.localeCompare(db);
-    });
+        const matchesCategory =
+          selectedCategory === 'all' ||
+          job.category === selectedCategory;
+
+        const matchesQualification =
+          selectedQualification === 'all' ||
+          String(job.qualification || '')
+            .toLowerCase()
+            .includes(selectedQualification.toLowerCase());
+
+        const remaining = daysLeft(job.application_last_date);
+
+        const matchesDeadline =
+          !onlyClosingSoon ||
+          (
+            remaining !== null &&
+            remaining >= 0 &&
+            remaining <= 7
+          );
+
+        return (
+          matchesSearch &&
+          matchesCategory &&
+          matchesQualification &&
+          matchesDeadline
+        );
+      })
+      .sort((a, b) => {
+        const dateA = a.application_last_date || '9999-12-31';
+        const dateB = b.application_last_date || '9999-12-31';
+
+        return dateA.localeCompare(dateB);
+      });
 
     if (resultCount) {
       resultCount.textContent =
         `${filtered.length} job${filtered.length === 1 ? '' : 's'} found`;
     }
 
-    grid.innerHTML = filtered.length
-      ? filtered.map(card).join('')
-      : `<div class="cj-empty">
-           <strong>No jobs match your filters.</strong>
-           <span>Try another search or qualification.</span>
-         </div>`;
+    if (filtered.length) {
+      grid.innerHTML = filtered.map(card).join('');
+    } else {
+      grid.innerHTML = `
+        <div class="cj-empty">
+          <strong>
+            ${state.items.length
+              ? 'No jobs match your filters.'
+              : 'No current jobs are available.'}
+          </strong>
+          <span>
+            ${state.items.length
+              ? 'Try clearing a filter or searching another qualification.'
+              : 'Please check again later.'}
+          </span>
+        </div>
+      `;
+    }
   }
 
+  // Fetch jobs from Supabase.
   async function load() {
     if (state.loading) return;
+
     state.loading = true;
-    grid.innerHTML = '<div class="cj-loading">Loading current jobs…</div>';
+    grid.innerHTML =
+      '<div class="cj-loading">Loading current jobs…</div>';
 
     try {
       const { data, error } = await db
         .from('current_jobs_v1')
         .select('*')
         .in('status', ['open', 'closing_soon', 'closed'])
-        .order('application_last_date', { ascending: true, nullsFirst: false })
-        .order('featured', { ascending: false })
+        .order('application_last_date', {
+          ascending: true,
+          nullsFirst: false
+        })
+        .order('featured', {
+          ascending: false
+        })
         .limit(200);
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
-      state.items = data || [];
+      state.items = Array.isArray(data) ? data : [];
 
+      // Populate categories without unnecessarily resetting the selection.
       if (category) {
-        const selected = category.value || 'all';
-        const cats = [...new Set(state.items.map(x => x.category).filter(Boolean))].sort();
+        const previousCategory = category.value || 'all';
+
+        const categories = [
+          ...new Set(
+            state.items
+              .map(job => job.category)
+              .filter(Boolean)
+          )
+        ].sort();
 
         category.innerHTML =
           '<option value="all">All categories</option>' +
-          cats.map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join('');
+          categories.map(item =>
+            `<option value="${esc(item)}">${esc(item)}</option>`
+          ).join('');
 
-        category.value = cats.includes(selected) ? selected : 'all';
+        category.value = categories.includes(previousCategory)
+          ? previousCategory
+          : 'all';
       }
 
       if (updateTime) {
-        updateTime.textContent = 'Data checked ' +
-          new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        const latest = state.items.reduce((mostRecent, job) => {
+          const updated = job.updated_at || '';
+          return updated > mostRecent ? updated : mostRecent;
+        }, '');
+
+        updateTime.textContent = latest
+          ? `Updated ${new Date(latest).toLocaleString('en-IN', {
+              dateStyle: 'medium',
+              timeStyle: 'short',
+              timeZone: 'Asia/Kolkata'
+            })}`
+          : `Checked ${new Date().toLocaleString('en-IN', {
+              dateStyle: 'medium',
+              timeStyle: 'short',
+              timeZone: 'Asia/Kolkata'
+            })}`;
       }
 
       render();
     } catch (error) {
-      console.error('AxomPrep jobs loading error:', error);
-      showError('The database request failed. Check the browser console and Supabase settings.');
+      console.error('AxomPrep current jobs error:', error);
+
+      showError(
+        'The database request failed. Check the browser console, ' +
+        'Supabase table, and access permissions.'
+      );
     } finally {
       state.loading = false;
     }
   }
 
-  [search, category, qualification, closing].forEach(el => {
-    el?.addEventListener(el.type === 'checkbox' ? 'change' : 'input', render);
-  });
+  // Connect the filters.
+  [search, category, qualification, closing].forEach(element => {
+    if (!element) return;
 
-  clearBtn?.addEventListener('click', () => {
-    if (search) search.value = '';
-    if (category) category.value = 'all';
-    if (qualification) qualification.value = 'all';
-    if (closing) closing.checked = false;
-    render();
-  });
-
-  // Load after the HTML has finished parsing.
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', load, { once: true });
-} else {
-  load();
-}
-
-  // Re-fetch job records daily at midnight IST, even if the tab stays open.
-  function scheduleMidnightRefresh() {
-    const now = new Date();
-    const parts = new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'Asia/Kolkata',
-      year: 'numeric', month: '2-digit', day: '2-digit'
-    }).formatToParts(now);
-
-    const get = type => parts.find(p => p.type === type)?.value;
-    const tomorrow = new Date(
-      `${get('year')}-${get('month')}-${get('day')}T00:00:00+05:30`
+    element.addEventListener(
+      element.type === 'checkbox' ? 'change' : 'input',
+      render
     );
-    tomorrow.setDate(tomorrow.getDate() + 1);
+  });
 
-    setTimeout(async () => {
+  // Clear all filters.
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      if (search) search.value = '';
+      if (category) category.value = 'all';
+      if (qualification) qualification.value = 'all';
+      if (closing) closing.checked = false;
+
+      render();
+    });
+  }
+
+  // Load correctly whether this file runs before or after DOM readiness.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', load, { once: true });
+  } else {
+    load();
+  }
+
+  // Refresh the data at midnight India time while the page remains open.
+  function scheduleMidnightRefresh() {
+    const now = Date.now();
+
+    const indiaParts = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).formatToParts(new Date(now));
+
+    const part = type =>
+      indiaParts.find(item => item.type === type)?.value;
+
+    const todayIndia = `${part('year')}-${part('month')}-${part('day')}`;
+
+    const [year, month, day] = todayIndia.split('-').map(Number);
+
+    // IST is UTC+05:30. Calculate the next midnight in IST.
+    const nextMidnight = Date.UTC(year, month - 1, day + 1) - 330 * 60000;
+
+    const delay = Math.max(1000, nextMidnight - now);
+
+    window.setTimeout(async () => {
       await load();
       scheduleMidnightRefresh();
-    }, Math.max(1000, tomorrow.getTime() - now.getTime()));
+    }, delay);
   }
 
   scheduleMidnightRefresh();
+
 })();
 ```
