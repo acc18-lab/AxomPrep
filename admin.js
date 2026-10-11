@@ -44,7 +44,7 @@ async function init(){
 
 $('loginAdmin').onclick=()=>{
   sessionStorage.setItem('axomprep_admin_return','/admin.html');
-  location.href='/#login';
+  location.href='/index.html#login';
 };
 
 $('logoutBtn').onclick=async()=>{
