@@ -91,7 +91,7 @@
 
     const coverHtml=cover
       ? `<div class="book-cover"><img src="${esc(cover)}" alt="${title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;book-cover-placeholder&quot;>${title}</div>'"></div>`
-      : `<div class="book-cover"><div class="book-cover-placeholder">${title}</div></div>`;
+      : `<div class="book-cover book-cover-missing" data-book-title="${title}"><div class="book-cover-placeholder">${title}</div></div>`;
 
     return `<article class="card">
       ${coverHtml}
@@ -106,6 +106,33 @@
         ${flipkart ? `<a class="book-flipkart" href="${esc(flipkart)}" target="_blank" rel="noopener noreferrer sponsored">Flipkart</a>` : ''}
       </div>
     </article>`;
+  }
+
+
+  async function loadMissingCovers(){
+    const missing=[...grid.querySelectorAll('.book-cover-missing[data-book-title]')];
+    for(const box of missing){
+      const title=box.getAttribute('data-book-title');
+      if(!title) continue;
+      try{
+        const url='https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent('intitle:'+title)+'&maxResults=5';
+        const response=await fetch(url);
+        if(!response.ok) continue;
+        const result=await response.json();
+        const items=Array.isArray(result.items)?result.items:[];
+        const item=items.find(x=>x.volumeInfo && x.volumeInfo.imageLinks && (x.volumeInfo.imageLinks.thumbnail || x.volumeInfo.imageLinks.smallThumbnail));
+        if(!item) continue;
+        const imageUrl=(item.volumeInfo.imageLinks.thumbnail || item.volumeInfo.imageLinks.smallThumbnail).replace(/^http:/,'https:');
+        const img=document.createElement('img');
+        img.src=imageUrl;
+        img.alt=title;
+        img.loading='lazy';
+        img.referrerPolicy='no-referrer';
+        img.onerror=()=>{ img.remove(); box.classList.remove('book-cover-missing'); };
+        box.replaceChildren(img);
+        box.classList.remove('book-cover-missing');
+      }catch(_){ /* Keep the title placeholder if no public cover is found. */ }
+    }
   }
 
   async function loadBooks(){
@@ -139,6 +166,8 @@
       }
 
       grid.innerHTML=data.map(card).join('');
+      // Fill missing covers using the public Google Books API; existing cover_url values stay unchanged.
+      loadMissingCovers();
     }catch(err){
       console.error('AxomPrep books:',err);
       grid.innerHTML=`<div class="card books-error"><h2>Unable to load books</h2><p>${esc(err?.message || 'Please try again later.')}</p></div>`;
