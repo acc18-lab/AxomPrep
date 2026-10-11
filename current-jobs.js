@@ -42,7 +42,7 @@
   };
 
   function showError(message) {
-    grid.innerHTML = `
+    grid.innerHTML = '
       <div class="cj-empty">
         <strong>Current jobs could not be loaded.</strong>
         <span>${esc(message)}</span>
@@ -51,7 +51,7 @@
           Try again
         </button>
       </div>
-    `;
+    ';
 
     const retryButton = document.getElementById('cjRetry');
 
