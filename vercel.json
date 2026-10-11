@@ -1,4 +1,3 @@
-
 {
   "crons": [
     {
@@ -9,6 +8,15 @@
       "path": "/api/cron/current-jobs",
       "schedule": "30 18 * * *"
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/admin/",
+      "destination": "/admin.html"
+    }
   ]
 }
-
