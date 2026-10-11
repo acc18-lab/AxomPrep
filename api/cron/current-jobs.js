@@ -8,7 +8,8 @@
 const TABLE = 'current_jobs_v1';
 const DEFAULT_LISTING_URL = 'https://www.assamcareer.com/';
 const SOURCE_NAME = 'AssamCareer';
-const MAX_ARTICLES = 25;
+const MAX_ARTICLES = 60;
+const LISTING_URLS = [DEFAULT_LISTING_URL, 'https://www.assamcareer.com/search?max-results=50'];
 
 function json(res, status, body) {
   res.status(status).setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -36,7 +37,7 @@ function stripHtml(s) {
 function safeUrl(raw, base) {
   try {
     const u = new URL(decodeEntities(raw), base);
-    return ['https:', 'http:'].includes(u.protocol) && u.hostname.endsWith('assamcareer.com') ? u.href : null;
+    return ['https:', 'http:'].includes(u.protocol) && (u.hostname === 'assamcareer.com' || u.hostname.endsWith('.assamcareer.com')) ? u.href : null;
   } catch (_) { return null; }
 }
 function dateToIso(raw) {
@@ -83,6 +84,9 @@ function extractArticleLinks(html, baseUrl) {
     // Blogger article URLs generally look like /2026/09/article-name.html.
     if (!/^\/\d{4}\/\d{2}\/[^/]+\.html$/i.test(u.pathname)) continue;
     if (/^(home|read more|click here|older posts|newer posts)$/i.test(title)) continue;
+    // Focus this feed on employment notifications, not results/admissions/schemes.
+    if (/\b(result|admit card|admission|scholarship|scheme|answer key|counselling|merit list)\b/i.test(title)) continue;
+    if (!/\b(recruitment|vacanc|jobs?|posts?|hiring|career|apprentice|walk.?in|employment|notification|trainee|officer|assistant|teacher|faculty|engineer|constable|technician|driver|staff nurse|internship)\b/i.test(title)) continue;
     if (!found.has(url)) found.set(url, { url, title });
   }
   return [...found.values()].slice(0, MAX_ARTICLES);
@@ -95,6 +99,34 @@ function extractField(text, labels) {
     if (m) return cleanText(m[1], 500);
   }
   return null;
+}
+function externalApplicationLinks(html, baseUrl) {
+  const found = [];
+  const re = /<a\b([^>]*?)href\s*=\s*(["'])(.*?)\2([^>]*)>([\s\S]*?)<\/a>/gi;
+  let m;
+  while ((m = re.exec(html))) {
+    try {
+      const u = new URL(decodeEntities(m[3]), baseUrl);
+      if (!['https:', 'http:'].includes(u.protocol)) continue;
+      if (u.hostname === 'assamcareer.com' || u.hostname.endsWith('.assamcareer.com')) continue;
+      if (/facebook|instagram|youtube|telegram|twitter|x\.com|whatsapp|pinterest|google\.com/i.test(u.hostname)) continue;
+      const label = stripHtml(m[5] || '').toLowerCase();
+      const full = `${label} ${u.href.toLowerCase()}`;
+      if (/apply online|apply now|registration|application form|online application|apply here/i.test(full)) found.push({type:'apply',url:u.href});
+      else if (/official notification|notification pdf|advertisement|recruitment notice|official website|download.*pdf|\.pdf(?:$|\?)/i.test(full)) found.push({type:'official',url:u.href});
+    } catch (_) {}
+  }
+  return found;
+}
+function paraphrasedSummary(fields) {
+  const org = fields.organization || 'The recruiting organisation';
+  const role = fields.post_name || fields.title || 'the advertised position';
+  const bits = [`${org} has published a recruitment update for ${role}.`];
+  if (fields.vacancies) bits.push(`The listing reports ${fields.vacancies} vacancies.`);
+  if (fields.qualification) bits.push(`The stated qualification is ${fields.qualification}.`);
+  if (fields.application_last_date) bits.push(`The listed application deadline is ${fields.application_last_date}.`);
+  bits.push('Review the linked official notice for full eligibility, category-wise vacancies, selection stages, fees and application instructions.');
+  return cleanText(bits.join(' '), 1200);
 }
 function parseArticle(html, article, now) {
   const text = stripHtml(html);
@@ -112,9 +144,11 @@ function parseArticle(html, article, now) {
   const postedDate = dateToIso((html.match(/<meta\s+property=["']article:published_time["']\s+content=["']([^"']+)/i) || [])[1]) ||
     dateToIso((text.match(/(?:by\s+[^,]{2,80}\s+)?(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}/i) || [])[0]);
   const lastDate = dateToIso(lastDateRaw);
-  const description = cleanText(text.slice(0, 4500), 4500);
+  const links = externalApplicationLinks(html, article.url);
+  const officialLink = links.find(x => x.type === 'official');
+  const applyLink = links.find(x => x.type === 'apply');
   const key = article.url.replace(/[?#].*$/, '').replace(/\/$/, '');
-  return {
+  const fields = {
     external_key: key,
     title,
     organization,
@@ -128,15 +162,16 @@ function parseArticle(html, article, now) {
     application_last_date: lastDate,
     posted_date: postedDate,
     category: /private job|private limited|sales executive|company/i.test(title + ' ' + text.slice(0,1000)) ? 'Private Jobs' : 'Government Jobs',
-    description,
     source_name: SOURCE_NAME,
     source_url: article.url,
-    official_url: null,
-    apply_url: null,
+    official_url: officialLink ? officialLink.url : null,
+    apply_url: applyLink ? applyLink.url : null,
     featured: false,
     status: statusForDate(lastDate, now),
     last_verified: now.toISOString()
   };
+  fields.description = paraphrasedSummary(fields);
+  return fields;
 }
 async function supabaseRequest(url, serviceKey, options = {}) {
   const r = await fetch(url, { ...options, headers: {
@@ -159,9 +194,16 @@ module.exports = async function handler(req, res) {
   const listingUrl = process.env.ASSAMCAREER_LISTING_URL || DEFAULT_LISTING_URL;
   const now = new Date();
   try {
-    const listingHtml = await getHtml(listingUrl);
-    const links = extractArticleLinks(listingHtml, listingUrl);
-    if (!links.length) throw new Error('No article links were found. AssamCareer may have changed its HTML; no job records were imported.');
+    const listingUrls = [...new Set([listingUrl, ...LISTING_URLS.filter(u => u !== listingUrl)])];
+    const listingResults = await Promise.allSettled(listingUrls.map(async url => ({url, html: await getHtml(url)})));
+    const listingPages = listingResults.filter(x => x.status === 'fulfilled').map(x => x.value);
+    if (!listingPages.length) throw new Error('Could not load any AssamCareer listing page; no job records were imported.');
+    const linkMap = new Map();
+    for (const page of listingPages) {
+      for (const article of extractArticleLinks(page.html, page.url)) if (!linkMap.has(article.url)) linkMap.set(article.url, article);
+    }
+    const links = [...linkMap.values()].slice(0, MAX_ARTICLES);
+    if (!links.length) throw new Error('No job article links were found. The source page may have changed or no matching job posts were visible.');
     const results = await Promise.allSettled(links.map(async article => ({ article, job: parseArticle(await getHtml(article.url), article, now) })));
     const jobs = results.filter(x => x.status === 'fulfilled').map(x => x.value.job).filter(j => j && j.title && j.external_key && j.source_url);
     const articleErrors = results.filter(x => x.status === 'rejected').length;
@@ -181,10 +223,10 @@ module.exports = async function handler(req, res) {
       statusesUpdated++;
     }
     return json(res, 200, {
-      ok: true, source: SOURCE_NAME, listingUrl, articlesFound: links.length,
+      ok: true, source: SOURCE_NAME, listingUrlsChecked: listingPages.map(p => p.url), articlesFound: links.length,
       importedOrUpdated: jobs.length, articleFetchErrors: articleErrors, statusesUpdated,
       checkedAt: now.toISOString(),
-      warning: 'This imports basic listing/article data from AssamCareer. Verify official notifications and application links before relying on details; fields not reliably extracted may be blank.'
+      warning: 'Job summaries are rewritten from extracted facts, not copied article text. Some fields may be unavailable; always verify against the linked official notice.'
     });
   } catch (error) {
     console.error('AxomPrep current-jobs cron failed:', error);

@@ -212,6 +212,7 @@
         </div>
 
         <div class="cj-actions">
+          <a class="cj-apply" href="job.html?id=${encodeURIComponent(job.id || '')}">Full details →</a>
           ${apply
             ? `<a class="cj-apply"
                  href="${esc(apply)}"

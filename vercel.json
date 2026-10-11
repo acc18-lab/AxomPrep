@@ -17,6 +17,10 @@
     {
       "source": "/admin/",
       "destination": "/admin.html"
+    },
+    {
+      "source": "/job/:id",
+      "destination": "/job.html?id=:id"
     }
   ]
 }

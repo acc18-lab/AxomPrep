@@ -225,7 +225,7 @@
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
-                <!-- Column 1: Job Alerts -->
+                <!-- Column 1: Job Alerts (live from current_jobs_v1) -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col overflow-hidden h-full">
                     <div class="bg-slate-50 px-5 py-4 border-b border-slate-200 flex justify-between items-center">
                         <h2 class="font-bold text-axom-dark flex items-center gap-2">
@@ -233,38 +233,10 @@
                         </h2>
                         <a href="current-jobs.html" class="text-xs font-semibold text-axom-blue hover:underline">View All</a>
                     </div>
-                    <div class="p-5 flex-1 flex flex-col gap-4">
-                        <!-- Job Item: 28 Sep 2026 -->
-                        <a href="current-jobs.html" class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white">
-                            <div class="flex justify-between items-start mb-2 gap-2">
-                                <span class="bg-orange-50 text-orange-700 text-xs font-bold px-2 py-1 rounded">IOCL</span>
-                                <span class="text-xs text-slate-400 whitespace-nowrap"><i class="fa-regular fa-clock"></i> 1d ago</span>
-                            </div>
-                            <h3 class="font-semibold text-slate-800 group-hover:text-axom-blue transition-colors text-sm leading-tight mb-1">IOCL Apprentice Recruitment 2026</h3>
-                            <p class="text-xs text-slate-500">58 Posts • Graduate/Diploma</p>
-                            <p class="text-xs text-slate-400 mt-1">Last Date: 18 Oct 2026</p>
-                        </a>
-                        <!-- Job Item: 28 Sep 2026 -->
-                        <a href="current-jobs.html" class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white">
-                            <div class="flex justify-between items-start mb-2 gap-2">
-                                <span class="bg-blue-50 text-axom-blue text-xs font-bold px-2 py-1 rounded">IIT Guwahati</span>
-                                <span class="text-xs text-slate-400 whitespace-nowrap"><i class="fa-regular fa-clock"></i> 1d ago</span>
-                            </div>
-                            <h3 class="font-semibold text-slate-800 group-hover:text-axom-blue transition-colors text-sm leading-tight mb-1">IIT Guwahati JRF Recruitment 2026</h3>
-                            <p class="text-xs text-slate-500">1 Post • B.Tech/B.E</p>
-                            <p class="text-xs text-slate-400 mt-1">Last Date: 29 Sep 2026</p>
-                        </a>
-                        <!-- Job Item: 28 Sep 2026 -->
-                        <a href="current-jobs.html" class="group block border border-slate-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition-all bg-white">
-                            <div class="flex justify-between items-start mb-2 gap-2">
-                                <span class="bg-green-50 text-axom-green text-xs font-bold px-2 py-1 rounded">AIIMS Guwahati</span>
-                                <span class="text-xs text-slate-400 whitespace-nowrap"><i class="fa-regular fa-clock"></i> 1d ago</span>
-                            </div>
-                            <h3 class="font-semibold text-slate-800 group-hover:text-axom-blue transition-colors text-sm leading-tight mb-1">AIIMS Guwahati Project Associate I</h3>
-                            <p class="text-xs text-slate-500">1 Post • M.Sc</p>
-                            <p class="text-xs text-slate-400 mt-1">Last Date: 08 Oct 2026</p>
-                        </a>
+                    <div id="homeJobsGrid" class="p-5 flex-1 flex flex-col gap-4">
+                        <div class="rounded-xl border border-slate-100 p-4 text-sm text-slate-500">Loading latest job alerts…</div>
                     </div>
+                    <div class="px-5 pb-4 text-xs text-slate-400" id="homeJobsUpdated">Daily updates from public recruitment listings</div>
                 </div>
 
                 <!-- Column 2: Today's Focus / Daily Q -->
@@ -970,5 +942,6 @@
   }
 })();
 </script>
+<script src="homepage-current-jobs.js" defer></script>
 </body>
 </html>
