@@ -206,11 +206,11 @@
   });
 
   // Load after the HTML has finished parsing.
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', load, { once: true });
-  } else {
-    load();
-  }
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', load, { once: true });
+} else {
+  load();
+}
 
   // Re-fetch job records daily at midnight IST, even if the tab stays open.
   function scheduleMidnightRefresh() {
