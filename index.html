@@ -909,9 +909,30 @@
   const form=document.getElementById('axLoginForm');
   const message=document.getElementById('axLoginMessage');
   const submit=document.getElementById('axLoginSubmit');
+  let authClient=null;
   function openPopup(){popup.classList.add('ax-login-open');popup.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setTimeout(()=>document.getElementById('axLoginEmail').focus(),50);}
   function closePopup(){popup.classList.remove('ax-login-open');popup.setAttribute('aria-hidden','true');document.body.style.overflow='';}
-  openButtons.forEach(button=>button.addEventListener('click',()=>{const menu=document.getElementById('mobile-menu');if(menu)menu.classList.remove('axu-open');openPopup();}));
+  function setAuthButtons(user){
+    openButtons.forEach(button=>{
+      if(!button)return;
+      if(user){
+        button.textContent=(user.email||'Account')+' · Logout';
+        button.setAttribute('aria-label','Log out '+(user.email||'account'));
+        button.onclick=async()=>{button.disabled=true;try{if(authClient)await authClient.auth.signOut();}finally{button.disabled=false;}};
+      }else{
+        button.textContent='Login';button.setAttribute('aria-label','Login');button.onclick=()=>{const menu=document.getElementById('mobile-menu');if(menu)menu.classList.remove('axu-open');openPopup();};
+      }
+    });
+  }
+  function initAuthUi(attempt=0){
+    const cfg=window.AXOMPREP_CONFIG||{};
+    if(!window.supabase||!window.supabase.createClient||!cfg.supabaseUrl||!cfg.supabasePublishableKey){if(attempt<40)setTimeout(()=>initAuthUi(attempt+1),250);return;}
+    authClient=window.AXOMPREP_AUTH_CLIENT||window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
+    authClient.auth.getSession().then(({data,error})=>{if(!error)setAuthButtons(data.session&&data.session.user||null);}).catch(()=>setAuthButtons(null));
+    authClient.auth.onAuthStateChange((_event,session)=>setAuthButtons(session&&session.user||null));
+  }
+  openButtons.forEach(button=>button.addEventListener('click',()=>{if(button.textContent.includes('Logout'))return;const menu=document.getElementById('mobile-menu');if(menu)menu.classList.remove('axu-open');openPopup();}));
+  initAuthUi();
   if(location.hash==='#login') openPopup();
   closeButton.addEventListener('click',closePopup);
   popup.addEventListener('click',event=>{if(event.target===popup)closePopup();});
@@ -921,11 +942,13 @@
     try{
       const cfg=window.AXOMPREP_CONFIG||{};
       if(!window.supabase||!window.supabase.createClient||!cfg.supabaseUrl||!cfg.supabasePublishableKey){throw new Error('Login service is not ready. Refresh the page and try again.');}
-      const client=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
+      const client=authClient||window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
+      authClient=client;
       const {error}=await client.auth.signInWithPassword({email:document.getElementById('axLoginEmail').value.trim(),password:document.getElementById('axLoginPassword').value});
       if(error)throw error;
       message.textContent='Login successful.';message.classList.add('success');
       document.getElementById('axLoginPassword').value='';
+      const {data:sessionData}=await client.auth.getSession();setAuthButtons(sessionData.session&&sessionData.session.user||null);
       setTimeout(closePopup,900);
     }catch(error){message.textContent=error&&error.message?error.message:'Unable to log in. Please try again.';}
     finally{submit.disabled=false;submit.textContent='Log In';}
