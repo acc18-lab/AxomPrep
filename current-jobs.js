@@ -1,3 +1,4 @@
+
 (function () {
   'use strict';
 
@@ -35,6 +36,18 @@
     }
   };
 
+  function formatIST(value) {
+    return new Date(value).toLocaleString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'Asia/Kolkata'
+    });
+  }
+
   function showError(message) {
     grid.innerHTML = `
       <div class="cj-empty">
@@ -47,8 +60,8 @@
       </div>
     `;
 
-    const retryButton = document.getElementById('cjRetry');
-    if (retryButton) retryButton.addEventListener('click', load);
+    document.getElementById('cjRetry')
+      ?.addEventListener('click', load);
   }
 
   const cfg = window.AXOMPREP_CONFIG;
@@ -58,14 +71,17 @@
     !cfg.supabaseUrl ||
     !cfg.supabasePublishableKey
   ) {
-    console.error('AxomPrep: Supabase configuration is missing or incomplete.');
+    console.error('AxomPrep: Supabase configuration is missing.');
     showError('Check config.js and the Supabase URL/key settings.');
     return;
   }
 
-  if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+  if (
+    !window.supabase ||
+    typeof window.supabase.createClient !== 'function'
+  ) {
     console.error('AxomPrep: Supabase JavaScript library did not load.');
-    showError('The Supabase library did not load. Check the page scripts and internet connection.');
+    showError('The Supabase library did not load. Check the page scripts.');
     return;
   }
 
@@ -77,7 +93,7 @@
       cfg.supabasePublishableKey
     );
   } catch (error) {
-    console.error('AxomPrep: Could not initialize Supabase.', error);
+    console.error('AxomPrep: Supabase initialization failed.', error);
     showError('Supabase could not be initialized. Check config.js.');
     return;
   }
@@ -86,17 +102,28 @@
     if (!dateValue) return null;
 
     const deadline = new Date(`${dateValue}T23:59:59`);
+
     if (Number.isNaN(deadline.getTime())) return null;
 
-    return Math.ceil((deadline.getTime() - Date.now()) / 86400000);
+    return Math.ceil(
+      (deadline.getTime() - Date.now()) / 86400000
+    );
   }
 
   function statusFor(job) {
     const remaining = daysLeft(job.application_last_date);
 
-    if (remaining === null) return { cls: '', label: 'Check notification' };
-    if (remaining < 0) return { cls: 'red', label: 'Closed' };
-    if (remaining <= 3) return { cls: 'red', label: 'Closing soon' };
+    if (remaining === null) {
+      return { cls: '', label: 'Check notification' };
+    }
+
+    if (remaining < 0) {
+      return { cls: 'red', label: 'Closed' };
+    }
+
+    if (remaining <= 3) {
+      return { cls: 'red', label: 'Closing soon' };
+    }
 
     return { cls: 'orange', label: 'Open' };
   }
@@ -104,6 +131,7 @@
   function card(job) {
     const status = statusFor(job);
     const remaining = daysLeft(job.application_last_date);
+
     const apply = safeUrl(job.apply_url);
     const official = safeUrl(job.official_url);
     const source = safeUrl(job.source_url);
@@ -111,51 +139,109 @@
     let deadlineText = 'Check notification';
 
     if (remaining !== null) {
-      if (remaining < 0) deadlineText = 'Applications closed';
-      else if (remaining === 0) deadlineText = 'Last date: today';
-      else deadlineText = `${remaining} day${remaining === 1 ? '' : 's'} left`;
+      if (remaining < 0) {
+        deadlineText = 'Applications closed';
+      } else if (remaining === 0) {
+        deadlineText = 'Last date: today';
+      } else {
+        deadlineText =
+          `${remaining} day${remaining === 1 ? '' : 's'} left`;
+      }
     }
 
     return `
       <article class="cj-card">
         <div class="cj-top">
           <div class="cj-badges">
-            <span class="cj-pill">${esc(job.category || 'Current Jobs')}</span>
-            <span class="cj-pill ${status.cls}">${esc(status.label)}</span>
-            ${job.featured ? '<span class="cj-pill">Featured</span>' : ''}
+            <span class="cj-pill">
+              ${esc(job.category || 'Current Jobs')}
+            </span>
+
+            <span class="cj-pill ${status.cls}">
+              ${esc(status.label)}
+            </span>
+
+            ${job.featured
+              ? '<span class="cj-pill">Featured</span>'
+              : ''}
           </div>
         </div>
 
         <h2>${esc(job.title || 'Recruitment Notification')}</h2>
-        <div class="cj-org">${esc(job.organization || 'Organization not specified')}</div>
+
+        <div class="cj-org">
+          ${esc(job.organization || 'Organization not specified')}
+        </div>
 
         <p class="cj-summary">
-          ${esc(job.description || 'Check the official notification for complete details and eligibility.')}
+          ${esc(
+            job.description ||
+            'Check the official notification for complete details and eligibility.'
+          )}
         </p>
 
         <div class="cj-info">
-          <div><span>Vacancies</span><b>${esc(job.vacancies || '—')}</b></div>
-          <div><span>Qualification</span><b>${esc(String(job.qualification || 'See notification').slice(0, 90))}</b></div>
-          <div><span>Location</span><b>${esc(job.location || 'India')}</b></div>
-          <div><span>Last date</span><b>${esc(job.application_last_date || 'Not specified')}</b></div>
+          <div>
+            <span>Vacancies</span>
+            <b>${esc(job.vacancies || '—')}</b>
+          </div>
+
+          <div>
+            <span>Qualification</span>
+            <b>${esc(
+              String(job.qualification || 'See notification').slice(0, 90)
+            )}</b>
+          </div>
+
+          <div>
+            <span>Location</span>
+            <b>${esc(job.location || 'India')}</b>
+          </div>
+
+          <div>
+            <span>Last date</span>
+            <b>${esc(job.application_last_date || 'Not specified')}</b>
+          </div>
         </div>
 
         <div class="cj-deadline">
           <strong>${esc(deadlineText)}</strong>
-          ${job.post_name ? `<span class="days">${esc(job.post_name)}</span>` : ''}
+          ${job.post_name
+            ? `<span class="days">${esc(job.post_name)}</span>`
+            : ''}
         </div>
 
         <div class="cj-actions">
-          ${apply ? `<a class="cj-apply" href="${esc(apply)}" target="_blank" rel="noopener noreferrer">Apply / Portal ↗</a>` : ''}
-          ${official ? `<a class="cj-official" href="${esc(official)}" target="_blank" rel="noopener noreferrer">Official site ↗</a>` : ''}
-          ${source ? `<a class="cj-source" href="${esc(source)}" target="_blank" rel="noopener noreferrer">Details ↗</a>` : ''}
+          ${apply
+            ? `<a class="cj-apply"
+                 href="${esc(apply)}"
+                 target="_blank"
+                 rel="noopener noreferrer">Apply / Portal ↗</a>`
+            : ''}
+
+          ${official
+            ? `<a class="cj-official"
+                 href="${esc(official)}"
+                 target="_blank"
+                 rel="noopener noreferrer">Official site ↗</a>`
+            : ''}
+
+          ${source
+            ? `<a class="cj-source"
+                 href="${esc(source)}"
+                 target="_blank"
+                 rel="noopener noreferrer">Details ↗</a>`
+            : ''}
         </div>
       </article>
     `;
   }
 
   function render() {
-    const query = String(search?.value || '').trim().toLowerCase();
+    const query = String(search?.value || '')
+      .trim()
+      .toLowerCase();
+
     const selectedCategory = category?.value || 'all';
     const selectedQualification = qualification?.value || 'all';
     const onlyClosingSoon = Boolean(closing?.checked);
@@ -170,11 +256,18 @@
           job.qualification,
           job.location,
           job.vacancies
-        ].map(value => String(value || '')).join(' ').toLowerCase();
+        ]
+          .map(value => String(value || ''))
+          .join(' ')
+          .toLowerCase();
 
-        const matchesSearch = !query || searchableText.includes(query);
+        const matchesSearch =
+          !query || searchableText.includes(query);
+
         const matchesCategory =
-          selectedCategory === 'all' || job.category === selectedCategory;
+          selectedCategory === 'all' ||
+          job.category === selectedCategory;
+
         const matchesQualification =
           selectedQualification === 'all' ||
           String(job.qualification || '')
@@ -182,9 +275,14 @@
             .includes(selectedQualification.toLowerCase());
 
         const remaining = daysLeft(job.application_last_date);
+
         const matchesDeadline =
           !onlyClosingSoon ||
-          (remaining !== null && remaining >= 0 && remaining <= 7);
+          (
+            remaining !== null &&
+            remaining >= 0 &&
+            remaining <= 7
+          );
 
         return (
           matchesSearch &&
@@ -196,6 +294,7 @@
       .sort((a, b) => {
         const dateA = a.application_last_date || '9999-12-31';
         const dateB = b.application_last_date || '9999-12-31';
+
         return dateA.localeCompare(dateB);
       });
 
@@ -208,8 +307,16 @@
       ? filtered.map(card).join('')
       : `
         <div class="cj-empty">
-          <strong>${state.items.length ? 'No jobs match your filters.' : 'No current jobs are available.'}</strong>
-          <span>${state.items.length ? 'Try clearing a filter or searching another qualification.' : 'Please check again later.'}</span>
+          <strong>
+            ${state.items.length
+              ? 'No jobs match your filters.'
+              : 'No current jobs are available.'}
+          </strong>
+          <span>
+            ${state.items.length
+              ? 'Try clearing a filter or searching another qualification.'
+              : 'Please check again later.'}
+          </span>
         </div>
       `;
   }
@@ -218,7 +325,8 @@
     if (state.loading) return;
 
     state.loading = true;
-    grid.innerHTML = '<div class="cj-loading">Loading current jobs…</div>';
+    grid.innerHTML =
+      '<div class="cj-loading">Loading current jobs…</div>';
 
     try {
       const { data, error } = await db
@@ -229,7 +337,9 @@
           ascending: true,
           nullsFirst: false
         })
-        .order('featured', { ascending: false })
+        .order('featured', {
+          ascending: false
+        })
         .limit(200);
 
       if (error) throw error;
@@ -238,8 +348,13 @@
 
       if (category) {
         const previousCategory = category.value || 'all';
+
         const categories = [
-          ...new Set(state.items.map(job => job.category).filter(Boolean))
+          ...new Set(
+            state.items
+              .map(job => job.category)
+              .filter(Boolean)
+          )
         ].sort();
 
         category.innerHTML =
@@ -253,29 +368,32 @@
           : 'all';
       }
 
+      // Show the actual database update time separately from the
+      // most recent successful fetch time.
       if (updateTime) {
         const latest = state.items.reduce((mostRecent, job) => {
           const updated = job.updated_at || '';
           return updated > mostRecent ? updated : mostRecent;
         }, '');
 
-        updateTime.textContent = latest
-          ? `Updated ${new Date(latest).toLocaleString('en-IN', {
-              dateStyle: 'medium',
-              timeStyle: 'short',
-              timeZone: 'Asia/Kolkata'
-            })}`
-          : `Checked ${new Date().toLocaleString('en-IN', {
-              dateStyle: 'medium',
-              timeStyle: 'short',
-              timeZone: 'Asia/Kolkata'
-            })}`;
+        const checkedAt = formatIST(new Date());
+
+        const dataUpdatedAt = latest
+          ? formatIST(latest)
+          : 'Not available';
+
+        updateTime.textContent =
+          `Last checked: ${checkedAt} • Data last updated: ${dataUpdatedAt}`;
       }
 
       render();
     } catch (error) {
       console.error('AxomPrep current jobs error:', error);
-      showError('The database request failed. Check the Console, Supabase table, and access permissions.');
+
+      showError(
+        'The database request failed. Check the Console, ' +
+        'Supabase table, and access permissions.'
+      );
     } finally {
       state.loading = false;
     }
@@ -283,6 +401,7 @@
 
   [search, category, qualification, closing].forEach(element => {
     if (!element) return;
+
     element.addEventListener(
       element.type === 'checkbox' ? 'change' : 'input',
       render
@@ -295,20 +414,22 @@
       if (category) category.value = 'all';
       if (qualification) qualification.value = 'all';
       if (closing) closing.checked = false;
+
       render();
     });
   }
 
-  // Run even if this script is loaded after DOMContentLoaded.
+  // Load whether the script runs before or after DOMContentLoaded.
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', load, { once: true });
   } else {
     load();
   }
 
-  // Refresh the database query at midnight India time while the page is open.
+  // Re-fetch the database at midnight IST while the page is open.
   function scheduleMidnightRefresh() {
     const now = Date.now();
+
     const parts = new Intl.DateTimeFormat('en-GB', {
       timeZone: 'Asia/Kolkata',
       year: 'numeric',
@@ -316,13 +437,17 @@
       day: '2-digit'
     }).formatToParts(new Date(now));
 
-    const getPart = type => parts.find(part => part.type === type)?.value;
+    const getPart = type =>
+      parts.find(part => part.type === type)?.value;
+
     const year = Number(getPart('year'));
     const month = Number(getPart('month'));
     const day = Number(getPart('day'));
 
-    // India Standard Time is UTC+05:30.
-    const nextMidnight = Date.UTC(year, month - 1, day + 1) - 330 * 60000;
+    // Midnight tomorrow in IST, converted to UTC.
+    const nextMidnight =
+      Date.UTC(year, month - 1, day + 1) - 330 * 60000;
+
     const delay = Math.max(1000, nextMidnight - now);
 
     window.setTimeout(async () => {
