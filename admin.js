@@ -1,5 +1,7 @@
 const cfg=window.AXOMPREP_CONFIG;
-const client=supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
+const client=window.AXOMPREP_AUTH_CLIENT || supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
+window.AXOMPREP_AUTH_CLIENT=client;
+let initInProgress=false;
 const $=id=>document.getElementById(id);
 
 function msg(id,text,hide=false){
@@ -9,37 +11,42 @@ function msg(id,text,hide=false){
 }
 
 async function init(){
+  if(initInProgress) return;
+  initInProgress=true;
   $('authState').classList.remove('hidden');
   $('adminApp').classList.add('hidden');
   $('authMessage').textContent='Checking your account…';
-  const {data:{user},error:userError}=await client.auth.getUser();
-  if(userError||!user){
-    $('authMessage').textContent='Please log in with your AxomPrep account.';
-    return;
-  }
-
-  const {data:profile,error:profileError}=await client
-    .from('profiles')
-    .select('role,full_name')
-    .eq('id',user.id)
-    .maybeSingle();
-
-  if(profileError||profile?.role!=='admin'){
-    $('authMessage').textContent=profileError
-      ? 'Could not verify admin permissions: '+profileError.message
-      : 'You are logged in, but this account does not have admin access. Ask an administrator to set profiles.role to admin.';
-    return;
-  }
-
-  $('authState').classList.add('hidden');
-  $('adminApp').classList.remove('hidden');
-  $('adminUser').textContent=profile.full_name||user.email;
-
-  try{
-    await Promise.all([loadOptions(),loadQuestions(),loadStats(),loadCurrent()]);
-  }catch(err){
-    alert('Admin panel error: '+(err?.message||err));
-  }
+  try {
+    const {data:{session},error:sessionError}=await client.auth.getSession();
+    const user=session?.user||null;
+    const account=$('adminHeaderAccount');
+    const logout=$('logoutBtn');
+    if(account) account.textContent=user ? (user.email||'Signed in') : '';
+    if(logout) logout.classList.toggle('hidden',!user);
+    if(sessionError||!user){
+      $('authMessage').textContent=sessionError ? 'Could not check your session: '+sessionError.message : 'Please log in with your AxomPrep account.';
+      return;
+    }
+    const {data:profile,error:profileError}=await client
+      .from('profiles')
+      .select('role,full_name')
+      .eq('id',user.id)
+      .maybeSingle();
+    if(profileError||profile?.role!=='admin'){
+      $('authMessage').textContent=profileError
+        ? 'Could not verify admin permissions: '+profileError.message
+        : 'You are logged in, but this account does not have admin access. Ask an administrator to set profiles.role to admin.';
+      return;
+    }
+    $('authState').classList.add('hidden');
+    $('adminApp').classList.remove('hidden');
+    $('adminUser').textContent=profile.full_name||user.email;
+    try { await Promise.all([loadOptions(),loadQuestions(),loadStats(),loadCurrent()]); }
+    catch(err) { $('authMessage').textContent='Admin data could not load: '+(err?.message||err); $('authState').classList.remove('hidden'); $('adminApp').classList.add('hidden'); }
+  } catch(err) {
+    $('authMessage').textContent='Admin check failed: '+(err?.message||err);
+    $('authState').classList.remove('hidden'); $('adminApp').classList.add('hidden');
+  } finally { initInProgress=false; }
 }
 
 $('loginAdmin').onclick=()=>{
@@ -48,8 +55,8 @@ $('loginAdmin').onclick=()=>{
 };
 
 $('logoutBtn').onclick=async()=>{
-  await client.auth.signOut();
-  location.href='index.html';
+  const button=$('logoutBtn'); button.disabled=true;
+  try { await client.auth.signOut(); } finally { location.href='/index.html'; }
 };
 
 async function loadOptions(){
@@ -435,13 +442,9 @@ document.querySelectorAll('.admin-nav button').forEach(b=>b.onclick=()=>{
   $('tab-'+b.dataset.tab).classList.remove('hidden');
 });
 
+client.auth.onAuthStateChange((event) => {
+  if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED') {
+    init();
+  }
+});
 init();
-
-client.auth.onAuthStateChange((_event, session) => {
-  if (session) init().catch(err => {
-    $('authMessage').textContent='Admin panel could not load: '+(err?.message||err);
-  });
-});
-init().catch(err => {
-  $('authMessage').textContent='Admin panel could not load: '+(err?.message||err);
-});
