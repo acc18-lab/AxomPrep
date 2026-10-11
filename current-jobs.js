@@ -134,7 +134,6 @@
 
     const apply = safeUrl(job.apply_url);
     const official = safeUrl(job.official_url);
-    const source = safeUrl(job.source_url);
 
     let deadlineText = 'Check notification';
 
@@ -227,12 +226,6 @@
                  rel="noopener noreferrer">Official site ↗</a>`
             : ''}
 
-          ${source
-            ? `<a class="cj-source"
-                 href="${esc(source)}"
-                 target="_blank"
-                 rel="noopener noreferrer">Details ↗</a>`
-            : ''}
         </div>
       </article>
     `;
