@@ -9,6 +9,9 @@ function msg(id,text,hide=false){
 }
 
 async function init(){
+  $('authState').classList.remove('hidden');
+  $('adminApp').classList.add('hidden');
+  $('authMessage').textContent='Checking your account…';
   const {data:{user},error:userError}=await client.auth.getUser();
   if(userError||!user){
     $('authMessage').textContent='Please log in with your AxomPrep account.';
@@ -22,7 +25,9 @@ async function init(){
     .maybeSingle();
 
   if(profileError||profile?.role!=='admin'){
-    $('authMessage').textContent='Your account does not have admin access yet.';
+    $('authMessage').textContent=profileError
+      ? 'Could not verify admin permissions: '+profileError.message
+      : 'You are logged in, but this account does not have admin access. Ask an administrator to set profiles.role to admin.';
     return;
   }
 
@@ -38,7 +43,7 @@ async function init(){
 }
 
 $('loginAdmin').onclick=()=>{
-  sessionStorage.setItem('axomprep_admin_return','/admin');
+  sessionStorage.setItem('axomprep_admin_return','/admin.html');
   location.href='/#login';
 };
 
@@ -431,3 +436,12 @@ document.querySelectorAll('.admin-nav button').forEach(b=>b.onclick=()=>{
 });
 
 init();
+
+\nclient.auth.onAuthStateChange((_event, session) => {
+  if (session) init().catch(err => {
+    $('authMessage').textContent='Admin panel could not load: '+(err?.message||err);
+  });
+});
+init().catch(err => {
+  $('authMessage').textContent='Admin panel could not load: '+(err?.message||err);
+});

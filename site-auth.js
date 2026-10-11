@@ -1,0 +1,41 @@
+/* AxomPrep shared login/session header */
+(function(){
+'use strict';
+const cfg=window.AXOMPREP_CONFIG||{};
+if(!window.supabase||!window.supabase.createClient||!cfg.supabaseUrl||!cfg.supabasePublishableKey)return;
+const client=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
+window.AXOMPREP_AUTH_CLIENT=client;
+const style=document.createElement('style');
+style.textContent='.ax-global-auth-btn{border:1px solid #dbe2ea;background:#fff;color:#1A56DB;border-radius:9px;padding:8px 13px;font:700 13px Inter,system-ui;cursor:pointer;white-space:nowrap}.ax-global-auth-modal{position:fixed;inset:0;z-index:100000;background:#0f172a99;display:none;align-items:center;justify-content:center;padding:18px}.ax-global-auth-modal.open{display:flex}.ax-global-auth-card{width:min(100%,420px);background:#fff;border-radius:18px;padding:26px;box-shadow:0 20px 70px #0f172a40;position:relative}.ax-global-auth-card h2{margin:0 0 8px;font-size:24px;color:#1e293b}.ax-global-auth-card p{color:#64748b;font-size:14px}.ax-global-auth-card label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px}.ax-global-auth-card input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:9px;font:inherit}.ax-global-auth-card button[type=submit]{width:100%;margin-top:18px;background:#1A56DB;color:#fff;border:0;border-radius:9px;padding:12px;font-weight:800;cursor:pointer}.ax-global-auth-close{position:absolute;right:14px;top:10px;border:0;background:none;font-size:26px;cursor:pointer}.ax-global-auth-msg{min-height:18px;white-space:pre-line}';
+document.head.appendChild(style);
+let modal;
+function open(){modal.classList.add('open');modal.setAttribute('aria-hidden','false');setTimeout(()=>modal.querySelector('input').focus(),30)}
+function close(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
+function mount(){
+ const host=document.querySelector('.axu-inner')||document.querySelector('.headin')||document.querySelector('.topbar .nav-actions')||document.querySelector('header');
+ if(host&&!document.getElementById('axGlobalLoginBtn')){
+  const b=document.createElement('button');b.id='axGlobalLoginBtn';b.className='ax-global-auth-btn';b.type='button';b.textContent='Login';b.onclick=open;
+  const nav=host.querySelector('.axu-nav,nav');
+  if(nav)nav.appendChild(b);else host.appendChild(b);
+ }
+ modal=document.createElement('div');modal.className='ax-global-auth-modal';modal.setAttribute('aria-hidden','true');
+ modal.innerHTML='<section class="ax-global-auth-card" role="dialog" aria-modal="true" aria-labelledby="axGlobalTitle"><button class="ax-global-auth-close" type="button" aria-label="Close">×</button><h2 id="axGlobalTitle">Welcome back</h2><p>Log in to your AxomPrep account.</p><form><label for="axGlobalEmail">Email address</label><input id="axGlobalEmail" type="email" autocomplete="email" required><label for="axGlobalPassword">Password</label><input id="axGlobalPassword" type="password" autocomplete="current-password" required><button type="submit">Log In</button><p class="ax-global-auth-msg" role="status"></p></form></section>';
+ document.body.appendChild(modal);
+ modal.querySelector('.ax-global-auth-close').onclick=close;
+ modal.addEventListener('click',e=>{if(e.target===modal)close()});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+ modal.querySelector('form').addEventListener('submit',async e=>{
+  e.preventDefault();const form=e.currentTarget,button=form.querySelector('button[type=submit]'),msg=form.querySelector('.ax-global-auth-msg');
+  button.disabled=true;button.textContent='Logging in…';msg.textContent='';
+  try{const {error}=await client.auth.signInWithPassword({email:form.querySelector('#axGlobalEmail').value.trim(),password:form.querySelector('#axGlobalPassword').value});if(error)throw error;msg.textContent='Login successful.';setTimeout(()=>{close();update()},500)}
+  catch(err){msg.textContent=err.message||'Login failed.'}
+  finally{button.disabled=false;button.textContent='Log In'}
+ });
+}
+function update(){
+ const b=document.getElementById('axGlobalLoginBtn');if(!b)return;
+ client.auth.getUser().then(({data})=>{const u=data&&data.user;if(u){b.textContent=(u.email||'Account')+' · Logout';b.onclick=async()=>{await client.auth.signOut();location.reload()}}else{b.textContent='Login';b.onclick=open}});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{mount();update()});else{mount();update()}
+client.auth.onAuthStateChange(()=>update());
+})();

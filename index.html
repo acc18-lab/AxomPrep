@@ -912,6 +912,7 @@
   function openPopup(){popup.classList.add('ax-login-open');popup.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setTimeout(()=>document.getElementById('axLoginEmail').focus(),50);}
   function closePopup(){popup.classList.remove('ax-login-open');popup.setAttribute('aria-hidden','true');document.body.style.overflow='';}
   openButtons.forEach(button=>button.addEventListener('click',()=>{const menu=document.getElementById('mobile-menu');if(menu)menu.classList.remove('axu-open');openPopup();}));
+  if(location.hash==='#login') openPopup();
   closeButton.addEventListener('click',closePopup);
   popup.addEventListener('click',event=>{if(event.target===popup)closePopup();});
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&popup.classList.contains('ax-login-open'))closePopup();});
