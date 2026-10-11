@@ -474,4 +474,3 @@
   scheduleMidnightRefresh();
 
 })();
-```
