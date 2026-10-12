@@ -366,7 +366,7 @@
       // most recent successful fetch time.
       if (updateTime) {
         const latest = state.items.reduce((mostRecent, job) => {
-          const updated = job.updated_at || '';
+          const updated = job.last_verified || job.updated_at || '';
           return updated > mostRecent ? updated : mostRecent;
         }, '');
 
@@ -377,7 +377,7 @@
           : 'Not available';
 
         updateTime.textContent =
-          `Last checked: ${checkedAt} • Data last updated: ${dataUpdatedAt}`;
+          `Last checked: ${checkedAt} • Jobs last synced: ${dataUpdatedAt}`;
       }
 
       render();

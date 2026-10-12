@@ -8,8 +8,12 @@
 const TABLE = 'current_jobs_v1';
 const DEFAULT_LISTING_URL = 'https://www.assamcareer.com/';
 const SOURCE_NAME = 'AssamCareer';
-const MAX_ARTICLES = 60;
-const LISTING_URLS = [DEFAULT_LISTING_URL, 'https://www.assamcareer.com/search?max-results=50'];
+const MAX_ARTICLES = 100;
+const FEED_URLS = [
+  'https://www.assamcareer.com/feeds/posts/default?alt=json&max-results=150',
+  'https://www.assamcareer.com/feeds/posts/default/-/Private%20Job?alt=json&max-results=50'
+];
+const LISTING_URLS = [DEFAULT_LISTING_URL, 'https://www.assamcareer.com/p/latest-updates.html', 'https://www.assamcareer.com/search?max-results=50'];
 
 function json(res, status, body) {
   res.status(status).setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -72,6 +76,35 @@ async function getHtml(url) {
   if (type && !type.includes('html') && !type.includes('text/')) throw new Error(`Expected HTML but received ${type}`);
   return r.text();
 }
+function isJobTitle(title) {
+  if (!title || title.length < 12) return false;
+  if (/\b(result|admit card|admission|scholarship|scheme|answer key|counselling|merit list|exam date|syllabus)\b/i.test(title)) return false;
+  return /\b(recruitment|vacanc|jobs?|posts?|hiring|career|apprentice|walk.?in|employment|notification|trainee|officer|assistant|teacher|faculty|engineer|constable|technician|driver|staff nurse|internship|field assistant|non.?executive|young professional|credit analyst|executive|manager|professor|nurse|grade [a-z])\b/i.test(title);
+}
+function extractFeedArticles(feedJson) {
+  const entries = feedJson && feedJson.feed && Array.isArray(feedJson.feed.entry) ? feedJson.feed.entry : [];
+  const found = new Map();
+  for (const entry of entries) {
+    const title = cleanText(entry && entry.title && entry.title.$t, 500);
+    if (!isJobTitle(title)) continue;
+    const links = Array.isArray(entry.link) ? entry.link : [];
+    const alternate = links.find(link => link && link.rel === 'alternate' && link.href);
+    if (!alternate) continue;
+    const url = safeUrl(alternate.href, DEFAULT_LISTING_URL);
+    if (!url || !/^\/\d{4}\/\d{2}\/[^/]+\.html$/i.test(new URL(url).pathname)) continue;
+    found.set(url, { url, title, published: entry.published && entry.published.$t || null, updated: entry.updated && entry.updated.$t || null });
+  }
+  return [...found.values()];
+}
+async function getFeedArticles(url) {
+  const response = await fetch(url, {
+    headers: { 'User-Agent': 'AxomPrepJobIndexer/1.1', 'Accept': 'application/json' },
+    signal: AbortSignal.timeout(15000)
+  });
+  if (!response.ok) throw new Error(`AssamCareer feed returned HTTP ${response.status} for ${url}`);
+  const payload = await response.json();
+  return extractFeedArticles(payload);
+}
 function extractArticleLinks(html, baseUrl) {
   const found = new Map();
   const re = /<a\b[^>]*href\s*=\s*(["'])(.*?)\1[^>]*>([\s\S]*?)<\/a>/gi;
@@ -84,9 +117,7 @@ function extractArticleLinks(html, baseUrl) {
     // Blogger article URLs generally look like /2026/09/article-name.html.
     if (!/^\/\d{4}\/\d{2}\/[^/]+\.html$/i.test(u.pathname)) continue;
     if (/^(home|read more|click here|older posts|newer posts)$/i.test(title)) continue;
-    // Focus this feed on employment notifications, not results/admissions/schemes.
-    if (/\b(result|admit card|admission|scholarship|scheme|answer key|counselling|merit list)\b/i.test(title)) continue;
-    if (!/\b(recruitment|vacanc|jobs?|posts?|hiring|career|apprentice|walk.?in|employment|notification|trainee|officer|assistant|teacher|faculty|engineer|constable|technician|driver|staff nurse|internship)\b/i.test(title)) continue;
+    if (!isJobTitle(title)) continue;
     if (!found.has(url)) found.set(url, { url, title });
   }
   return [...found.values()].slice(0, MAX_ARTICLES);
@@ -141,7 +172,7 @@ function parseArticle(html, article, now) {
   const qualification = extractField(text, ['Qualification', 'Educational Qualification', 'Minimum qualification']);
   const ageLimit = extractField(text, ['Age Limit', 'Age limit']);
   const salary = extractField(text, ['Pay', 'Salary', 'Pay Scale']);
-  const postedDate = dateToIso((html.match(/<meta\s+property=["']article:published_time["']\s+content=["']([^"']+)/i) || [])[1]) ||
+  const postedDate = dateToIso(article.published) || dateToIso((html.match(/<meta\s+property=["']article:published_time["']\s+content=["']([^"']+)/i) || [])[1]) ||
     dateToIso((text.match(/(?:by\s+[^,]{2,80}\s+)?(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}/i) || [])[0]);
   const lastDate = dateToIso(lastDateRaw);
   const links = externalApplicationLinks(html, article.url);
@@ -168,7 +199,8 @@ function parseArticle(html, article, now) {
     apply_url: applyLink ? applyLink.url : null,
     featured: false,
     status: statusForDate(lastDate, now),
-    last_verified: now.toISOString()
+    last_verified: now.toISOString(),
+    updated_at: now.toISOString()
   };
   fields.description = paraphrasedSummary(fields);
   return fields;
@@ -195,15 +227,26 @@ module.exports = async function handler(req, res) {
   const now = new Date();
   try {
     const listingUrls = [...new Set([listingUrl, ...LISTING_URLS.filter(u => u !== listingUrl)])];
-    const listingResults = await Promise.allSettled(listingUrls.map(async url => ({url, html: await getHtml(url)})));
+    const [listingResults, feedResults] = await Promise.all([
+      Promise.allSettled(listingUrls.map(async url => ({url, html: await getHtml(url)}))),
+      Promise.allSettled(FEED_URLS.map(async url => ({url, articles: await getFeedArticles(url)})))
+    ]);
     const listingPages = listingResults.filter(x => x.status === 'fulfilled').map(x => x.value);
-    if (!listingPages.length) throw new Error('Could not load any AssamCareer listing page; no job records were imported.');
     const linkMap = new Map();
+    for (const result of feedResults) {
+      if (result.status !== 'fulfilled') continue;
+      for (const article of result.value.articles) if (!linkMap.has(article.url)) linkMap.set(article.url, article);
+    }
     for (const page of listingPages) {
       for (const article of extractArticleLinks(page.html, page.url)) if (!linkMap.has(article.url)) linkMap.set(article.url, article);
     }
-    const links = [...linkMap.values()].slice(0, MAX_ARTICLES);
-    if (!links.length) throw new Error('No job article links were found. The source page may have changed or no matching job posts were visible.');
+    if (!linkMap.size && !listingPages.length) throw new Error('Could not load an AssamCareer feed or listing page; no job records were imported.');
+    const links = [...linkMap.values()].sort((a, b) => {
+      const da = Date.parse(a.published || a.updated || '') || 0;
+      const db = Date.parse(b.published || b.updated || '') || 0;
+      return db - da;
+    }).slice(0, MAX_ARTICLES);
+    if (!links.length) throw new Error('AssamCareer pages loaded, but no matching job article links were found. No job records were imported.');
     const results = await Promise.allSettled(links.map(async article => ({ article, job: parseArticle(await getHtml(article.url), article, now) })));
     const jobs = results.filter(x => x.status === 'fulfilled').map(x => x.value.job).filter(j => j && j.title && j.external_key && j.source_url);
     const articleErrors = results.filter(x => x.status === 'rejected').length;
@@ -223,7 +266,7 @@ module.exports = async function handler(req, res) {
       statusesUpdated++;
     }
     return json(res, 200, {
-      ok: true, source: SOURCE_NAME, listingUrlsChecked: listingPages.map(p => p.url), articlesFound: links.length,
+      ok: true, source: SOURCE_NAME, listingUrlsChecked: listingPages.map(p => p.url), feedsChecked: feedResults.filter(x => x.status === 'fulfilled').map(x => x.value.url), articlesFound: links.length,
       importedOrUpdated: jobs.length, articleFetchErrors: articleErrors, statusesUpdated,
       checkedAt: now.toISOString(),
       warning: 'Job summaries are rewritten from extracted facts, not copied article text. Some fields may be unavailable; always verify against the linked official notice.'
