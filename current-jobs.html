@@ -39,6 +39,13 @@
   .axu-inner{padding:0 14px}
   .axu-name{font-size:18px}
 }
+
+.axu-login{flex:0 0 auto;border:0;border-radius:9px;background:#1A56DB;color:#fff;padding:9px 17px;font:700 14px Inter,system-ui,sans-serif;cursor:pointer;box-shadow:0 2px 5px rgba(26,86,219,.18);white-space:nowrap}
+.axu-login:hover{background:#1648b8}
+.axu-login-mobile{display:none;margin:8px 8px 2px;text-align:center}
+.ax-global-auth-btn{font-family:Inter,system-ui,sans-serif!important}
+@media(max-width:900px){.axu-login:not(.axu-login-mobile){display:none}.axu-login-mobile{display:block}.axu-inner{gap:14px}}
+
 </style>
 
 <link rel="stylesheet" href="/axomprep-theme.css">
@@ -52,9 +59,10 @@
       <span class="axu-name">Axom<span>Prep</span></span>
     </a>
     <nav class="axu-nav" aria-label="Primary navigation"><a href="index.html" class="">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="">Current Affairs</a><a href="current-jobs.html" class="axu-active">Jobs</a><a href="books.html" class="">Books</a><a href="premium.html" class="">Premium</a></nav>
-    <button id="axUnifiedMenu" class="axu-menu" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+    <button id="axGlobalLoginBtn" class="axu-login ax-global-auth-btn" type="button">Login</button>
+    <button id="mobile-menu-btn" class="axu-menu" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
   </div>
-  <div id="axUnifiedMobile" class="axu-mobile" aria-hidden="true"><a href="index.html" class="">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="">Current Affairs</a><a href="current-jobs.html" class="axu-active">Jobs</a><a href="books.html" class="">Books</a><a href="premium.html" class="">Premium</a></div>
+  <div id="mobile-menu" class="axu-mobile" aria-hidden="true"><a href="index.html" class="">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="">Current Affairs</a><a href="current-jobs.html" class="axu-active">Jobs</a><a href="books.html" class="">Books</a><a href="premium.html" class="">Premium</a><button id="openLoginMobile" class="axu-login axu-login-mobile" type="button">Login</button></div>
 </header>
 
 <main class="cj-page">
@@ -129,15 +137,12 @@
 
 <script id="axomprep-unified-header-script">
 (function(){
-  const b=document.getElementById("axUnifiedMenu");
-  const n=document.getElementById("axUnifiedMobile");
-  if(b&&n){
-    b.addEventListener("click",function(){
-      const open=n.classList.toggle("axu-open");
-      n.setAttribute("aria-hidden",String(!open));
-      b.setAttribute("aria-expanded",String(open));
-    });
-  }
+  const b=document.getElementById("mobile-menu-btn");
+  const n=document.getElementById("mobile-menu");
+  const desktop=document.getElementById("axGlobalLoginBtn");
+  const mobile=document.getElementById("openLoginMobile");
+  if(b&&n){b.addEventListener("click",function(){const open=n.classList.toggle("axu-open");n.setAttribute("aria-hidden",String(!open));b.setAttribute("aria-expanded",String(open));});}
+  if(desktop&&mobile){mobile.addEventListener("click",function(){desktop.click();});const sync=()=>{mobile.textContent=desktop.textContent;mobile.setAttribute("aria-label",desktop.textContent);};new MutationObserver(sync).observe(desktop,{childList:true,characterData:true,subtree:true});sync();}
 })();
 </script>
 <script src="site-auth.js"></script>
