@@ -47,13 +47,19 @@ function safeUrl(raw, base) {
 function dateToIso(raw) {
   if (!raw) return null;
   const s = String(raw).replace(/\u00a0/g, ' ').trim();
-  let m = s.match(/\b(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})\b/);
+  // ISO / Blogger timestamps (e.g. 2026-10-12T03:15:00Z).
+  let m = s.match(/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/);
+  if (m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+  // Numeric dates: dd/mm/yyyy or dd-mm-yyyy.
+  m = s.match(/\b(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})\b/);
   if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  const months = {jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
+  // 12 October 2026.
   m = s.match(/\b(\d{1,2})\s+(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?\s*,?\s*(\d{4})\b/i);
-  if (m) {
-    const months = {jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
-    return `${m[3]}-${months[m[2].slice(0,3).toLowerCase()]}-${m[1].padStart(2,'0')}`;
-  }
+  if (m) return `${m[3]}-${months[m[2].slice(0,3).toLowerCase()]}-${m[1].padStart(2,'0')}`;
+  // October 12, 2026.
+  m = s.match(/\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{1,2}),?\s+(\d{4})\b/i);
+  if (m) return `${m[3]}-${months[m[1].slice(0,3).toLowerCase()]}-${m[2].padStart(2,'0')}`;
   return null;
 }
 function statusForDate(dateValue, now = new Date()) {
@@ -165,15 +171,15 @@ function parseArticle(html, article, now) {
     html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
   let title = titleMatch ? cleanText(stripHtml(titleMatch[1]).replace(/\s*[-|].*AssamCareer.*$/i, ''), 500) : article.title;
   if (!title || title.length < 8) title = article.title;
-  const lastDateRaw = extractField(text, ['Last Date', 'Last date of submission', 'Last date to apply', 'Closing Date', 'Last date for online application']);
-  const startDateRaw = extractField(text, ['Start Date', 'Starting date of submission', 'Application Start Date', 'Starting date to apply']);
+  const lastDateRaw = extractField(text, ['Last Date', 'Last date of submission', 'Last date to apply', 'Closing Date', 'Last date for online application', 'Last date for application', 'Apply before', 'Application deadline', 'Online application last date']);
+  const startDateRaw = extractField(text, ['Start Date', 'Starting date of submission', 'Application Start Date', 'Starting date to apply', 'Online application start date', 'Application begins']);
   const organization = extractField(text, ['Organization', 'Name of organisation', 'Name of organization', 'Department']) || title.replace(/\s*(Recruitment|Vacancy|Jobs?).*$/i, '').slice(0, 500);
   const vacancies = extractField(text, ['No of posts', 'No. of posts', 'Total posts', 'Vacancy']);
   const qualification = extractField(text, ['Qualification', 'Educational Qualification', 'Minimum qualification']);
   const ageLimit = extractField(text, ['Age Limit', 'Age limit']);
   const salary = extractField(text, ['Pay', 'Salary', 'Pay Scale']);
-  const postedDate = dateToIso(article.published) || dateToIso((html.match(/<meta\s+property=["']article:published_time["']\s+content=["']([^"']+)/i) || [])[1]) ||
-    dateToIso((text.match(/(?:by\s+[^,]{2,80}\s+)?(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}/i) || [])[0]);
+  const postedDate = dateToIso(article.published) || dateToIso(article.updated) || dateToIso((html.match(/<meta\s+property=["']article:published_time["']\s+content=["']([^"']+)/i) || [])[1]) ||
+    dateToIso((text.match(/(?:published|posted|updated|date of notification|notification date)\s*[:：-]?\s*(?:on\s+)?(?:\d{1,2}[\/.-]\d{1,2}[\/.-]\d{4}|\d{1,2}\s+[A-Za-z]+\s+\d{4}|[A-Za-z]+\s+\d{1,2},?\s+\d{4})/i) || [])[0]);
   const lastDate = dateToIso(lastDateRaw);
   const links = externalApplicationLinks(html, article.url);
   const officialLink = links.find(x => x.type === 'official');
@@ -192,6 +198,7 @@ function parseArticle(html, article, now) {
     application_start_date: startDateRaw ? (dateToIso(startDateRaw) || startDateRaw) : null,
     application_last_date: lastDate,
     posted_date: postedDate,
+    notification_date: dateToIso(extractField(text, ['Notification Date', 'Date of Notification', 'Advertisement Date'])) || postedDate,
     category: /private job|private limited|sales executive|company/i.test(title + ' ' + text.slice(0,1000)) ? 'Private Jobs' : 'Government Jobs',
     source_name: SOURCE_NAME,
     source_url: article.url,
