@@ -172,42 +172,23 @@
           ${esc(job.organization || 'Organization not specified')}
         </div>
 
-        <p class="cj-summary">
-          ${esc(
-            job.description ||
-            'Check the official notification for complete details and eligibility.'
-          )}
-        </p>
-
-        <div class="cj-info">
+        <div class="cj-info cj-info-compact">
           <div>
             <span>Vacancies</span>
-            <b>${esc(job.vacancies || '—')}</b>
+            <b>${esc(job.vacancies || 'See notice')}</b>
           </div>
-
-          <div>
-            <span>Qualification</span>
-            <b>${esc(
-              String(job.qualification || 'See notification').slice(0, 90)
-            )}</b>
-          </div>
-
           <div>
             <span>Location</span>
-            <b>${esc(job.location || 'India')}</b>
+            <b>${esc(job.location || 'As per notice')}</b>
           </div>
-
           <div>
             <span>Last date</span>
-            <b>${esc(job.application_last_date || 'Not specified')}</b>
+            <b>${esc(job.application_last_date || 'Check notice')}</b>
           </div>
         </div>
 
         <div class="cj-deadline">
           <strong>${esc(deadlineText)}</strong>
-          ${job.post_name
-            ? `<span class="days">${esc(job.post_name)}</span>`
-            : ''}
         </div>
 
         <div class="cj-actions">
@@ -216,7 +197,7 @@
             ? `<a class="cj-apply"
                  href="${esc(apply)}"
                  target="_blank"
-                 rel="noopener noreferrer">Apply / Portal ↗</a>`
+                 rel="noopener noreferrer">Apply online ↗</a>`
             : ''}
 
           ${official

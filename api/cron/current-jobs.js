@@ -155,18 +155,30 @@ function extractDateField(text, labels) {
 
 function externalApplicationLinks(html, baseUrl) {
   const found = [];
+  const seen = new Set();
   const re = /<a\b([^>]*?)href\s*=\s*(["'])(.*?)\2([^>]*)>([\s\S]*?)<\/a>/gi;
   let m;
   while ((m = re.exec(html))) {
     try {
       const u = new URL(decodeEntities(m[3]), baseUrl);
       if (!['https:', 'http:'].includes(u.protocol)) continue;
-      if (u.hostname === 'assamcareer.com' || u.hostname.endsWith('.assamcareer.com')) continue;
-      if (/facebook|instagram|youtube|telegram|twitter|x\.com|whatsapp|pinterest|google\.com/i.test(u.hostname)) continue;
-      const label = stripHtml(m[5] || '').toLowerCase();
-      const full = `${label} ${u.href.toLowerCase()}`;
-      if (/apply online|apply now|registration|application form|online application|apply here/i.test(full)) found.push({type:'apply',url:u.href});
-      else if (/official notification|notification pdf|advertisement|recruitment notice|official website|download.*pdf|\.pdf(?:$|\?)/i.test(full)) found.push({type:'official',url:u.href});
+      const host = u.hostname.toLowerCase().replace(/^www\./, '');
+      if (host === 'assamcareer.com' || host.endsWith('.assamcareer.com')) continue;
+      if (/facebook|instagram|youtube|telegram|twitter|x\.com|whatsapp|pinterest|google\.com|linkedin\.com/i.test(host)) continue;
+      if (/javascript:|mailto:|tel:/i.test(m[3])) continue;
+      const label = stripHtml(m[5] || '').toLowerCase().replace(/\s+/g, ' ').trim();
+      const attrs = `${m[1]} ${m[4]}`.toLowerCase();
+      const full = `${label} ${u.href.toLowerCase()} ${attrs}`;
+      let type = '';
+      if (/apply|application|registration|register|candidate.?login|online.?form|submit.?form|careers?\.?.*(?:login|apply)|recruitment.*portal/i.test(full)) type = 'apply';
+      else if (/official|website|notification|advertisement|recruitment.?notice|detailed.?notice|download.?pdf|\.pdf(?:$|[?#])|careers?\b/i.test(full)) type = 'official';
+      // Common recruitment portals use generic link text such as "Click Here".
+      else if (/^(click here|here|apply|apply online|online application)$/i.test(label) && /apply|career|recruit|registration|portal|application/i.test(u.href)) type = 'apply';
+      if (!type) continue;
+      const key = `${type}:${u.href}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      found.push({ type, url: u.href, label });
     } catch (_) {}
   }
   return found;
@@ -274,8 +286,19 @@ module.exports = async function handler(req, res) {
     const articleErrors = results.filter(x => x.status === 'rejected').length;
     if (!jobs.length) throw new Error('Article links were found, but no article pages could be parsed. No job records were imported.');
     const base = `${supabaseUrl.replace(/\/+$/, '')}/rest/v1/${TABLE}`;
+    // Preserve previously verified application/official URLs when a source page temporarily omits them.
+    const existingLinks = await supabaseRequest(`${base}?select=external_key,apply_url,official_url&limit=1000`, serviceKey, { method: 'GET' });
+    const linkByKey = new Map((Array.isArray(existingLinks) ? existingLinks : []).map(row => [row.external_key, row]));
+    const mergedJobs = jobs.map(job => {
+      const previous = linkByKey.get(job.external_key) || {};
+      return {
+        ...job,
+        apply_url: job.apply_url || previous.apply_url || null,
+        official_url: job.official_url || previous.official_url || null
+      };
+    });
     await supabaseRequest(`${base}?on_conflict=external_key`, serviceKey, {
-      method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(jobs)
+      method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(mergedJobs)
     });
     const existing = await supabaseRequest(`${base}?select=id,application_last_date,status&limit=1000`, serviceKey, { method: 'GET' });
     let statusesUpdated = 0;
