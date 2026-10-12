@@ -286,10 +286,12 @@
         );
       })
       .sort((a, b) => {
-        const dateA = a.application_last_date || '9999-12-31';
-        const dateB = b.application_last_date || '9999-12-31';
-
-        return dateA.localeCompare(dateB);
+        // Newest published jobs first. Fall back to verification/update time
+        // only when a source posting date is unavailable.
+        const dateA = Date.parse(a.posted_date || a.published_at || a.published_date || a.last_verified || a.updated_at || '') || 0;
+        const dateB = Date.parse(b.posted_date || b.published_at || b.published_date || b.last_verified || b.updated_at || '') || 0;
+        if (dateA !== dateB) return dateB - dateA;
+        return Number(Boolean(b.featured)) - Number(Boolean(a.featured));
       });
 
     if (resultCount) {
@@ -327,8 +329,8 @@
         .from('current_jobs_v1')
         .select('*')
         .in('status', ['open', 'closing_soon', 'closed'])
-        .order('application_last_date', {
-          ascending: true,
+        .order('posted_date', {
+          ascending: false,
           nullsFirst: false
         })
         .order('featured', {
