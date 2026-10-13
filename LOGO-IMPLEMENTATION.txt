@@ -1,0 +1,10 @@
+AxomPrep logo update
+
+- Added assets/axomprep-logo-symbol.png for the site header.
+- Added assets/axomprep-favicon.png for browser tabs.
+- Updated unified AxomPrep header marks across HTML pages without changing navigation/layout.
+- Added the favicon reference to HTML pages (root-relative path works on nested routes).
+- Preserved the current job card cleanup and job details link updates.
+- Included the latest date-extraction importer at api/cron/current-jobs.js.
+
+Deploy by uploading the contents of AxomPrep-main to the existing GitHub repository, preserving its folder structure, then let Vercel deploy. Existing Supabase columns referenced by the importer must exist (including application_start_date and notification_date). Do not overwrite production environment variables.
