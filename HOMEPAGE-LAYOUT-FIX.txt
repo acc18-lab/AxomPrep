@@ -1,0 +1,7 @@
+Homepage layout update
+
+- Latest Job Alerts cards are compact: organization, title, vacancy summary, deadline, and details link.
+- Removed the Explore More block from the Current Affairs card so the dashboard columns align more evenly.
+- Homepage job data query and current-jobs page remain connected to public.current_jobs_v1.
+
+Deploy by uploading the contents of AxomPrep-main to the existing GitHub repository, preserving folder structure. No Supabase schema changes are required.
