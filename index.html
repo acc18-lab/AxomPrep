@@ -365,15 +365,20 @@
                         </div>
                     </div>
                     <h3 class="text-xl font-bold text-slate-800 mb-1">Study Streak</h3>
-                    <p class="text-slate-500 text-sm mb-4">You haven't practiced today.</p>
-                    <div class="flex gap-2 mb-6">
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">M</div>
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">T</div>
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">W</div>
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400 ring-2 ring-orange-200">T</div>
-                        <div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">F</div>
-                        <div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">S</div>
-                        <div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">S</div>
+                    <p class="text-slate-500 text-sm mb-3">You haven't practiced today.</p>
+                    <div class="mb-4" aria-live="off">
+                        <div id="axom-live-time" class="text-2xl font-bold tracking-tight text-slate-800 tabular-nums">--:--:--</div>
+                        <div id="axom-live-date" class="text-xs text-slate-500 mt-1">Loading local date…</div>
+                        <div class="text-[10px] font-semibold text-slate-400 mt-1">INDIA STANDARD TIME (IST)</div>
+                    </div>
+                    <div class="flex gap-2 mb-6" id="axom-live-weekdays" aria-label="Current weekday">
+                        <div data-weekday="1" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">M</div>
+                        <div data-weekday="2" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">T</div>
+                        <div data-weekday="3" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">W</div>
+                        <div data-weekday="4" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">T</div>
+                        <div data-weekday="5" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">F</div>
+                        <div data-weekday="6" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">S</div>
+                        <div data-weekday="7" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">S</div>
                     </div>
                     <button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 rounded-lg text-sm transition-colors">
                         Take a Quiz to Start
@@ -913,5 +918,46 @@
 })();
 </script>
 <script src="homepage-current-jobs.js" defer></script>
+
+<script id="axomprep-live-india-clock">
+(function () {
+  const timeEl = document.getElementById('axom-live-time');
+  const dateEl = document.getElementById('axom-live-date');
+  const weekdays = document.querySelectorAll('#axom-live-weekdays [data-weekday]');
+  if (!timeEl || !dateEl) return;
+
+  const timeFormatter = new Intl.DateTimeFormat('en-IN', {
+    timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: true
+  });
+  const dateFormatter = new Intl.DateTimeFormat('en-IN', {
+    timeZone: 'Asia/Kolkata', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
+  const weekdayFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata', weekday: 'short'
+  });
+  const weekdayNumbers = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 };
+
+  function updateIndiaClock() {
+    const now = new Date();
+    timeEl.textContent = timeFormatter.format(now);
+    dateEl.textContent = dateFormatter.format(now);
+    const today = weekdayNumbers[weekdayFormatter.format(now)];
+    weekdays.forEach((day) => {
+      const isToday = Number(day.dataset.weekday) === today;
+      day.classList.toggle('ring-2', isToday);
+      day.classList.toggle('ring-orange-300', isToday);
+      day.classList.toggle('bg-orange-50', isToday);
+      day.classList.toggle('text-orange-600', isToday);
+      day.classList.toggle('bg-slate-100', !isToday);
+      day.classList.toggle('text-slate-400', !isToday);
+      day.setAttribute('aria-current', isToday ? 'date' : 'false');
+    });
+  }
+  updateIndiaClock();
+  window.setInterval(updateIndiaClock, 1000);
+})();
+</script>
+
 </body>
 </html>
