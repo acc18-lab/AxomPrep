@@ -15,11 +15,11 @@
    }
    try{
      const db=window.AXOMPREP_AUTH_CLIENT||window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
-     const {data,error}=await db.from('current_jobs_v1').select('id,title,organization,vacancies,qualification,application_last_date,category,featured,updated_at,status').in('status',['open','closing_soon']).order('featured',{ascending:false}).order('application_last_date',{ascending:true,nullsFirst:false}).limit(3);
+     const {data,error}=await db.from('current_jobs_v1').select('id,title,organization,vacancies,qualification,application_last_date,posted_date,category,featured,updated_at,status').in('status',['open','closing_soon']).order('posted_date',{ascending:false,nullsFirst:false}).order('featured',{ascending:false}).limit(3);
      if(error)throw error;
      if(!Array.isArray(data)||!data.length){grid.innerHTML='<div class="rounded-xl border border-slate-100 p-4 text-sm text-slate-500">No active job alerts right now. <a class="font-semibold text-blue-700 underline" href="current-jobs.html">See all listings</a>.</div>';return;}
      grid.innerHTML=data.map(card).join('');
-     if(meta){const latest=data.map(x=>x.updated_at||'').sort().pop();meta.textContent=latest?'Updated '+new Date(latest).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'Updated from current job listings';}
+     if(meta){const latest=data.map(x=>x.posted_date||x.updated_at||'').sort().pop();meta.textContent=latest?'Updated '+new Date(latest).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'Updated from current job listings';}
    }catch(e){console.error('AxomPrep homepage job alerts:',e);showError();}
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
