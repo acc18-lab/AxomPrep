@@ -446,12 +446,19 @@ async function loadBooksAdmin(){
   const {data,error}=await client.from('books_v1').select('*').order('created_at',{ascending:false}).limit(500);
   if(error){tbody.innerHTML='<tr><td colspan="7">Could not load books: '+esc(error.message)+'</td></tr>';return;}
   adminBooksCache=data||[];
-  tbody.innerHTML=adminBooksCache.map(b=>`<tr><td>${b.cover_url?`<img class="book-row-cover" src="${esc(b.cover_url)}" alt="">`:'—'}</td><td><strong>${esc(b.title||'Untitled')}</strong><div class="small">${esc(b.author||'')}</div></td><td>${esc(b.category||'')}</td><td>${b.price==null?'—':'₹'+esc(b.price)}</td><td><span class="badge">${esc(b.status||'draft')}</span></td><td>${b.featured?'Yes':'No'}</td><td><button class="btn light" type="button" data-book-edit="${esc(b.id)}">Edit</button> <button class="btn light danger" type="button" data-book-delete="${esc(b.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="7">No books yet. Add one using the form above.</td></tr>';
+  tbody.innerHTML=adminBooksCache.map(b=>{const mappedCover=window.getAxomPrepBookCover?.(b)||'';const directCover=String(b.cover_url||'').trim();const cover=mappedCover||directCover;const coverCell=cover?`<img class="book-row-cover" src="${esc(cover)}" data-direct-fallback="${esc(directCover)}" alt="${esc((b.title||'Book')+' cover')}" loading="lazy" onerror="axAdminBookCoverError(this)">`:`<span class="book-row-cover-empty">No cover</span>`;return `<tr><td>${coverCell}</td><td><strong>${esc(b.title||'Untitled')}</strong><div class="small">${esc(b.author||'')}</div></td><td>${esc(b.category||'')}</td><td>${b.price==null?'—':'₹'+esc(b.price)}</td><td><span class="badge">${esc(b.status||'draft')}</span></td><td>${b.featured?'Yes':'No'}</td><td><button class="btn light" type="button" data-book-edit="${esc(b.id)}">Edit</button> <button class="btn light danger" type="button" data-book-delete="${esc(b.id)}">Delete</button></td></tr>`}).join('')||'<tr><td colspan="7">No books yet. Add one using the form above.</td></tr>';
 }
+window.axAdminBookCoverError=function(img){
+  if(!img||img.dataset.coverErrorHandled==='1')return;
+  const fallback=img.dataset.directFallback||'';
+  if(fallback && img.src!==fallback && !img.dataset.triedDirectFallback){img.dataset.triedDirectFallback='1';img.src=fallback;return;}
+  img.dataset.coverErrorHandled='1';
+  const box=document.createElement('span');box.className='book-row-cover-empty';box.textContent='No cover';img.replaceWith(box);
+};
 function editBookAdmin(id){
   const b=adminBooksCache.find(x=>String(x.id)===String(id));if(!b)return;
   $('bookAdminId').value=b.id||'';$('bookExistingCover').value=b.cover_url||'';$('bookTitle').value=b.title||'';$('bookAuthor').value=b.author||'';$('bookCategory').value=b.category||'';$('bookExamName').value=b.exam_name||'';$('bookPrice').value=b.price??'';$('bookStatus').value=b.status||'draft';$('bookFeatured').value=String(!!b.featured);$('bookDescription').value=b.description||'';$('bookAmazonUrl').value=b.amazon_url||'';$('bookFlipkartUrl').value=b.flipkart_url||'';$('bookCoverFile').value='';
-  const img=$('bookCoverPreview');img.src=b.cover_url||'';img.hidden=!b.cover_url;$('bookSaveBtn').textContent='Save changes';bookMsg('Editing: '+(b.title||'book'),true);$('tab-books').scrollIntoView({behavior:'smooth',block:'start'});
+  const img=$('bookCoverPreview');const editCover=window.getAxomPrepBookCover?.(b)||b.cover_url||'';img.src=editCover;img.hidden=!editCover;$('bookSaveBtn').textContent='Save changes';bookMsg('Editing: '+(b.title||'book'),true);$('tab-books').scrollIntoView({behavior:'smooth',block:'start'});
 }
 $('bookAdminRows')?.addEventListener('click',async e=>{
   const edit=e.target.closest('[data-book-edit]');if(edit){editBookAdmin(edit.dataset.bookEdit);return;}
