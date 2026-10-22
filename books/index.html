@@ -68,6 +68,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
+<script src="/book-covers.js"></script>
 <script id="axomprep-books-db-loader">
 (function(){
   'use strict';
@@ -87,27 +88,53 @@
     const description=esc(book.description || '');
     const exam=esc(book.exam_name || '');
     const category=esc(book.category || '');
-    const cover=String(book.cover_url || '').trim();
+    const cover=String(window.getAxomPrepBookCover?.(book)||book.cover_url||'').trim();
     const amazon=String(book.amazon_url || '').trim();
     const flipkart=String(book.flipkart_url || '').trim();
-
+    const attrs=`data-book-title="${title}" data-book-author="${author}"`;
     const coverHtml=cover
-      ? `<div class="book-cover"><img src="${esc(cover)}" alt="${title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;book-cover-placeholder&quot;>${title}</div>'"></div>`
-      : `<div class="book-cover"><div class="book-cover-placeholder">${title}</div></div>`;
-
-    return `<article class="card">
-      ${coverHtml}
+      ? `<div class="book-cover" ${attrs}><img src="${esc(cover)}" alt="${title} book cover" loading="lazy" referrerpolicy="no-referrer"></div>`
+      : `<div class="book-cover book-cover-missing" ${attrs}><div class="book-cover-placeholder">${title}</div></div>`;
+    return `<article class="card">${coverHtml}
       ${category ? `<span class="book-category">${category}</span>` : ''}
       <h2>${title}</h2>
       ${author ? `<div class="book-meta"><strong>Author:</strong> ${author}</div>` : ''}
       ${publisher ? `<div class="book-meta"><strong>Publisher:</strong> ${publisher}</div>` : ''}
       ${exam ? `<div class="book-exam">${exam}</div>` : ''}
       ${description ? `<p>${description}</p>` : ''}
-      <div class="book-actions">
-        ${amazon ? `<a class="book-amazon" href="${esc(amazon)}" target="_blank" rel="noopener noreferrer sponsored">Amazon</a>` : ''}
-        ${flipkart ? `<a class="book-flipkart" href="${esc(flipkart)}" target="_blank" rel="noopener noreferrer sponsored">Flipkart</a>` : ''}
-      </div>
+      <div class="book-actions">${amazon ? `<a class="book-amazon" href="${esc(amazon)}" target="_blank" rel="noopener noreferrer sponsored">Amazon</a>` : ''}${flipkart ? `<a class="book-flipkart" href="${esc(flipkart)}" target="_blank" rel="noopener noreferrer sponsored">Flipkart</a>` : ''}</div>
     </article>`;
+  }
+
+  async function lookupCover(title, author){
+    const queries=[];
+    if(title&&author) queries.push(`intitle:${title}+inauthor:${author}`);
+    if(title) queries.push(`intitle:${title}`);
+    for(const q of queries){
+      try{
+        const response=await fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=10&printType=books');
+        if(!response.ok) continue;
+        const result=await response.json(), items=Array.isArray(result.items)?result.items:[];
+        const norm=String(title||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+        const ranked=items.map(item=>{const v=item.volumeInfo||{}, t=String(v.title||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(), links=v.imageLinks||{};return {links,score:(t===norm?5:(t.includes(norm)||norm.includes(t)?2:0))+(links.thumbnail||links.smallThumbnail?2:0)}}).filter(x=>x.links.thumbnail||x.links.smallThumbnail).sort((a,b)=>b.score-a.score);
+        if(ranked.length) return (ranked[0].links.thumbnail||ranked[0].links.smallThumbnail).replace(/^http:/,'https:');
+      }catch(_){ }
+    }
+    try{
+      const response=await fetch('https://openlibrary.org/search.json?title='+encodeURIComponent(title||'')+'&author='+encodeURIComponent(author||'')+'&limit=5');
+      if(response.ok){const result=await response.json(),doc=(result.docs||[]).find(x=>x.cover_i);if(doc)return `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`;}
+    }catch(_){ }
+    return '';
+  }
+  function showPlaceholder(box){box.classList.add('book-cover-missing');box.innerHTML=`<div class="book-cover-placeholder">${esc(box.dataset.bookTitle||'Book cover unavailable')}</div>`;}
+  async function loadInternetCovers(){
+    const boxes=[...grid.querySelectorAll('.book-cover[data-book-title]')];
+    for(const box of boxes){
+      const img=box.querySelector('img');
+      if(img){img.addEventListener('error',async()=>{if(img.dataset.catalogAttempted)return;img.dataset.catalogAttempted='1';const found=await lookupCover(box.dataset.bookTitle,box.dataset.bookAuthor);if(found){const replacement=document.createElement('img');replacement.src=found;replacement.alt=(box.dataset.bookTitle||'Book')+' book cover';replacement.loading='lazy';replacement.referrerPolicy='no-referrer';replacement.addEventListener('error',()=>showPlaceholder(box),{once:true});box.replaceChildren(replacement);}else showPlaceholder(box);},{once:true});continue;}
+      const found=await lookupCover(box.dataset.bookTitle,box.dataset.bookAuthor);
+      if(found){const replacement=document.createElement('img');replacement.src=found;replacement.alt=(box.dataset.bookTitle||'Book')+' book cover';replacement.loading='lazy';replacement.referrerPolicy='no-referrer';replacement.addEventListener('error',()=>showPlaceholder(box),{once:true});box.replaceChildren(replacement);box.classList.remove('book-cover-missing');}
+    }
   }
 
   async function loadBooks(){
@@ -141,6 +168,7 @@
       }
 
       grid.innerHTML=data.map(card).join('');
+      loadInternetCovers();
     }catch(err){
       console.error('AxomPrep books:',err);
       grid.innerHTML=`<div class="card books-error"><h2>Unable to load books</h2><p>${esc(err?.message || 'Please try again later.')}</p></div>`;

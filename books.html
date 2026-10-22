@@ -68,6 +68,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
+<script src="/book-covers.js"></script>
 <script id="axomprep-books-db-loader">
 (function(){
   'use strict';
@@ -87,13 +88,14 @@
     const description=esc(book.description || '');
     const exam=esc(book.exam_name || '');
     const category=esc(book.category || '');
-    const cover=String(book.cover_url || '').trim();
+    const mapped=String(window.getAxomPrepBookCover?.(book)||'').trim();
+    const cover=mapped || String(book.cover_url || '').trim();
     const amazon=String(book.amazon_url || '').trim();
     const flipkart=String(book.flipkart_url || '').trim();
-
+    const attrs=`data-book-title="${title}" data-book-author="${author}"`;
     const coverHtml=cover
-      ? `<div class="book-cover"><img src="${esc(cover)}" alt="${title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;book-cover-placeholder&quot;>${title}</div>'"></div>`
-      : `<div class="book-cover book-cover-missing" data-book-title="${title}"><div class="book-cover-placeholder">${title}</div></div>`;
+      ? `<div class="book-cover" ${attrs}><img src="${esc(cover)}" alt="${title} book cover" loading="lazy" referrerpolicy="no-referrer"></div>`
+      : `<div class="book-cover book-cover-missing" ${attrs}><div class="book-cover-placeholder">${title}</div></div>`;
 
     return `<article class="card">
       ${coverHtml}
@@ -110,31 +112,75 @@
     </article>`;
   }
 
-
-  async function loadMissingCovers(){
-    const missing=[...grid.querySelectorAll('.book-cover-missing[data-book-title]')];
-    for(const box of missing){
-      const title=box.getAttribute('data-book-title');
-      if(!title) continue;
+  async function lookupCover(title, author){
+    const queries=[];
+    if(title && author) queries.push(`intitle:${title}+inauthor:${author}`);
+    if(title) queries.push(`intitle:${title}`);
+    for(const q of queries){
       try{
-        const url='https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent('intitle:'+title)+'&maxResults=5';
+        const url='https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=10&printType=books';
         const response=await fetch(url);
         if(!response.ok) continue;
         const result=await response.json();
         const items=Array.isArray(result.items)?result.items:[];
-        const item=items.find(x=>x.volumeInfo && x.volumeInfo.imageLinks && (x.volumeInfo.imageLinks.thumbnail || x.volumeInfo.imageLinks.smallThumbnail));
-        if(!item) continue;
-        const imageUrl=(item.volumeInfo.imageLinks.thumbnail || item.volumeInfo.imageLinks.smallThumbnail).replace(/^http:/,'https:');
-        const img=document.createElement('img');
-        img.src=imageUrl;
-        img.alt=title;
-        img.loading='lazy';
-        img.referrerPolicy='no-referrer';
-        img.onerror=()=>{ img.remove(); box.classList.remove('book-cover-missing'); };
-        box.replaceChildren(img);
-        box.classList.remove('book-cover-missing');
-      }catch(_){ /* Keep the title placeholder if no public cover is found. */ }
+        const normalized=String(title||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+        const ranked=items.map(item=>{
+          const v=item.volumeInfo||{};
+          const t=String(v.title||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+          const hasCover=!!(v.imageLinks&&(v.imageLinks.thumbnail||v.imageLinks.smallThumbnail));
+          return {v,score:(t===normalized?5:(t.includes(normalized)||normalized.includes(t)?2:0))+(hasCover?2:0)};
+        }).filter(x=>x.v.imageLinks&&(x.v.imageLinks.thumbnail||x.v.imageLinks.smallThumbnail)).sort((a,b)=>b.score-a.score);
+        if(ranked.length){
+          let image=ranked[0].v.imageLinks.thumbnail||ranked[0].v.imageLinks.smallThumbnail;
+          return image.replace(/^http:/,'https:').replace(/&amp;/g,'&');
+        }
+      }catch(_){ }
     }
+    // Open Library is a secondary public catalogue for titles not indexed by Google Books.
+    try{
+      const url='https://openlibrary.org/search.json?title='+encodeURIComponent(title||'')+'&author='+encodeURIComponent(author||'')+'&limit=5';
+      const response=await fetch(url);
+      if(response.ok){
+        const result=await response.json();
+        const doc=(result.docs||[]).find(x=>x.cover_i);
+        if(doc) return `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`;
+      }
+    }catch(_){ }
+    return '';
+  }
+
+  async function loadMissingCovers(){
+    const boxes=[...grid.querySelectorAll('.book-cover[data-book-title]')];
+    // Resolve every book card: known cover map first, then database image, then public book catalogues.
+    for(const box of boxes){
+      const img=box.querySelector('img');
+      if(img){
+        img.addEventListener('error',async function retryOnError(){
+          if(img.dataset.triedCatalog==='1') return;
+          img.dataset.triedCatalog='1';
+          const found=await lookupCover(box.dataset.bookTitle,box.dataset.bookAuthor);
+          if(found){ img.dataset.triedCatalog='2'; img.src=found; img.addEventListener('error',()=>showCoverPlaceholder(box),{once:true}); }
+          else showCoverPlaceholder(box);
+        },{once:true});
+        // Existing URLs are tried first; the error handler searches the internet if one fails.
+        continue;
+      }
+      const found=await lookupCover(box.dataset.bookTitle,box.dataset.bookAuthor);
+      if(found){
+        const image=document.createElement('img');
+        image.src=found; image.alt=(box.dataset.bookTitle||'Book')+' book cover';
+        image.loading='lazy'; image.referrerPolicy='no-referrer';
+        image.addEventListener('error',()=>showCoverPlaceholder(box),{once:true});
+        box.replaceChildren(image); box.classList.remove('book-cover-missing');
+      }
+    }
+  }
+
+  function showCoverPlaceholder(box){
+    if(!box) return;
+    const title=box.dataset.bookTitle||'Book cover unavailable';
+    box.classList.add('book-cover-missing');
+    box.innerHTML=`<div class="book-cover-placeholder">${esc(title)}</div>`;
   }
 
   async function loadBooks(){
@@ -168,7 +214,7 @@
       }
 
       grid.innerHTML=data.map(card).join('');
-      // Fill missing covers using the public Google Books API; existing cover_url values stay unchanged.
+      // Load real cover art from title-matched map, database URLs, Google Books, and Open Library.
       loadMissingCovers();
     }catch(err){
       console.error('AxomPrep books:',err);
