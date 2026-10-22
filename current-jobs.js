@@ -345,22 +345,31 @@
           : 'all';
       }
 
-      // Show the actual database update time separately from the
-      // most recent successful fetch time.
+      // Display only the latest successful sync timestamp from the database.
       if (updateTime) {
-        const latest = state.items.reduce((mostRecent, job) => {
-          const updated = job.last_verified || job.updated_at || '';
-          return updated > mostRecent ? updated : mostRecent;
-        }, '');
+        let latestSync = '';
+        try {
+          const { data: syncRows, error: syncError } = await db
+            .from('current_jobs_v1')
+            .select('last_verified')
+            .not('last_verified', 'is', null)
+            .order('last_verified', { ascending: false })
+            .limit(1);
+          if (!syncError && Array.isArray(syncRows) && syncRows[0]) {
+            latestSync = syncRows[0].last_verified || '';
+          }
+        } catch (_) {}
 
-        const checkedAt = formatIST(new Date());
+        if (!latestSync) {
+          latestSync = state.items.reduce((mostRecent, job) => {
+            const updated = job.last_verified || job.updated_at || '';
+            return updated > mostRecent ? updated : mostRecent;
+          }, '');
+        }
 
-        const dataUpdatedAt = latest
-          ? formatIST(latest)
-          : 'Not available';
-
-        updateTime.textContent =
-          `Last checked: ${checkedAt} • Jobs last synced: ${dataUpdatedAt}`;
+        updateTime.textContent = latestSync
+          ? `Last synced: ${formatIST(latestSync)}`
+          : 'Last synced: Not available';
       }
 
       render();
