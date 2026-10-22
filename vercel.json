@@ -21,6 +21,38 @@
     {
       "source": "/job/:id",
       "destination": "/job.html?id=:id"
+    },
+    {
+      "source": "/about",
+      "destination": "/about/index.html"
+    },
+    {
+      "source": "/about.html",
+      "destination": "/about/index.html"
+    },
+    {
+      "source": "/contact-support",
+      "destination": "/contact-support/index.html"
+    },
+    {
+      "source": "/contact-support.html",
+      "destination": "/contact-support/index.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy/index.html"
+    },
+    {
+      "source": "/privacy.html",
+      "destination": "/privacy/index.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms/index.html"
+    },
+    {
+      "source": "/terms.html",
+      "destination": "/terms/index.html"
     }
   ]
 }
