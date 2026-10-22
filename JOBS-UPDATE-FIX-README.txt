@@ -1,7 +1,7 @@
 AxomPrep Jobs Update Fix
 
 Files changed:
-- api/cron/current-jobs.js: reads the AssamCareer Blogger JSON feed as well as the homepage, latest-updates page, and search page; filters employment-related posts; imports up to 100 recent matching posts; upserts last_verified and updated_at timestamps; returns source/feed counts and parsing errors.
+- api/cron/current-jobs.js: reads the configured JSON feeds and public listing pages; filters employment-related posts; imports up to 100 recent matching posts; upserts last_verified and updated_at timestamps; returns source/feed counts and parsing errors.
 - current-jobs.js: uses last_verified (when present) for the sync timestamp and labels it "Jobs last synced" rather than implying a source publication date.
 
 Deploy:

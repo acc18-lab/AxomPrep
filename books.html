@@ -50,7 +50,7 @@
   </div>
   <div id="axUnifiedMobile" class="axu-mobile" aria-hidden="true"><a href="index.html" class="">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="">Current Affairs</a><a href="current-jobs.html" class="">Jobs</a><a href="books.html" class="axu-active">Books</a><a href="premium.html" class="">Premium</a></div>
 </header>
-<main class="main"><section class="hero"><div class="eyebrow">STUDY RESOURCES</div><h1>Books for aspirants.</h1><p>Explore the study resources highlighted across AxomPrep. Purchase links can be connected to the site's configured affiliate destinations.</p><div id="axomprep-assamcareer-store" style="margin-top:18px"><a href="https://www.amazon.in/shop/assamcareer" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;background:#fff;color:#1647b8;border:1px solid #dbeafe;border-radius:10px;padding:11px 15px;font-weight:800;text-decoration:none">Browse AssamCareer’s Amazon Bookstore ↗</a><p style="font-size:12px;margin:8px 0 0;color:#eaf1ff">Explore additional competitive-exam book recommendations from AssamCareer.</p></div></section><section class="grid" id="booksGrid">
+<main class="main"><section class="hero"><div class="eyebrow">STUDY RESOURCES</div><h1>Books for aspirants.</h1><p>Explore the study resources highlighted across AxomPrep. Purchase links can be connected to the site's configured affiliate destinations.</p></section><section class="grid" id="booksGrid">
   <div class="card"><p class="muted">Loading books from AxomPrep database…</p></div>
 </section></main><footer class="footer">© 2026 AxomPrep. Prepare Today. Rank Tomorrow.</footer><script id="axomprep-unified-header-script">
 (function(){
@@ -91,16 +91,7 @@
     const mapped=String(window.getAxomPrepBookCover?.(book)||'').trim();
     const cover=mapped || String(book.cover_url || '').trim();
     const amazonStored=String(book.amazon_url || '').trim();
-    const normalizedTitle=String(book.title||'').toLowerCase();
-    const assamCareerLinks=[
-      {match:['lucent','general knowledge'],url:'https://amzn.to/43tSnWB'},
-      {match:['assam year book'],url:'https://amzn.to/3oDWWPm'},
-      {match:['objective general english'],url:'https://amzn.to/43ehY6k'},
-      {match:['quantitative aptitude'],url:'https://amzn.to/43xKy2a'},
-      {match:['verbal','non-verbal reasoning'],url:'https://amzn.to/3WDa4Rq'}
-    ];
-    const matchedAssamCareer=assamCareerLinks.find(item=>item.match.every(word=>normalizedTitle.includes(word)));
-    const amazon=amazonStored || (matchedAssamCareer ? matchedAssamCareer.url : 'https://www.amazon.in/shop/assamcareer');
+    const amazon=amazonStored;
     const flipkart=String(book.flipkart_url || '').trim();
     const attrs=`data-book-title="${title}" data-book-author="${author}"`;
     const coverHtml=cover

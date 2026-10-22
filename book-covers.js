@@ -2,7 +2,6 @@
    These are image URLs from publisher/book-retailer/Google Books pages.
    Database cover_url values take precedence; this map fills missing covers. */
 window.AXOMPREP_BOOK_COVERS = {
-  // Additional book recommendations are linked to the AssamCareer Amazon storefront from books.html.
   "Assam Year Book 2026": "https://www.assambookbazaar.com/storage/assam-year-book-2026-1-400x400.jpeg",
   "Assam Year Book": "https://www.assambookbazaar.com/storage/assam-year-book-2026-1-400x400.jpeg",
   "ADRE Grade III Guide": "https://dishapublication.com/cdn/shop/files/9789371868976.jpg?v=1759143583&width=530",
