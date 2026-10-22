@@ -461,28 +461,45 @@ $('bookAdminRows')?.addEventListener('click',async e=>{
   if(error){bookMsg('Delete failed: '+error.message);del.disabled=false;return;}
   if($('bookAdminId').value===String(b.id))clearBookForm();bookMsg('Book deleted.');await loadBooksAdmin();
 });
-$('bookAdminForm')?.addEventListener('submit',async e=>{
-  e.preventDefault();const btn=$('bookSaveBtn');btn.disabled=true;bookMsg('Saving book…',false);
+async function saveBookAdmin(){
+  const form=$('bookAdminForm');const btn=$('bookSaveBtn');
+  if(!form||!btn)return;
+  btn.disabled=true;const originalText=btn.textContent;btn.textContent='Saving…';
+  bookMsg('Saving book details…',false);
   try{
+    if(!client)throw new Error('Supabase client is not initialized. Refresh the page and sign in again.');
+    const {data:{user},error:userError}=await client.auth.getUser();
+    if(userError)throw userError;
+    if(!user)throw new Error('Your login session has expired. Please sign in again.');
+    const title=$('bookTitle').value.trim();
+    const category=$('bookCategory').value.trim();
+    if(!title)throw new Error('Enter a book title.');
+    if(!category)throw new Error('Enter a book category.');
     let coverUrl=$('bookExistingCover').value||null;const file=$('bookCoverFile').files?.[0];
     if(file){
       if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024)throw new Error('Cover must be JPG, PNG or WebP and smaller than 5 MB.');
       const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
-      const path=`${Date.now()}-${crypto.randomUUID()}.${ext}`;
+      const path=`${Date.now()}-${crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)}.${ext}`;
       const {error:uploadError}=await client.storage.from('book-covers').upload(path,file,{contentType:file.type,cacheControl:'3600',upsert:false});
-      if(uploadError)throw new Error('Cover upload failed. Check the book-covers bucket and its admin upload policy. '+uploadError.message);
+      if(uploadError)throw new Error('Cover upload failed: '+uploadError.message+' (check the book-covers bucket and its Storage policies).');
       coverUrl=client.storage.from('book-covers').getPublicUrl(path).data.publicUrl;
     }
-    const title=$('bookTitle').value.trim();if(!title)throw new Error('Book title is required.');
-    const payload={title,author:$('bookAuthor').value.trim()||null,category:$('bookCategory').value.trim(),exam_name:$('bookExamName').value.trim()||null,description:$('bookDescription').value.trim()||null,cover_url:coverUrl,amazon_url:safeHttpUrl($('bookAmazonUrl').value.trim()),flipkart_url:safeHttpUrl($('bookFlipkartUrl').value.trim()),price:$('bookPrice').value===''?null:Number($('bookPrice').value),status:$('bookStatus').value,featured:$('bookFeatured').value==='true'};
+    const rawPrice=$('bookPrice').value;
+    const payload={title,author:$('bookAuthor').value.trim()||null,category,exam_name:$('bookExamName').value.trim()||null,description:$('bookDescription').value.trim()||null,cover_url:coverUrl,amazon_url:safeHttpUrl($('bookAmazonUrl').value.trim()),flipkart_url:safeHttpUrl($('bookFlipkartUrl').value.trim()),price:rawPrice===''?null:Number(rawPrice),status:$('bookStatus').value,featured:$('bookFeatured').value==='true'};
     if(payload.price!==null&&(!Number.isFinite(payload.price)||payload.price<0))throw new Error('Price must be zero or higher.');
     const id=$('bookAdminId').value;let result;
-    if(id)result=await client.from('books_v1').update(payload).eq('id',id);else result=await client.from('books_v1').insert(payload);
+    if(id)result=await client.from('books_v1').update(payload).eq('id',id);
+    else result=await client.from('books_v1').insert(payload);
     if(result.error)throw result.error;
-    clearBookForm();bookMsg(id?'Book updated successfully.':'Book added successfully. If status is Published, it will appear on the Books page; feature it to show it on the homepage.');await loadBooksAdmin();
-  }catch(err){bookMsg('Could not save book: '+(err?.message||String(err)));}
-  finally{btn.disabled=false;}
-});
+    clearBookForm();bookMsg(id?'Book updated successfully.':'Book added successfully. Published books appear on the Books page; featured published books can appear on the homepage.');
+    await loadBooksAdmin();
+  }catch(err){
+    console.error('[AxomPrep Books Admin] Save failed:',err);
+    bookMsg('Save failed: '+(err?.message||String(err))+' — check Supabase table columns, admin role and RLS policies.');
+  }finally{btn.disabled=false;btn.textContent=$('bookAdminId').value?'Save changes':'Save book';}
+}
+$('bookSaveBtn')?.addEventListener('click',saveBookAdmin);
+$('bookAdminForm')?.addEventListener('submit',async e=>{e.preventDefault();await saveBookAdmin();});
 
 function esc(s){
   return String(s??'').replace(/[&<>"']/g,m=>({
