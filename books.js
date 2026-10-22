@@ -8,7 +8,7 @@ function safeUrl(value){
     return /^https?:$/.test(u.protocol)?u.href:'';
   }catch(_){return '';}
 }
-function coverFor(book){return String(window.getAxomPrepBookCover?.(book)||'').trim();}
+function coverFor(book){return String(book.cover_url||window.getAxomPrepBookCover?.(book)||'').trim();}
 function splitExams(value){return String(value||'').split(/[•|]/).map(x=>x.trim()).filter(Boolean).slice(0,4)}
 function fallbackCover(book){
   const title=escapeHtml(book.title||'Competitive Exam Book');

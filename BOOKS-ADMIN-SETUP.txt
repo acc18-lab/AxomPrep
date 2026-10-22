@@ -1,0 +1,10 @@
+AXOMPREP BOOKS ADMIN SETUP
+
+1. Deploy the updated website to Vercel.
+2. In Supabase Dashboard, open SQL Editor and run books-admin-setup.sql once.
+3. Confirm the account used to log in at /admin.html has public.profiles.role = 'admin'.
+4. Open https://www.axomprep.online/admin.html, log in, and choose the Books tab.
+5. Add title/category and other book details. Choose an original cover image (JPG/PNG/WebP, up to 5 MB), choose Draft or Published, and save.
+6. Published books appear on /books.html. Set “Feature on homepage” to Yes to include them in the homepage recommendations.
+
+The cover file is stored in the public Supabase Storage bucket `book-covers`; only users with profiles.role='admin' may upload, update, or delete cover files. Public visitors can read published book rows and book cover images. Do not put a Supabase service-role key in client-side files.

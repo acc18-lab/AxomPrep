@@ -3,7 +3,7 @@
   if(!grid) return;
   const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const safeUrl=value=>{try{const u=new URL(String(value||''),window.location.href);return /^https?:$/.test(u.protocol)?u.href:'';}catch(_){return '';}};
-  const coverFor=book=>String(window.getAxomPrepBookCover?.(book)||book.cover_url||'').trim();
+  const coverFor=book=>String(book.cover_url||window.getAxomPrepBookCover?.(book)||'').trim();
   const splitExam=s=>String(s||'').split(/[•|]/).map(x=>x.trim()).filter(Boolean).slice(0,3);
   const coverTone=cat=>{const c=String(cat||'').toLowerCase();if(c.includes('mathemat'))return 'math';if(c.includes('reason'))return 'reason';if(c.includes('english'))return 'english';if(c.includes('science'))return 'science';if(c.includes('current')||c.includes('economy'))return 'orange';return 'assam';};
 
