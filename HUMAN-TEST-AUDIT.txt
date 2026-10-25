@@ -1,0 +1,28 @@
+AXOMPREP HUMAN-TEST AUDIT — PATCH NOTES
+Snapshot audited: AxomPrep repository ZIP available in this conversation (source files dated 12 Oct 2026).
+
+CONFIRMED BY STATIC SOURCE INSPECTION AND PATCHED IN THIS PACKAGE
+1. Favicon: added the AxomPrep mark favicon to HTML pages.
+2. Header branding: replaced the generic letter tile with the existing AxomPrep logo mark on unified headers.
+3. Homepage navigation: replaced nonfunctional # links for primary CTAs, quick actions, exam cards, subject chips, and footer navigation with real internal destinations. Social icons are now visibly non-clickable until real profile URLs are configured rather than pretending to work.
+4. Homepage Current Affairs: removed three hardcoded sample headlines that were not wired to live data and replaced them with a route to the Current Affairs page.
+5. Homepage jobs ordering: changed the job-alert query to sort by posted_date descending, then updated_at descending, instead of prioritizing application deadline.
+6. Premium checkout: wired the Premium page to the existing premium.js, Supabase config, and Razorpay Checkout scripts; replaced Continue links with the ₹49/₹129 plan buttons; order API now returns the public Razorpay key ID from server configuration; payment verification errors are surfaced to the user.
+7. Clean URLs: added Vercel rewrites for clean page routes so nested directory copies with relative asset paths do not unexpectedly serve when a root HTML page is intended.
+
+LOCAL CHECKS COMPLETED
+- `node --check` passed for all JavaScript files in the patched snapshot.
+- JSON parse passed for vercel.json.
+- ZIP archive integrity checked after packaging.
+- Placeholder href="#" links were removed from root HTML pages in the patched snapshot.
+
+NOT VERIFIED — REQUIRES LIVE DEPLOYMENT / BROWSER / DATABASE
+- Whether production deployment is updated to this package.
+- Actual homepage/mobile layout at multiple viewport sizes and on a real mobile network.
+- Live Supabase queries, RLS permissions, question data accuracy, job dates, and official/application link correctness.
+- End-to-end login, registration, session persistence, and password recovery.
+- Real Razorpay checkout success/failure/cancel flows. Server-side RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, Supabase service-role key, and required database tables/policies must be configured in Vercel/Supabase. Never expose the service-role key in frontend code.
+- Admin authorization against production profiles and policies.
+
+IMPORTANT
+This is a static-code remediation package, not proof that every item in the user's human-testing checklist passes. Deploy to a staging/production preview and complete the live tests before marking those items PASS. If the repository has changed since the available snapshot, apply the changes to the current branch carefully rather than replacing newer files wholesale.

@@ -77,12 +77,6 @@ document.querySelectorAll('.plan-pay-btn').forEach(btn => {
       alert('Razorpay Checkout could not be loaded. Please refresh.');
       return;
     }
-    const key = window.RAZORPAY_KEY_ID;
-    if (!key) {
-      alert('Razorpay Key ID is missing in config.js.');
-      return;
-    }
-
     const planCode = btn.dataset.plan;
     const plan = PLANS[planCode];
     if (!plan) {
@@ -105,6 +99,8 @@ document.querySelectorAll('.plan-pay-btn').forEach(btn => {
       });
       const order = await orderResponse.json();
       if (!orderResponse.ok) throw new Error(order.error || 'Could not create payment order.');
+      const key = order.key_id || window.RAZORPAY_KEY_ID;
+      if (!key) throw new Error('Razorpay Key ID is not configured on the server.');
 
       const options = {
         key,
@@ -117,20 +113,26 @@ document.querySelectorAll('.plan-pay-btn').forEach(btn => {
         theme: { color: '#f28c28' },
         handler: async function (response) {
           setStatus('Verifying payment...');
-          const verifyResponse = await fetch('/api/verify-payment', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session.access_token}`
-            },
-            body: JSON.stringify(response)
-          });
-          const result = await verifyResponse.json();
-          if (!verifyResponse.ok) throw new Error(result.error || 'Payment verification failed.');
-
-          setStatus(`${plan.name} plan active until ${new Date(result.expires_at).toLocaleDateString('en-IN')}.`);
-          setButtons(true);
-          alert('Payment verified. AxomPrep Premium is now active.');
+          try {
+            const verifyResponse = await fetch('/api/verify-payment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`
+              },
+              body: JSON.stringify(response)
+            });
+            const result = await verifyResponse.json();
+            if (!verifyResponse.ok) throw new Error(result.error || 'Payment verification failed.');
+            setStatus(`${plan.name} plan active until ${new Date(result.expires_at).toLocaleDateString('en-IN')}.`);
+            setButtons(true);
+            alert('Payment verified. AxomPrep Premium is now active.');
+          } catch (err) {
+            console.error('AxomPrep payment verification failed:', err);
+            setStatus(err.message || 'Payment was received but verification did not complete. Contact support before retrying.');
+            alert(err.message || 'Payment verification failed. Please contact support before paying again.');
+            setButtons(false);
+          }
         }
       };
 

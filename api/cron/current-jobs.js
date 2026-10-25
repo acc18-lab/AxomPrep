@@ -46,20 +46,14 @@ function safeUrl(raw, base) {
 }
 function dateToIso(raw) {
   if (!raw) return null;
-  const s = String(raw).replace(/\u00a0/g, ' ').replace(/(\d{1,2})(st|nd|rd|th)\b/gi, '$1').trim();
-  // ISO / Blogger timestamps (e.g. 2026-10-12T03:15:00Z).
-  let m = s.match(/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/);
-  if (m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
-  // Numeric dates: dd/mm/yyyy or dd-mm-yyyy.
-  m = s.match(/\b(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})\b/);
+  const s = String(raw).replace(/\u00a0/g, ' ').trim();
+  let m = s.match(/\b(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})\b/);
   if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
-  const months = {jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
-  // 12 October 2026.
   m = s.match(/\b(\d{1,2})\s+(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?\s*,?\s*(\d{4})\b/i);
-  if (m) return `${m[3]}-${months[m[2].slice(0,3).toLowerCase()]}-${m[1].padStart(2,'0')}`;
-  // October 12, 2026.
-  m = s.match(/\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{1,2}),?\s+(\d{4})\b/i);
-  if (m) return `${m[3]}-${months[m[1].slice(0,3).toLowerCase()]}-${m[2].padStart(2,'0')}`;
+  if (m) {
+    const months = {jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
+    return `${m[3]}-${months[m[2].slice(0,3).toLowerCase()]}-${m[1].padStart(2,'0')}`;
+  }
   return null;
 }
 function statusForDate(dateValue, now = new Date()) {
@@ -137,48 +131,20 @@ function extractField(text, labels) {
   }
   return null;
 }
-function extractDateField(text, labels) {
-  const source = String(text || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ');
-  const datePattern = '(\\d{4}-\\d{1,2}-\\d{1,2}|\\d{1,2}[\\/.-]\\d{1,2}[\\/.-]\\d{4}|\\d{1,2}(?:st|nd|rd|th)?\\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s*,?\\s*\\d{4}|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\s+\\d{1,2}(?:st|nd|rd|th)?\\s*,?\\s*\\d{4})';
-  for (const label of labels) {
-    const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    // Labels are often rendered in tables without a colon, e.g. "Application Start Date 12th October 2026".
-    const re = new RegExp('(?:^|\\b)' + escaped + '\\b\\s*(?:[:：–—-]\\s*)?(?:is\\s+|on\\s+|from\\s+)?(' + datePattern + ')', 'i');
-    const m = source.match(re);
-    if (m) {
-      const iso = dateToIso(m[1]);
-      if (iso) return iso;
-    }
-  }
-  return null;
-}
-
 function externalApplicationLinks(html, baseUrl) {
   const found = [];
-  const seen = new Set();
   const re = /<a\b([^>]*?)href\s*=\s*(["'])(.*?)\2([^>]*)>([\s\S]*?)<\/a>/gi;
   let m;
   while ((m = re.exec(html))) {
     try {
       const u = new URL(decodeEntities(m[3]), baseUrl);
       if (!['https:', 'http:'].includes(u.protocol)) continue;
-      const host = u.hostname.toLowerCase().replace(/^www\./, '');
-      if (host === 'assamcareer.com' || host.endsWith('.assamcareer.com')) continue;
-      if (/facebook|instagram|youtube|telegram|twitter|x\.com|whatsapp|pinterest|google\.com|linkedin\.com/i.test(host)) continue;
-      if (/javascript:|mailto:|tel:/i.test(m[3])) continue;
-      const label = stripHtml(m[5] || '').toLowerCase().replace(/\s+/g, ' ').trim();
-      const attrs = `${m[1]} ${m[4]}`.toLowerCase();
-      const full = `${label} ${u.href.toLowerCase()} ${attrs}`;
-      let type = '';
-      if (/apply|application|registration|register|candidate.?login|online.?form|submit.?form|careers?\.?.*(?:login|apply)|recruitment.*portal/i.test(full)) type = 'apply';
-      else if (/official|website|notification|advertisement|recruitment.?notice|detailed.?notice|download.?pdf|\.pdf(?:$|[?#])|careers?\b/i.test(full)) type = 'official';
-      // Common recruitment portals use generic link text such as "Click Here".
-      else if (/^(click here|here|apply|apply online|online application)$/i.test(label) && /apply|career|recruit|registration|portal|application/i.test(u.href)) type = 'apply';
-      if (!type) continue;
-      const key = `${type}:${u.href}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      found.push({ type, url: u.href, label });
+      if (u.hostname === 'assamcareer.com' || u.hostname.endsWith('.assamcareer.com')) continue;
+      if (/facebook|instagram|youtube|telegram|twitter|x\.com|whatsapp|pinterest|google\.com/i.test(u.hostname)) continue;
+      const label = stripHtml(m[5] || '').toLowerCase();
+      const full = `${label} ${u.href.toLowerCase()}`;
+      if (/apply online|apply now|registration|application form|online application|apply here/i.test(full)) found.push({type:'apply',url:u.href});
+      else if (/official notification|notification pdf|advertisement|recruitment notice|official website|download.*pdf|\.pdf(?:$|\?)/i.test(full)) found.push({type:'official',url:u.href});
     } catch (_) {}
   }
   return found;
@@ -199,15 +165,16 @@ function parseArticle(html, article, now) {
     html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
   let title = titleMatch ? cleanText(stripHtml(titleMatch[1]).replace(/\s*[-|].*AssamCareer.*$/i, ''), 500) : article.title;
   if (!title || title.length < 8) title = article.title;
-  const lastDate = extractDateField(text, ['Last Date of Submission', 'Last Date to Apply', 'Last Date for Online Application', 'Last Date for Application', 'Application Deadline', 'Online Application Last Date', 'Closing Date', 'Last Date', 'Apply Before']);
-  const startDate = extractDateField(text, ['Application Start Date', 'Starting Date of Submission', 'Starting Date to Apply', 'Online Application Start Date', 'Application Begins', 'Start Date']);
+  const lastDateRaw = extractField(text, ['Last Date', 'Last date of submission', 'Last date to apply', 'Closing Date', 'Last date for online application']);
+  const startDateRaw = extractField(text, ['Start Date', 'Starting date of submission', 'Application Start Date', 'Starting date to apply']);
   const organization = extractField(text, ['Organization', 'Name of organisation', 'Name of organization', 'Department']) || title.replace(/\s*(Recruitment|Vacancy|Jobs?).*$/i, '').slice(0, 500);
   const vacancies = extractField(text, ['No of posts', 'No. of posts', 'Total posts', 'Vacancy']);
   const qualification = extractField(text, ['Qualification', 'Educational Qualification', 'Minimum qualification']);
   const ageLimit = extractField(text, ['Age Limit', 'Age limit']);
   const salary = extractField(text, ['Pay', 'Salary', 'Pay Scale']);
-  const postedDate = dateToIso(article.published) || dateToIso(article.updated) || dateToIso((html.match(/<meta\s+property=["']article:published_time["']\s+content=["']([^"']+)/i) || [])[1]) ||
-    dateToIso((text.match(/(?:published|posted|updated|date of notification|notification date)\s*[:：-]?\s*(?:on\s+)?(?:\d{1,2}[\/.-]\d{1,2}[\/.-]\d{4}|\d{1,2}\s+[A-Za-z]+\s+\d{4}|[A-Za-z]+\s+\d{1,2},?\s+\d{4})/i) || [])[0]);
+  const postedDate = dateToIso(article.published) || dateToIso((html.match(/<meta\s+property=["']article:published_time["']\s+content=["']([^"']+)/i) || [])[1]) ||
+    dateToIso((text.match(/(?:by\s+[^,]{2,80}\s+)?(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}/i) || [])[0]);
+  const lastDate = dateToIso(lastDateRaw);
   const links = externalApplicationLinks(html, article.url);
   const officialLink = links.find(x => x.type === 'official');
   const applyLink = links.find(x => x.type === 'apply');
@@ -222,10 +189,9 @@ function parseArticle(html, article, now) {
     qualification,
     age_limit: ageLimit,
     salary,
-    application_start_date: startDate,
+    application_start_date: startDateRaw ? (dateToIso(startDateRaw) || startDateRaw) : null,
     application_last_date: lastDate,
     posted_date: postedDate,
-    notification_date: extractDateField(text, ['Date of Notification', 'Notification Date', 'Advertisement Date']) || postedDate,
     category: /private job|private limited|sales executive|company/i.test(title + ' ' + text.slice(0,1000)) ? 'Private Jobs' : 'Government Jobs',
     source_name: SOURCE_NAME,
     source_url: article.url,
@@ -286,19 +252,8 @@ module.exports = async function handler(req, res) {
     const articleErrors = results.filter(x => x.status === 'rejected').length;
     if (!jobs.length) throw new Error('Article links were found, but no article pages could be parsed. No job records were imported.');
     const base = `${supabaseUrl.replace(/\/+$/, '')}/rest/v1/${TABLE}`;
-    // Preserve previously verified application/official URLs when a source page temporarily omits them.
-    const existingLinks = await supabaseRequest(`${base}?select=external_key,apply_url,official_url&limit=1000`, serviceKey, { method: 'GET' });
-    const linkByKey = new Map((Array.isArray(existingLinks) ? existingLinks : []).map(row => [row.external_key, row]));
-    const mergedJobs = jobs.map(job => {
-      const previous = linkByKey.get(job.external_key) || {};
-      return {
-        ...job,
-        apply_url: job.apply_url || previous.apply_url || null,
-        official_url: job.official_url || previous.official_url || null
-      };
-    });
     await supabaseRequest(`${base}?on_conflict=external_key`, serviceKey, {
-      method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(mergedJobs)
+      method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(jobs)
     });
     const existing = await supabaseRequest(`${base}?select=id,application_last_date,status&limit=1000`, serviceKey, { method: 'GET' });
     let statusesUpdated = 0;

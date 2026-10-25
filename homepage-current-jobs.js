@@ -15,7 +15,7 @@
    }
    try{
      const db=window.AXOMPREP_AUTH_CLIENT||window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
-     const {data,error}=await db.from('current_jobs_v1').select('id,title,organization,vacancies,qualification,application_last_date,category,featured,updated_at,status').in('status',['open','closing_soon']).order('featured',{ascending:false}).order('application_last_date',{ascending:true,nullsFirst:false}).limit(3);
+     const {data,error}=await db.from('current_jobs_v1').select('id,title,organization,vacancies,qualification,application_last_date,posted_date,category,featured,updated_at,status').in('status',['open','closing_soon']).order('featured',{ascending:false}).order('posted_date',{ascending:false,nullsFirst:false}).order('updated_at',{ascending:false,nullsFirst:false}).limit(3);
      if(error)throw error;
      if(!Array.isArray(data)||!data.length){grid.innerHTML='<div class="rounded-xl border border-slate-100 p-4 text-sm text-slate-500">No active job alerts right now. <a class="font-semibold text-blue-700 underline" href="current-jobs.html">See all listings</a>.</div>';return;}
      grid.innerHTML=data.map(card).join('');

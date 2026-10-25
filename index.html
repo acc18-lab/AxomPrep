@@ -55,7 +55,7 @@
 .axu-header{height:60px;background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:9999;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .axu-inner{height:60px;max-width:1180px;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:28px}
 .axu-brand{display:flex;align-items:center;gap:9px;text-decoration:none!important;flex:0 0 auto}
-.axu-mark{width:32px;height:32px;border-radius:8px;background:#1A56DB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;line-height:1}
+.axu-mark{width:32px;height:32px;min-width:32px;border-radius:8px;display:block;object-fit:cover;flex:0 0 32px}
 .axu-name{font-size:20px;font-weight:800;letter-spacing:-.02em;color:#1e293b;line-height:1}
 .axu-name span{color:#1A56DB}
 .axu-nav{display:flex;align-items:center;gap:24px;margin-left:auto}
@@ -75,6 +75,7 @@
 </style>
 
 <link rel="stylesheet" href="/axomprep-theme.css">
+  <link rel="icon" type="image/png" href="/axomprep-mark-cropped.png">
 </head>
 <body class="text-slate-800 antialiased">
 
@@ -82,7 +83,7 @@
 <header class="axu-header">
   <div class="axu-inner">
     <a class="axu-brand" href="index.html" aria-label="AxomPrep home">
-      <span class="axu-mark">A</span>
+      <img class="axu-mark" src="/axomprep-mark-cropped.png" alt="">
       <span class="axu-name">Axom<span>Prep</span></span>
     </a>
     <nav class="axu-nav" aria-label="Primary navigation"><a href="index.html" class="axu-active">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="">Current Affairs</a><a href="current-jobs.html" class="">Jobs</a><a href="books.html" class="">Books</a><a href="premium.html" class="">Premium</a></nav>
@@ -172,10 +173,10 @@
                             The most trusted platform for Assam competitive exams. Practice with curated mock tests, daily quizzes, and stay updated with the latest job notifications.
                         </p>
                         <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="#" class="bg-axom-blue hover:bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-xl shadow-md shadow-blue-200 flex justify-center items-center gap-2 transition-all">
+                            <a href="practice.html" class="bg-axom-blue hover:bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-xl shadow-md shadow-blue-200 flex justify-center items-center gap-2 transition-all">
                                 Start Practicing Free <i class="fa-solid fa-arrow-right"></i>
                             </a>
-                            <a href="#" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold px-8 py-3.5 rounded-xl shadow-sm flex justify-center items-center gap-2 transition-all">
+                            <a href="#choose-exam" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold px-8 py-3.5 rounded-xl shadow-sm flex justify-center items-center gap-2 transition-all">
                                 Explore Exams
                             </a>
                         </div>
@@ -273,40 +274,9 @@
                         </h2>
                         <a href="current-affairs.html" class="text-xs font-semibold text-axom-blue hover:underline">Read All</a>
                     </div>
-                    <div class="p-0 flex-1 flex flex-col divide-y divide-slate-100">
-                        <!-- CA Item -->
-                        <a href="#" class="p-5 flex gap-4 hover:bg-slate-50 transition-colors group">
-                            <div class="w-12 h-12 rounded-lg bg-green-50 flex-shrink-0 flex flex-col items-center justify-center border border-green-100 text-axom-green">
-                                <span class="text-xs font-bold">SEP</span>
-                                <span class="text-lg font-black leading-none">28</span>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-slate-800 text-sm mb-1 group-hover:text-axom-blue transition-colors line-clamp-2">Assam Government launches new initiative for rural development</h3>
-                                <p class="text-xs text-slate-500">State Govt. schemes | 3 min read</p>
-                            </div>
-                        </a>
-                        <!-- CA Item -->
-                        <a href="#" class="p-5 flex gap-4 hover:bg-slate-50 transition-colors group">
-                            <div class="w-12 h-12 rounded-lg bg-blue-50 flex-shrink-0 flex flex-col items-center justify-center border border-blue-100 text-axom-blue">
-                                <span class="text-xs font-bold">SEP</span>
-                                <span class="text-lg font-black leading-none">27</span>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-slate-800 text-sm mb-1 group-hover:text-axom-blue transition-colors line-clamp-2">India's new space mission details announced by ISRO</h3>
-                                <p class="text-xs text-slate-500">National | Science & Tech</p>
-                            </div>
-                        </a>
-                        <!-- CA Item -->
-                        <a href="#" class="p-5 flex gap-4 hover:bg-slate-50 transition-colors group">
-                            <div class="w-12 h-12 rounded-lg bg-orange-50 flex-shrink-0 flex flex-col items-center justify-center border border-orange-100 text-orange-500">
-                                <span class="text-xs font-bold">SEP</span>
-                                <span class="text-lg font-black leading-none">26</span>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-slate-800 text-sm mb-1 group-hover:text-axom-blue transition-colors line-clamp-2">Economy expected to grow by 7% this fiscal: RBI Report</h3>
-                                <p class="text-xs text-slate-500">Economy | Finance</p>
-                            </div>
-                        </a>
+                    <div class="p-5 flex-1 flex flex-col justify-center gap-3">
+                        <p class="text-sm text-slate-600">Open the Current Affairs page for the latest published updates. Headlines on this homepage are loaded from the published question and news data when available.</p>
+                        <a href="current-affairs.html" class="inline-flex items-center gap-2 text-sm font-semibold text-axom-blue hover:underline">Browse Current Affairs <i class="fa-solid fa-arrow-right"></i></a>
                     </div>
                 </div>
 
@@ -317,28 +287,28 @@
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h2 class="text-xl font-bold text-slate-800 mb-6">Quick Actions</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <a href="#" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-blue-200 transition-all group">
+                <a href="practice.html" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-blue-200 transition-all group">
                     <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-axom-blue group-hover:text-white text-axom-blue transition-colors">
                         <i class="fa-solid fa-pen-to-square text-xl"></i>
                     </div>
                     <h3 class="font-semibold text-slate-800 text-sm md:text-base">Practice</h3>
                     <p class="text-xs text-slate-500 mt-1">Topic-wise MCQs</p>
                 </a>
-                <a href="#" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-amber-200 transition-all group">
+                <a href="daily-quiz.html" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-amber-200 transition-all group">
                     <div class="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-amber-500 group-hover:text-white text-amber-500 transition-colors">
                         <i class="fa-solid fa-clock text-xl"></i>
                     </div>
                     <h3 class="font-semibold text-slate-800 text-sm md:text-base">Daily Quiz</h3>
                     <p class="text-xs text-slate-500 mt-1">Live everyday</p>
                 </a>
-                <a href="#" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-red-200 transition-all group">
+                <a href="mock-tests.html" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-red-200 transition-all group">
                     <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-axom-red group-hover:text-white text-axom-red transition-colors">
                         <i class="fa-solid fa-file-signature text-xl"></i>
                     </div>
                     <h3 class="font-semibold text-slate-800 text-sm md:text-base">Mock Tests</h3>
                     <p class="text-xs text-slate-500 mt-1">Full length sets</p>
                 </a>
-                <a href="#" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-green-200 transition-all group">
+                <a href="practice.html" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-green-200 transition-all group">
                     <div class="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-axom-green group-hover:text-white text-axom-green transition-colors">
                         <i class="fa-solid fa-book-open text-xl"></i>
                     </div>
@@ -413,34 +383,34 @@
         </section>
 
         <!-- Choose Your Exam -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <section id="choose-exam" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="flex justify-between items-end mb-6">
                 <h2 class="text-xl font-bold text-slate-800">Choose Your Exam</h2>
-                <a href="#" class="text-sm font-medium text-axom-blue hover:underline">View All</a>
+                <a href="practice.html#examFilter" class="text-sm font-medium text-axom-blue hover:underline">View All</a>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <a href="#" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
+                <a href="practice.html?exam=ADRE" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
                     <div class="w-12 h-12 bg-red-50 text-axom-red rounded-lg flex items-center justify-center font-bold text-lg">A</div>
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm">ADRE</h3>
                         <p class="text-xs text-slate-500">Grade III & IV</p>
                     </div>
                 </a>
-                <a href="#" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
+                <a href="practice.html?exam=APSC CCE" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
                     <div class="w-12 h-12 bg-blue-50 text-axom-blue rounded-lg flex items-center justify-center font-bold text-lg">P</div>
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm">APSC</h3>
                         <p class="text-xs text-slate-500">CCE Prelims</p>
                     </div>
                 </a>
-                <a href="#" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
+                <a href="practice.html?exam=Assam Police" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
                     <div class="w-12 h-12 bg-green-50 text-axom-green rounded-lg flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-shield-halved"></i></div>
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm">Assam Police</h3>
                         <p class="text-xs text-slate-500">SI & Constable</p>
                     </div>
                 </a>
-                <a href="#" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
+                <a href="practice.html?exam=SSC" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
                     <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center font-bold text-lg">S</div>
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm">SSC</h3>
@@ -454,13 +424,13 @@
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h2 class="text-xl font-bold text-slate-800 mb-6">Study by Subject</h2>
             <div class="flex flex-wrap gap-3">
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Assam History</a>
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Indian Polity</a>
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">General Science</a>
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Quantitative Aptitude</a>
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Logical Reasoning</a>
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Assam Geography</a>
-                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">English Grammar</a>
+                <a href="practice.html?subject=Assam%20History" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Assam History</a>
+                <a href="practice.html?subject=Indian%20Polity" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Indian Polity</a>
+                <a href="practice.html?subject=General%20Science" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">General Science</a>
+                <a href="practice.html?subject=Quantitative%20Aptitude" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Quantitative Aptitude</a>
+                <a href="practice.html?subject=Logical%20Reasoning" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Logical Reasoning</a>
+                <a href="practice.html?subject=Assam%20Geography" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Assam Geography</a>
+                <a href="practice.html?subject=English%20Grammar" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">English Grammar</a>
             </div>
         </section>
 
@@ -548,8 +518,8 @@
                 <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">Ready to crack your dream job?</h2>
                 <p class="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">Join thousands of successful aspirants from Assam who trusted AxomPrep for their preparation.</p>
                 <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="#" class="bg-white text-axom-blue font-bold px-8 py-3.5 rounded-xl shadow-lg hover:bg-slate-50 transition-colors">Sign Up for Free</a>
-                    <a href="#" class="bg-blue-700 text-white border border-blue-600 font-bold px-8 py-3.5 rounded-xl hover:bg-blue-800 transition-colors">Download App</a>
+                    <a href="practice.html" class="bg-white text-axom-blue font-bold px-8 py-3.5 rounded-xl shadow-lg hover:bg-slate-50 transition-colors">Start Practicing Free</a>
+                    <a href="daily-quiz.html" class="bg-blue-700 text-white border border-blue-600 font-bold px-8 py-3.5 rounded-xl hover:bg-blue-800 transition-colors">Try Daily Quiz</a>
                 </div>
             </div>
         </section>
@@ -570,10 +540,10 @@
                         The ultimate destination for competitive exam preparation in Assam. Providing quality mocks, current affairs, and guidance.
                     </p>
                     <div class="flex space-x-4">
-                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors"><i class="fa-brands fa-facebook-f text-sm"></i></a>
-                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors"><i class="fa-brands fa-twitter text-sm"></i></a>
-                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors"><i class="fa-brands fa-youtube text-sm"></i></a>
-                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors"><i class="fa-brands fa-telegram text-sm"></i></a>
+                        <span class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center opacity-60" aria-label="facebook-f link not configured" title="Social link not configured"><i class="fa-brands fa-facebook-f text-sm"></i></span>
+                        <span class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center opacity-60" aria-label="twitter link not configured" title="Social link not configured"><i class="fa-brands fa-twitter text-sm"></i></span>
+                        <span class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center opacity-60" aria-label="youtube link not configured" title="Social link not configured"><i class="fa-brands fa-youtube text-sm"></i></span>
+                        <span class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center opacity-60" aria-label="telegram link not configured" title="Social link not configured"><i class="fa-brands fa-telegram text-sm"></i></span>
                     </div>
                 </div>
                 
@@ -581,11 +551,11 @@
                 <div>
                     <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Exams</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">ADRE Grade III & IV</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">APSC CCE</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Assam Police (SI/AB/UB)</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">TET Assam</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">SSC & Railway</a></li>
+                        <li><a href="practice.html?exam=ADRE" class="hover:text-axom-blue transition-colors">ADRE Grade III & IV</a></li>
+                        <li><a href="practice.html?exam=APSC%20CCE" class="hover:text-axom-blue transition-colors">APSC CCE</a></li>
+                        <li><a href="practice.html?exam=Assam%20Police" class="hover:text-axom-blue transition-colors">Assam Police (SI/AB/UB)</a></li>
+                        <li><a href="practice.html?exam=TET%20Assam" class="hover:text-axom-blue transition-colors">TET Assam</a></li>
+                        <li><a href="practice.html?exam=SSC" class="hover:text-axom-blue transition-colors">SSC & Railway</a></li>
                     </ul>
                 </div>
 
@@ -593,11 +563,11 @@
                 <div>
                     <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Resources</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Daily Current Affairs</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Free Mock Tests</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Previous Year Papers</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Job Notifications</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Recommended Books</a></li>
+                        <li><a href="current-affairs.html" class="hover:text-axom-blue transition-colors">Daily Current Affairs</a></li>
+                        <li><a href="mock-tests.html" class="hover:text-axom-blue transition-colors">Free Mock Tests</a></li>
+                        <li><a href="previous-year.html" class="hover:text-axom-blue transition-colors">Previous Year Papers</a></li>
+                        <li><a href="current-jobs.html" class="hover:text-axom-blue transition-colors">Job Notifications</a></li>
+                        <li><a href="books.html" class="hover:text-axom-blue transition-colors">Recommended Books</a></li>
                     </ul>
                 </div>
 
@@ -605,10 +575,10 @@
                 <div>
                     <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Company</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">About Us</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Contact Support</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-axom-blue transition-colors">Terms of Service</a></li>
+                        <li><a href="about.html" class="hover:text-axom-blue transition-colors">About Us</a></li>
+                        <li><a href="about.html" class="hover:text-axom-blue transition-colors">Contact Support</a></li>
+                        <li><a href="privacy.html" class="hover:text-axom-blue transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="hover:text-axom-blue transition-colors">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>
