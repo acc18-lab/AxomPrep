@@ -1,16 +1,19 @@
 // Vercel Cron endpoint: /api/cron/current-jobs
-// Imports recruitment listings from administrator-configured public listing pages and JSON feeds.
+// Scrapes publicly visible AssamCareer listing/article pages and upserts basic job records.
 // Server-side only. Never expose SUPABASE_SERVICE_ROLE_KEY in browser code.
 // Required env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 // Optional env: CRON_SECRET
-// Optional env: JOB_LISTING_URLS and JOB_FEED_URLS (comma-separated public URLs)
+// Optional env: ASSAMCAREER_LISTING_URL (defaults to AssamCareer homepage)
 
 const TABLE = 'current_jobs_v1';
-const SOURCE_NAME = 'External job feeds';
+const DEFAULT_LISTING_URL = 'https://www.assamcareer.com/';
+const SOURCE_NAME = 'AssamCareer';
 const MAX_ARTICLES = 100;
-const configuredUrls = name => String(process.env[name] || '').split(',').map(x => x.trim()).filter(Boolean);
-const FEED_URLS = configuredUrls('JOB_FEED_URLS');
-const LISTING_URLS = configuredUrls('JOB_LISTING_URLS');
+const FEED_URLS = [
+  'https://www.assamcareer.com/feeds/posts/default?alt=json&max-results=150',
+  'https://www.assamcareer.com/feeds/posts/default/-/Private%20Job?alt=json&max-results=50'
+];
+const LISTING_URLS = [DEFAULT_LISTING_URL, 'https://www.assamcareer.com/p/latest-updates.html', 'https://www.assamcareer.com/search?max-results=50'];
 
 function json(res, status, body) {
   res.status(status).setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -38,7 +41,7 @@ function stripHtml(s) {
 function safeUrl(raw, base) {
   try {
     const u = new URL(decodeEntities(raw), base);
-    return ['https:', 'http:'].includes(u.protocol) ? u.href : null;
+    return ['https:', 'http:'].includes(u.protocol) && (u.hostname === 'assamcareer.com' || u.hostname.endsWith('.assamcareer.com')) ? u.href : null;
   } catch (_) { return null; }
 }
 function dateToIso(raw) {
@@ -74,7 +77,7 @@ async function getHtml(url) {
     },
     signal: AbortSignal.timeout(15000)
   });
-  if (!r.ok) throw new Error(`Job listing source returned HTTP ${r.status} for ${url}`);
+  if (!r.ok) throw new Error(`AssamCareer returned HTTP ${r.status} for ${url}`);
   const type = r.headers.get('content-type') || '';
   if (type && !type.includes('html') && !type.includes('text/')) throw new Error(`Expected HTML but received ${type}`);
   return r.text();
@@ -93,7 +96,7 @@ function extractFeedArticles(feedJson) {
     const links = Array.isArray(entry.link) ? entry.link : [];
     const alternate = links.find(link => link && link.rel === 'alternate' && link.href);
     if (!alternate) continue;
-    const url = safeUrl(alternate.href, 'https://example.org/');
+    const url = safeUrl(alternate.href, DEFAULT_LISTING_URL);
     if (!url || !/^\/\d{4}\/\d{2}\/[^/]+\.html$/i.test(new URL(url).pathname)) continue;
     found.set(url, { url, title, published: entry.published && entry.published.$t || null, updated: entry.updated && entry.updated.$t || null });
   }
@@ -104,7 +107,7 @@ async function getFeedArticles(url) {
     headers: { 'User-Agent': 'AxomPrepJobIndexer/1.1', 'Accept': 'application/json' },
     signal: AbortSignal.timeout(15000)
   });
-  if (!response.ok) throw new Error(`Job feed returned HTTP ${response.status} for ${url}`);
+  if (!response.ok) throw new Error(`AssamCareer feed returned HTTP ${response.status} for ${url}`);
   const payload = await response.json();
   return extractFeedArticles(payload);
 }
@@ -152,18 +155,30 @@ function extractDateField(text, labels) {
 
 function externalApplicationLinks(html, baseUrl) {
   const found = [];
+  const seen = new Set();
   const re = /<a\b([^>]*?)href\s*=\s*(["'])(.*?)\2([^>]*)>([\s\S]*?)<\/a>/gi;
   let m;
   while ((m = re.exec(html))) {
     try {
       const u = new URL(decodeEntities(m[3]), baseUrl);
       if (!['https:', 'http:'].includes(u.protocol)) continue;
-      
-      if (/facebook|instagram|youtube|telegram|twitter|x\.com|whatsapp|pinterest|google\.com/i.test(u.hostname)) continue;
-      const label = stripHtml(m[5] || '').toLowerCase();
-      const full = `${label} ${u.href.toLowerCase()}`;
-      if (/apply online|apply now|registration|application form|online application|apply here/i.test(full)) found.push({type:'apply',url:u.href});
-      else if (/official notification|notification pdf|advertisement|recruitment notice|official website|download.*pdf|\.pdf(?:$|\?)/i.test(full)) found.push({type:'official',url:u.href});
+      const host = u.hostname.toLowerCase().replace(/^www\./, '');
+      if (host === 'assamcareer.com' || host.endsWith('.assamcareer.com')) continue;
+      if (/facebook|instagram|youtube|telegram|twitter|x\.com|whatsapp|pinterest|google\.com|linkedin\.com/i.test(host)) continue;
+      if (/javascript:|mailto:|tel:/i.test(m[3])) continue;
+      const label = stripHtml(m[5] || '').toLowerCase().replace(/\s+/g, ' ').trim();
+      const attrs = `${m[1]} ${m[4]}`.toLowerCase();
+      const full = `${label} ${u.href.toLowerCase()} ${attrs}`;
+      let type = '';
+      if (/apply|application|registration|register|candidate.?login|online.?form|submit.?form|careers?\.?.*(?:login|apply)|recruitment.*portal/i.test(full)) type = 'apply';
+      else if (/official|website|notification|advertisement|recruitment.?notice|detailed.?notice|download.?pdf|\.pdf(?:$|[?#])|careers?\b/i.test(full)) type = 'official';
+      // Common recruitment portals use generic link text such as "Click Here".
+      else if (/^(click here|here|apply|apply online|online application)$/i.test(label) && /apply|career|recruit|registration|portal|application/i.test(u.href)) type = 'apply';
+      if (!type) continue;
+      const key = `${type}:${u.href}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      found.push({ type, url: u.href, label });
     } catch (_) {}
   }
   return found;
@@ -182,7 +197,7 @@ function parseArticle(html, article, now) {
   const text = stripHtml(html);
   const titleMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']+)/i) ||
     html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-  let title = titleMatch ? cleanText(stripHtml(titleMatch[1]).replace(/\s*[-|].*$/i, ''), 500) : article.title;
+  let title = titleMatch ? cleanText(stripHtml(titleMatch[1]).replace(/\s*[-|].*AssamCareer.*$/i, ''), 500) : article.title;
   if (!title || title.length < 8) title = article.title;
   const lastDate = extractDateField(text, ['Last Date of Submission', 'Last Date to Apply', 'Last Date for Online Application', 'Last Date for Application', 'Application Deadline', 'Online Application Last Date', 'Closing Date', 'Last Date', 'Apply Before']);
   const startDate = extractDateField(text, ['Application Start Date', 'Starting Date of Submission', 'Starting Date to Apply', 'Online Application Start Date', 'Application Begins', 'Start Date']);
@@ -242,11 +257,10 @@ module.exports = async function handler(req, res) {
   const supabaseUrl = process.env.SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!supabaseUrl || !serviceKey) return json(res, 500, { ok: false, error: 'Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in Vercel.' });
-  const listingUrlsConfigured = LISTING_URLS;
+  const listingUrl = process.env.ASSAMCAREER_LISTING_URL || DEFAULT_LISTING_URL;
   const now = new Date();
   try {
-    const listingUrls = [...new Set(listingUrlsConfigured)];
-    if (!listingUrls.length && !FEED_URLS.length) throw new Error('Configure JOB_LISTING_URLS and/or JOB_FEED_URLS in Vercel to enable automatic job imports.');
+    const listingUrls = [...new Set([listingUrl, ...LISTING_URLS.filter(u => u !== listingUrl)])];
     const [listingResults, feedResults] = await Promise.all([
       Promise.allSettled(listingUrls.map(async url => ({url, html: await getHtml(url)}))),
       Promise.allSettled(FEED_URLS.map(async url => ({url, articles: await getFeedArticles(url)})))
@@ -260,20 +274,31 @@ module.exports = async function handler(req, res) {
     for (const page of listingPages) {
       for (const article of extractArticleLinks(page.html, page.url)) if (!linkMap.has(article.url)) linkMap.set(article.url, article);
     }
-    if (!linkMap.size && !listingPages.length) throw new Error('Could not load any configured job feed or listing page; no job records were imported.');
+    if (!linkMap.size && !listingPages.length) throw new Error('Could not load an AssamCareer feed or listing page; no job records were imported.');
     const links = [...linkMap.values()].sort((a, b) => {
       const da = Date.parse(a.published || a.updated || '') || 0;
       const db = Date.parse(b.published || b.updated || '') || 0;
       return db - da;
     }).slice(0, MAX_ARTICLES);
-    if (!links.length) throw new Error('Configured listing pages loaded, but no matching job article links were found. No job records were imported.');
+    if (!links.length) throw new Error('AssamCareer pages loaded, but no matching job article links were found. No job records were imported.');
     const results = await Promise.allSettled(links.map(async article => ({ article, job: parseArticle(await getHtml(article.url), article, now) })));
     const jobs = results.filter(x => x.status === 'fulfilled').map(x => x.value.job).filter(j => j && j.title && j.external_key && j.source_url);
     const articleErrors = results.filter(x => x.status === 'rejected').length;
     if (!jobs.length) throw new Error('Article links were found, but no article pages could be parsed. No job records were imported.');
     const base = `${supabaseUrl.replace(/\/+$/, '')}/rest/v1/${TABLE}`;
+    // Preserve previously verified application/official URLs when a source page temporarily omits them.
+    const existingLinks = await supabaseRequest(`${base}?select=external_key,apply_url,official_url&limit=1000`, serviceKey, { method: 'GET' });
+    const linkByKey = new Map((Array.isArray(existingLinks) ? existingLinks : []).map(row => [row.external_key, row]));
+    const mergedJobs = jobs.map(job => {
+      const previous = linkByKey.get(job.external_key) || {};
+      return {
+        ...job,
+        apply_url: job.apply_url || previous.apply_url || null,
+        official_url: job.official_url || previous.official_url || null
+      };
+    });
     await supabaseRequest(`${base}?on_conflict=external_key`, serviceKey, {
-      method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(jobs)
+      method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(mergedJobs)
     });
     const existing = await supabaseRequest(`${base}?select=id,application_last_date,status&limit=1000`, serviceKey, { method: 'GET' });
     let statusesUpdated = 0;

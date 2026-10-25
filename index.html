@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" sizes="64x64" href="/assets/axomprep-favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AxomPrep - Your Next Exam Starts Here</title>
@@ -56,7 +55,7 @@
 .axu-header{height:60px;background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:9999;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .axu-inner{height:60px;max-width:1180px;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:28px}
 .axu-brand{display:flex;align-items:center;gap:9px;text-decoration:none!important;flex:0 0 auto}
-.axu-mark{width:36px;height:36px;display:block;object-fit:contain;flex:0 0 36px;border-radius:0;background:transparent}
+.axu-mark{width:32px;height:32px;border-radius:8px;background:#1A56DB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;line-height:1}
 .axu-name{font-size:20px;font-weight:800;letter-spacing:-.02em;color:#1e293b;line-height:1}
 .axu-name span{color:#1A56DB}
 .axu-nav{display:flex;align-items:center;gap:24px;margin-left:auto}
@@ -83,7 +82,7 @@
 <header class="axu-header">
   <div class="axu-inner">
     <a class="axu-brand" href="index.html" aria-label="AxomPrep home">
-      <img class="axu-mark" src="/assets/axomprep-logo-symbol.png" alt="" aria-hidden="true">
+      <span class="axu-mark">A</span>
       <span class="axu-name">Axom<span>Prep</span></span>
     </a>
     <nav class="axu-nav" aria-label="Primary navigation"><a href="index.html" class="axu-active">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="">Current Affairs</a><a href="current-jobs.html" class="">Jobs</a><a href="books.html" class="">Books</a><a href="premium.html" class="">Premium</a></nav>
@@ -274,10 +273,41 @@
                         </h2>
                         <a href="current-affairs.html" class="text-xs font-semibold text-axom-blue hover:underline">Read All</a>
                     </div>
-                    <div id="homeCurrentAffairsList" class="p-0 flex-1 flex flex-col divide-y divide-slate-100">
-                        <div class="p-5 text-sm text-slate-500">Loading latest current affairs…</div>
+                    <div class="p-0 flex-1 flex flex-col divide-y divide-slate-100">
+                        <!-- CA Item -->
+                        <a href="#" class="p-5 flex gap-4 hover:bg-slate-50 transition-colors group">
+                            <div class="w-12 h-12 rounded-lg bg-green-50 flex-shrink-0 flex flex-col items-center justify-center border border-green-100 text-axom-green">
+                                <span class="text-xs font-bold">SEP</span>
+                                <span class="text-lg font-black leading-none">28</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-slate-800 text-sm mb-1 group-hover:text-axom-blue transition-colors line-clamp-2">Assam Government launches new initiative for rural development</h3>
+                                <p class="text-xs text-slate-500">State Govt. schemes | 3 min read</p>
+                            </div>
+                        </a>
+                        <!-- CA Item -->
+                        <a href="#" class="p-5 flex gap-4 hover:bg-slate-50 transition-colors group">
+                            <div class="w-12 h-12 rounded-lg bg-blue-50 flex-shrink-0 flex flex-col items-center justify-center border border-blue-100 text-axom-blue">
+                                <span class="text-xs font-bold">SEP</span>
+                                <span class="text-lg font-black leading-none">27</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-slate-800 text-sm mb-1 group-hover:text-axom-blue transition-colors line-clamp-2">India's new space mission details announced by ISRO</h3>
+                                <p class="text-xs text-slate-500">National | Science & Tech</p>
+                            </div>
+                        </a>
+                        <!-- CA Item -->
+                        <a href="#" class="p-5 flex gap-4 hover:bg-slate-50 transition-colors group">
+                            <div class="w-12 h-12 rounded-lg bg-orange-50 flex-shrink-0 flex flex-col items-center justify-center border border-orange-100 text-orange-500">
+                                <span class="text-xs font-bold">SEP</span>
+                                <span class="text-lg font-black leading-none">26</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-slate-800 text-sm mb-1 group-hover:text-axom-blue transition-colors line-clamp-2">Economy expected to grow by 7% this fiscal: RBI Report</h3>
+                                <p class="text-xs text-slate-500">Economy | Finance</p>
+                            </div>
+                        </a>
                     </div>
-
                 </div>
 
             </div>
@@ -365,20 +395,15 @@
                         </div>
                     </div>
                     <h3 class="text-xl font-bold text-slate-800 mb-1">Study Streak</h3>
-                    <p class="text-slate-500 text-sm mb-3">You haven't practiced today.</p>
-                    <div class="mb-4" aria-live="off">
-                        <div id="axom-live-time" class="text-2xl font-bold tracking-tight text-slate-800 tabular-nums">--:--:--</div>
-                        <div id="axom-live-date" class="text-xs text-slate-500 mt-1">Loading local date…</div>
-                        <div class="text-[10px] font-semibold text-slate-400 mt-1">INDIA STANDARD TIME (IST)</div>
-                    </div>
-                    <div class="flex gap-2 mb-6" id="axom-live-weekdays" aria-label="Current weekday">
-                        <div data-weekday="1" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">M</div>
-                        <div data-weekday="2" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">T</div>
-                        <div data-weekday="3" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">W</div>
-                        <div data-weekday="4" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">T</div>
-                        <div data-weekday="5" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">F</div>
-                        <div data-weekday="6" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">S</div>
-                        <div data-weekday="7" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">S</div>
+                    <p class="text-slate-500 text-sm mb-4">You haven't practiced today.</p>
+                    <div class="flex gap-2 mb-6">
+                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">M</div>
+                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">T</div>
+                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">W</div>
+                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400 ring-2 ring-orange-200">T</div>
+                        <div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">F</div>
+                        <div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">S</div>
+                        <div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">S</div>
                     </div>
                     <button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 rounded-lg text-sm transition-colors">
                         Take a Quiz to Start
@@ -580,10 +605,10 @@
                 <div>
                     <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Company</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="/about/" class="hover:text-axom-blue transition-colors">About Us</a></li>
-                        <li><a href="/contact-support/" class="hover:text-axom-blue transition-colors">Contact Support</a></li>
-                        <li><a href="/privacy/" class="hover:text-axom-blue transition-colors">Privacy Policy</a></li>
-                        <li><a href="/terms/" class="hover:text-axom-blue transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">Contact Support</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>
@@ -917,49 +942,6 @@
   }
 })();
 </script>
-<script src="homepage-current-jobs.js?v=20261022-syncfix1" defer></script>
-
-<script id="axomprep-live-india-clock">
-(function () {
-  const timeEl = document.getElementById('axom-live-time');
-  const dateEl = document.getElementById('axom-live-date');
-  const weekdays = document.querySelectorAll('#axom-live-weekdays [data-weekday]');
-  if (!timeEl || !dateEl) return;
-
-  const timeFormatter = new Intl.DateTimeFormat('en-IN', {
-    timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit',
-    hour12: true
-  });
-  const dateFormatter = new Intl.DateTimeFormat('en-IN', {
-    timeZone: 'Asia/Kolkata', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-  });
-  const weekdayFormatter = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Kolkata', weekday: 'short'
-  });
-  const weekdayNumbers = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 };
-
-  function updateIndiaClock() {
-    const now = new Date();
-    timeEl.textContent = timeFormatter.format(now);
-    dateEl.textContent = dateFormatter.format(now);
-    const today = weekdayNumbers[weekdayFormatter.format(now)];
-    weekdays.forEach((day) => {
-      const isToday = Number(day.dataset.weekday) === today;
-      day.classList.toggle('ring-2', isToday);
-      day.classList.toggle('ring-orange-300', isToday);
-      day.classList.toggle('bg-orange-50', isToday);
-      day.classList.toggle('text-orange-600', isToday);
-      day.classList.toggle('bg-slate-100', !isToday);
-      day.classList.toggle('text-slate-400', !isToday);
-      day.setAttribute('aria-current', isToday ? 'date' : 'false');
-    });
-  }
-  updateIndiaClock();
-  window.setInterval(updateIndiaClock, 1000);
-})();
-</script>
-
-
-<script src="/homepage-book-covers.js?v=20261022-2" defer></script>
+<script src="homepage-current-jobs.js" defer></script>
 </body>
 </html>
