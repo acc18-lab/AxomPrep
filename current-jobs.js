@@ -10,11 +10,8 @@
   const resultCount = document.getElementById('jobResultCount');
   const updateTime = document.getElementById('jobUpdateTime');
   const clearBtn = document.getElementById('jobClear');
-  const statusTabs = [...document.querySelectorAll('[data-job-status]')];
-  const openJobCount = document.getElementById('openJobCount');
-  const closedJobCount = document.getElementById('closedJobCount');
 
-  const state = { items: [], loading: false, selectedStatus: 'open' };
+  const state = { items: [], loading: false };
 
   if (!grid) {
     console.error('AxomPrep: #jobsGrid element was not found.');
@@ -131,11 +128,6 @@
     return { cls: 'orange', label: 'Open' };
   }
 
-  function isClosed(job) {
-    const remaining = daysLeft(job.application_last_date);
-    return remaining !== null ? remaining < 0 : String(job.status || '').toLowerCase() === 'closed';
-  }
-
   function card(job) {
     const status = statusFor(job);
     const remaining = daysLeft(job.application_last_date);
@@ -231,10 +223,6 @@
 
     const filtered = state.items
       .filter(job => {
-        const closed = isClosed(job);
-        const matchesStatus = state.selectedStatus === 'closed' ? closed : !closed;
-        if (!matchesStatus) return false;
-
         const searchableText = [
           job.title,
           job.organization,
@@ -287,18 +275,9 @@
         return Number(Boolean(b.featured)) - Number(Boolean(a.featured));
       });
 
-    const openCount = state.items.filter(job => !isClosed(job)).length;
-    const closedCount = state.items.filter(isClosed).length;
-    if (openJobCount) openJobCount.textContent = openCount;
-    if (closedJobCount) closedJobCount.textContent = closedCount;
-    statusTabs.forEach(tab => {
-      const active = tab.dataset.jobStatus === state.selectedStatus;
-      tab.classList.toggle('is-active', active);
-      tab.setAttribute('aria-pressed', String(active));
-    });
-
     if (resultCount) {
-      resultCount.textContent = `${filtered.length} ${state.selectedStatus} job${filtered.length === 1 ? '' : 's'} found`;
+      resultCount.textContent =
+        `${filtered.length} job${filtered.length === 1 ? '' : 's'} found`;
     }
 
     grid.innerHTML = filtered.length
@@ -366,22 +345,31 @@
           : 'all';
       }
 
-      // Show the actual database update time separately from the
-      // most recent successful fetch time.
+      // Display only the latest successful sync timestamp from the database.
       if (updateTime) {
-        const latest = state.items.reduce((mostRecent, job) => {
-          const updated = job.last_verified || job.updated_at || '';
-          return updated > mostRecent ? updated : mostRecent;
-        }, '');
+        let latestSync = '';
+        try {
+          const { data: syncRows, error: syncError } = await db
+            .from('current_jobs_v1')
+            .select('last_verified')
+            .not('last_verified', 'is', null)
+            .order('last_verified', { ascending: false })
+            .limit(1);
+          if (!syncError && Array.isArray(syncRows) && syncRows[0]) {
+            latestSync = syncRows[0].last_verified || '';
+          }
+        } catch (_) {}
 
-        const checkedAt = formatIST(new Date());
+        if (!latestSync) {
+          latestSync = state.items.reduce((mostRecent, job) => {
+            const updated = job.last_verified || job.updated_at || '';
+            return updated > mostRecent ? updated : mostRecent;
+          }, '');
+        }
 
-        const dataUpdatedAt = latest
-          ? formatIST(latest)
-          : 'Not available';
-
-        updateTime.textContent =
-          `Last checked: ${checkedAt} • Jobs last synced: ${dataUpdatedAt}`;
+        updateTime.textContent = latestSync
+          ? `Last synced: ${formatIST(latestSync)}`
+          : 'Last synced: Not available';
       }
 
       render();
@@ -396,13 +384,6 @@
       state.loading = false;
     }
   }
-
-  statusTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      state.selectedStatus = tab.dataset.jobStatus === 'closed' ? 'closed' : 'open';
-      render();
-    });
-  });
 
   [search, category, qualification, closing].forEach(element => {
     if (!element) return;
@@ -419,7 +400,6 @@
       if (category) category.value = 'all';
       if (qualification) qualification.value = 'all';
       if (closing) closing.checked = false;
-      state.selectedStatus = 'open';
 
       render();
     });

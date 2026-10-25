@@ -3,6 +3,11 @@
    Database cover_url values take precedence; this map fills missing covers. */
 window.AXOMPREP_BOOK_COVERS = {
   "Assam Year Book 2026": "https://www.assambookbazaar.com/storage/assam-year-book-2026-1-400x400.jpeg",
+  "Assam Year Book": "https://www.assambookbazaar.com/storage/assam-year-book-2026-1-400x400.jpeg",
+  "ADRE Grade III Guide": "https://dishapublication.com/cdn/shop/files/9789371868976.jpg?v=1759143583&width=530",
+  "ADRE Grade III Guidebook": "https://dishapublication.com/cdn/shop/files/9789371868976.jpg?v=1759143583&width=530",
+  "Quant. Aptitude": "https://books.google.com/books/content?id=S1i-0AEACAAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
+  "Quantitative Aptitude": "https://books.google.com/books/content?id=S1i-0AEACAAJ&printsec=frontcover&img=1&zoom=2&source=gbs_api",
   "Assam History & Culture for APSC & ADRE": "https://d34a0mln2492j4.cloudfront.net/unsigned/resize%3Afit%3A498%3A593%3A0/gravity%3Asm/plain/https%3A%2F%2Fimage-hub.reproindialtd.com%2F9789364443432.jpg",
   "History of Assam for ADRE & Assam State Competitive Exams": "https://dishapublication.com/cdn/shop/files/9789371867771.jpg?v=1757568707&width=530",
   "The Assam Mathematics Concept": "https://st.adda247.com/https%3A//storeimages.adda247.com/544701709732399.png",
@@ -23,7 +28,15 @@ window.AXOMPREP_BOOK_COVERS = {
 
 window.getAxomPrepBookCover = function(book){
   if(!book) return '';
+  const title=String(book.title||'').trim();
+  const normalized=title.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+  const covers=window.AXOMPREP_BOOK_COVERS||{};
+  // Prefer a known, title-matched real cover over stale or placeholder URLs stored in the database.
+  if(covers[title]) return covers[title];
+  if(normalized.includes('assam year book')) return covers['Assam Year Book 2026'];
+  if(normalized.includes('adre') && (normalized.includes('grade iii') || normalized.includes('grade 3'))) return covers['ADRE Grade III Guide'];
+  if(normalized.includes('quant') && normalized.includes('aptitude')) return covers['Quantitative Aptitude for Competitive Examinations'];
   const direct=String(book.cover_url||'').trim();
-  if(direct) return direct;
-  return String(window.AXOMPREP_BOOK_COVERS?.[String(book.title||'')]||'').trim();
+  if(/^https?:\/\//i.test(direct)) return direct;
+  return '';
 };

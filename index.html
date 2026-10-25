@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" sizes="64x64" href="/assets/axomprep-favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AxomPrep - Your Next Exam Starts Here</title>
@@ -55,7 +56,7 @@
 .axu-header{height:60px;background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:9999;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .axu-inner{height:60px;max-width:1180px;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:28px}
 .axu-brand{display:flex;align-items:center;gap:9px;text-decoration:none!important;flex:0 0 auto}
-.axu-mark{width:32px;height:32px;min-width:32px;border-radius:8px;display:block;object-fit:cover;flex:0 0 32px}
+.axu-mark{width:36px;height:36px;display:block;object-fit:contain;flex:0 0 36px;border-radius:0;background:transparent}
 .axu-name{font-size:20px;font-weight:800;letter-spacing:-.02em;color:#1e293b;line-height:1}
 .axu-name span{color:#1A56DB}
 .axu-nav{display:flex;align-items:center;gap:24px;margin-left:auto}
@@ -75,7 +76,6 @@
 </style>
 
 <link rel="stylesheet" href="/axomprep-theme.css">
-  <link rel="icon" type="image/png" href="/axomprep-mark-cropped.png">
 </head>
 <body class="text-slate-800 antialiased">
 
@@ -83,7 +83,7 @@
 <header class="axu-header">
   <div class="axu-inner">
     <a class="axu-brand" href="index.html" aria-label="AxomPrep home">
-      <img class="axu-mark" src="/axomprep-mark-cropped.png" alt="">
+      <img class="axu-mark" src="/assets/axomprep-logo-symbol.png" alt="" aria-hidden="true">
       <span class="axu-name">Axom<span>Prep</span></span>
     </a>
     <nav class="axu-nav" aria-label="Primary navigation"><a href="index.html" class="axu-active">Home</a><a href="practice.html" class="">Practice</a><a href="daily-quiz.html" class="">Daily Quiz</a><a href="mock-tests.html" class="">Mock Tests</a><a href="current-affairs.html" class="">Current Affairs</a><a href="current-jobs.html" class="">Jobs</a><a href="books.html" class="">Books</a><a href="premium.html" class="">Premium</a></nav>
@@ -173,10 +173,10 @@
                             The most trusted platform for Assam competitive exams. Practice with curated mock tests, daily quizzes, and stay updated with the latest job notifications.
                         </p>
                         <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="practice.html" class="bg-axom-blue hover:bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-xl shadow-md shadow-blue-200 flex justify-center items-center gap-2 transition-all">
+                            <a href="#" class="bg-axom-blue hover:bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-xl shadow-md shadow-blue-200 flex justify-center items-center gap-2 transition-all">
                                 Start Practicing Free <i class="fa-solid fa-arrow-right"></i>
                             </a>
-                            <a href="#choose-exam" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold px-8 py-3.5 rounded-xl shadow-sm flex justify-center items-center gap-2 transition-all">
+                            <a href="#" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold px-8 py-3.5 rounded-xl shadow-sm flex justify-center items-center gap-2 transition-all">
                                 Explore Exams
                             </a>
                         </div>
@@ -274,10 +274,10 @@
                         </h2>
                         <a href="current-affairs.html" class="text-xs font-semibold text-axom-blue hover:underline">Read All</a>
                     </div>
-                    <div class="p-5 flex-1 flex flex-col justify-center gap-3">
-                        <p class="text-sm text-slate-600">Open the Current Affairs page for the latest published updates. Headlines on this homepage are loaded from the published question and news data when available.</p>
-                        <a href="current-affairs.html" class="inline-flex items-center gap-2 text-sm font-semibold text-axom-blue hover:underline">Browse Current Affairs <i class="fa-solid fa-arrow-right"></i></a>
+                    <div id="homeCurrentAffairsList" class="p-0 flex-1 flex flex-col divide-y divide-slate-100">
+                        <div class="p-5 text-sm text-slate-500">Loading latest current affairs…</div>
                     </div>
+
                 </div>
 
             </div>
@@ -287,28 +287,28 @@
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h2 class="text-xl font-bold text-slate-800 mb-6">Quick Actions</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <a href="practice.html" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-blue-200 transition-all group">
+                <a href="#" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-blue-200 transition-all group">
                     <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-axom-blue group-hover:text-white text-axom-blue transition-colors">
                         <i class="fa-solid fa-pen-to-square text-xl"></i>
                     </div>
                     <h3 class="font-semibold text-slate-800 text-sm md:text-base">Practice</h3>
                     <p class="text-xs text-slate-500 mt-1">Topic-wise MCQs</p>
                 </a>
-                <a href="daily-quiz.html" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-amber-200 transition-all group">
+                <a href="#" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-amber-200 transition-all group">
                     <div class="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-amber-500 group-hover:text-white text-amber-500 transition-colors">
                         <i class="fa-solid fa-clock text-xl"></i>
                     </div>
                     <h3 class="font-semibold text-slate-800 text-sm md:text-base">Daily Quiz</h3>
                     <p class="text-xs text-slate-500 mt-1">Live everyday</p>
                 </a>
-                <a href="mock-tests.html" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-red-200 transition-all group">
+                <a href="#" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-red-200 transition-all group">
                     <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-axom-red group-hover:text-white text-axom-red transition-colors">
                         <i class="fa-solid fa-file-signature text-xl"></i>
                     </div>
                     <h3 class="font-semibold text-slate-800 text-sm md:text-base">Mock Tests</h3>
                     <p class="text-xs text-slate-500 mt-1">Full length sets</p>
                 </a>
-                <a href="practice.html" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-green-200 transition-all group">
+                <a href="#" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col items-center text-center hover:shadow-md hover:border-green-200 transition-all group">
                     <div class="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-axom-green group-hover:text-white text-axom-green transition-colors">
                         <i class="fa-solid fa-book-open text-xl"></i>
                     </div>
@@ -365,15 +365,20 @@
                         </div>
                     </div>
                     <h3 class="text-xl font-bold text-slate-800 mb-1">Study Streak</h3>
-                    <p class="text-slate-500 text-sm mb-4">You haven't practiced today.</p>
-                    <div class="flex gap-2 mb-6">
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">M</div>
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">T</div>
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">W</div>
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400 ring-2 ring-orange-200">T</div>
-                        <div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">F</div>
-                        <div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">S</div>
-                        <div class="w-8 h-8 rounded bg-slate-50 border border-slate-100 flex items-center justify-center text-xs font-medium text-slate-300">S</div>
+                    <p class="text-slate-500 text-sm mb-3">You haven't practiced today.</p>
+                    <div class="mb-4" aria-live="off">
+                        <div id="axom-live-time" class="text-2xl font-bold tracking-tight text-slate-800 tabular-nums">--:--:--</div>
+                        <div id="axom-live-date" class="text-xs text-slate-500 mt-1">Loading local date…</div>
+                        <div class="text-[10px] font-semibold text-slate-400 mt-1">INDIA STANDARD TIME (IST)</div>
+                    </div>
+                    <div class="flex gap-2 mb-6" id="axom-live-weekdays" aria-label="Current weekday">
+                        <div data-weekday="1" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">M</div>
+                        <div data-weekday="2" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">T</div>
+                        <div data-weekday="3" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">W</div>
+                        <div data-weekday="4" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">T</div>
+                        <div data-weekday="5" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">F</div>
+                        <div data-weekday="6" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">S</div>
+                        <div data-weekday="7" class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-400">S</div>
                     </div>
                     <button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 rounded-lg text-sm transition-colors">
                         Take a Quiz to Start
@@ -383,34 +388,34 @@
         </section>
 
         <!-- Choose Your Exam -->
-        <section id="choose-exam" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="flex justify-between items-end mb-6">
                 <h2 class="text-xl font-bold text-slate-800">Choose Your Exam</h2>
-                <a href="practice.html#examFilter" class="text-sm font-medium text-axom-blue hover:underline">View All</a>
+                <a href="#" class="text-sm font-medium text-axom-blue hover:underline">View All</a>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <a href="practice.html?exam=ADRE" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
+                <a href="#" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
                     <div class="w-12 h-12 bg-red-50 text-axom-red rounded-lg flex items-center justify-center font-bold text-lg">A</div>
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm">ADRE</h3>
                         <p class="text-xs text-slate-500">Grade III & IV</p>
                     </div>
                 </a>
-                <a href="practice.html?exam=APSC CCE" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
+                <a href="#" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
                     <div class="w-12 h-12 bg-blue-50 text-axom-blue rounded-lg flex items-center justify-center font-bold text-lg">P</div>
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm">APSC</h3>
                         <p class="text-xs text-slate-500">CCE Prelims</p>
                     </div>
                 </a>
-                <a href="practice.html?exam=Assam Police" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
+                <a href="#" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
                     <div class="w-12 h-12 bg-green-50 text-axom-green rounded-lg flex items-center justify-center font-bold text-lg"><i class="fa-solid fa-shield-halved"></i></div>
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm">Assam Police</h3>
                         <p class="text-xs text-slate-500">SI & Constable</p>
                     </div>
                 </a>
-                <a href="practice.html?exam=SSC" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
+                <a href="#" class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all">
                     <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center font-bold text-lg">S</div>
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm">SSC</h3>
@@ -424,13 +429,13 @@
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h2 class="text-xl font-bold text-slate-800 mb-6">Study by Subject</h2>
             <div class="flex flex-wrap gap-3">
-                <a href="practice.html?subject=Assam%20History" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Assam History</a>
-                <a href="practice.html?subject=Indian%20Polity" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Indian Polity</a>
-                <a href="practice.html?subject=General%20Science" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">General Science</a>
-                <a href="practice.html?subject=Quantitative%20Aptitude" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Quantitative Aptitude</a>
-                <a href="practice.html?subject=Logical%20Reasoning" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Logical Reasoning</a>
-                <a href="practice.html?subject=Assam%20Geography" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Assam Geography</a>
-                <a href="practice.html?subject=English%20Grammar" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">English Grammar</a>
+                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Assam History</a>
+                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Indian Polity</a>
+                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">General Science</a>
+                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Quantitative Aptitude</a>
+                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Logical Reasoning</a>
+                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">Assam Geography</a>
+                <a href="#" class="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:bg-axom-blue hover:text-white hover:border-axom-blue transition-all">English Grammar</a>
             </div>
         </section>
 
@@ -518,8 +523,8 @@
                 <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">Ready to crack your dream job?</h2>
                 <p class="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">Join thousands of successful aspirants from Assam who trusted AxomPrep for their preparation.</p>
                 <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="practice.html" class="bg-white text-axom-blue font-bold px-8 py-3.5 rounded-xl shadow-lg hover:bg-slate-50 transition-colors">Start Practicing Free</a>
-                    <a href="daily-quiz.html" class="bg-blue-700 text-white border border-blue-600 font-bold px-8 py-3.5 rounded-xl hover:bg-blue-800 transition-colors">Try Daily Quiz</a>
+                    <a href="#" class="bg-white text-axom-blue font-bold px-8 py-3.5 rounded-xl shadow-lg hover:bg-slate-50 transition-colors">Sign Up for Free</a>
+                    <a href="#" class="bg-blue-700 text-white border border-blue-600 font-bold px-8 py-3.5 rounded-xl hover:bg-blue-800 transition-colors">Download App</a>
                 </div>
             </div>
         </section>
@@ -540,10 +545,10 @@
                         The ultimate destination for competitive exam preparation in Assam. Providing quality mocks, current affairs, and guidance.
                     </p>
                     <div class="flex space-x-4">
-                        <span class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center opacity-60" aria-label="facebook-f link not configured" title="Social link not configured"><i class="fa-brands fa-facebook-f text-sm"></i></span>
-                        <span class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center opacity-60" aria-label="twitter link not configured" title="Social link not configured"><i class="fa-brands fa-twitter text-sm"></i></span>
-                        <span class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center opacity-60" aria-label="youtube link not configured" title="Social link not configured"><i class="fa-brands fa-youtube text-sm"></i></span>
-                        <span class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center opacity-60" aria-label="telegram link not configured" title="Social link not configured"><i class="fa-brands fa-telegram text-sm"></i></span>
+                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors"><i class="fa-brands fa-twitter text-sm"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors"><i class="fa-brands fa-youtube text-sm"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-axom-blue hover:text-white transition-colors"><i class="fa-brands fa-telegram text-sm"></i></a>
                     </div>
                 </div>
                 
@@ -551,11 +556,11 @@
                 <div>
                     <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Exams</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="practice.html?exam=ADRE" class="hover:text-axom-blue transition-colors">ADRE Grade III & IV</a></li>
-                        <li><a href="practice.html?exam=APSC%20CCE" class="hover:text-axom-blue transition-colors">APSC CCE</a></li>
-                        <li><a href="practice.html?exam=Assam%20Police" class="hover:text-axom-blue transition-colors">Assam Police (SI/AB/UB)</a></li>
-                        <li><a href="practice.html?exam=TET%20Assam" class="hover:text-axom-blue transition-colors">TET Assam</a></li>
-                        <li><a href="practice.html?exam=SSC" class="hover:text-axom-blue transition-colors">SSC & Railway</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">ADRE Grade III & IV</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">APSC CCE</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">Assam Police (SI/AB/UB)</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">TET Assam</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">SSC & Railway</a></li>
                     </ul>
                 </div>
 
@@ -563,11 +568,11 @@
                 <div>
                     <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Resources</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="current-affairs.html" class="hover:text-axom-blue transition-colors">Daily Current Affairs</a></li>
-                        <li><a href="mock-tests.html" class="hover:text-axom-blue transition-colors">Free Mock Tests</a></li>
-                        <li><a href="previous-year.html" class="hover:text-axom-blue transition-colors">Previous Year Papers</a></li>
-                        <li><a href="current-jobs.html" class="hover:text-axom-blue transition-colors">Job Notifications</a></li>
-                        <li><a href="books.html" class="hover:text-axom-blue transition-colors">Recommended Books</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">Daily Current Affairs</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">Free Mock Tests</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">Previous Year Papers</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">Job Notifications</a></li>
+                        <li><a href="#" class="hover:text-axom-blue transition-colors">Recommended Books</a></li>
                     </ul>
                 </div>
 
@@ -575,10 +580,10 @@
                 <div>
                     <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Company</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="about.html" class="hover:text-axom-blue transition-colors">About Us</a></li>
-                        <li><a href="about.html" class="hover:text-axom-blue transition-colors">Contact Support</a></li>
-                        <li><a href="privacy.html" class="hover:text-axom-blue transition-colors">Privacy Policy</a></li>
-                        <li><a href="terms.html" class="hover:text-axom-blue transition-colors">Terms of Service</a></li>
+                        <li><a href="/about/" class="hover:text-axom-blue transition-colors">About Us</a></li>
+                        <li><a href="/contact-support/" class="hover:text-axom-blue transition-colors">Contact Support</a></li>
+                        <li><a href="/privacy/" class="hover:text-axom-blue transition-colors">Privacy Policy</a></li>
+                        <li><a href="/terms/" class="hover:text-axom-blue transition-colors">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>
@@ -912,6 +917,49 @@
   }
 })();
 </script>
-<script src="homepage-current-jobs.js" defer></script>
+<script src="homepage-current-jobs.js?v=20261022-syncfix1" defer></script>
+
+<script id="axomprep-live-india-clock">
+(function () {
+  const timeEl = document.getElementById('axom-live-time');
+  const dateEl = document.getElementById('axom-live-date');
+  const weekdays = document.querySelectorAll('#axom-live-weekdays [data-weekday]');
+  if (!timeEl || !dateEl) return;
+
+  const timeFormatter = new Intl.DateTimeFormat('en-IN', {
+    timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: true
+  });
+  const dateFormatter = new Intl.DateTimeFormat('en-IN', {
+    timeZone: 'Asia/Kolkata', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
+  const weekdayFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata', weekday: 'short'
+  });
+  const weekdayNumbers = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 };
+
+  function updateIndiaClock() {
+    const now = new Date();
+    timeEl.textContent = timeFormatter.format(now);
+    dateEl.textContent = dateFormatter.format(now);
+    const today = weekdayNumbers[weekdayFormatter.format(now)];
+    weekdays.forEach((day) => {
+      const isToday = Number(day.dataset.weekday) === today;
+      day.classList.toggle('ring-2', isToday);
+      day.classList.toggle('ring-orange-300', isToday);
+      day.classList.toggle('bg-orange-50', isToday);
+      day.classList.toggle('text-orange-600', isToday);
+      day.classList.toggle('bg-slate-100', !isToday);
+      day.classList.toggle('text-slate-400', !isToday);
+      day.setAttribute('aria-current', isToday ? 'date' : 'false');
+    });
+  }
+  updateIndiaClock();
+  window.setInterval(updateIndiaClock, 1000);
+})();
+</script>
+
+
+<script src="/homepage-book-covers.js?v=20261022-2" defer></script>
 </body>
 </html>

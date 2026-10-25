@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/cron/current-jobs",
-      "schedule": "0 19 * * *"
+      "schedule": "30 18 * * *"
     }
   ],
   "rewrites": [
@@ -19,104 +19,40 @@
       "destination": "/admin.html"
     },
     {
-      "source": "/practice",
-      "destination": "/practice.html"
-    },
-    {
-      "source": "/practice/",
-      "destination": "/practice.html"
-    },
-    {
-      "source": "/daily-quiz",
-      "destination": "/daily-quiz.html"
-    },
-    {
-      "source": "/daily-quiz/",
-      "destination": "/daily-quiz.html"
-    },
-    {
-      "source": "/mock-tests",
-      "destination": "/mock-tests.html"
-    },
-    {
-      "source": "/mock-tests/",
-      "destination": "/mock-tests.html"
-    },
-    {
-      "source": "/current-affairs",
-      "destination": "/current-affairs.html"
-    },
-    {
-      "source": "/current-affairs/",
-      "destination": "/current-affairs.html"
-    },
-    {
-      "source": "/current-jobs",
-      "destination": "/current-jobs.html"
-    },
-    {
-      "source": "/current-jobs/",
-      "destination": "/current-jobs.html"
-    },
-    {
-      "source": "/books",
-      "destination": "/books.html"
-    },
-    {
-      "source": "/books/",
-      "destination": "/books.html"
-    },
-    {
-      "source": "/premium",
-      "destination": "/premium.html"
-    },
-    {
-      "source": "/premium/",
-      "destination": "/premium.html"
+      "source": "/job/:id",
+      "destination": "/job.html?id=:id"
     },
     {
       "source": "/about",
-      "destination": "/about.html"
+      "destination": "/about/index.html"
     },
     {
-      "source": "/about/",
-      "destination": "/about.html"
+      "source": "/about.html",
+      "destination": "/about/index.html"
+    },
+    {
+      "source": "/contact-support",
+      "destination": "/contact-support/index.html"
+    },
+    {
+      "source": "/contact-support.html",
+      "destination": "/contact-support/index.html"
     },
     {
       "source": "/privacy",
-      "destination": "/privacy.html"
+      "destination": "/privacy/index.html"
     },
     {
-      "source": "/privacy/",
-      "destination": "/privacy.html"
+      "source": "/privacy.html",
+      "destination": "/privacy/index.html"
     },
     {
       "source": "/terms",
-      "destination": "/terms.html"
+      "destination": "/terms/index.html"
     },
     {
-      "source": "/terms/",
-      "destination": "/terms.html"
-    },
-    {
-      "source": "/disclaimer",
-      "destination": "/disclaimer.html"
-    },
-    {
-      "source": "/disclaimer/",
-      "destination": "/disclaimer.html"
-    },
-    {
-      "source": "/previous-year",
-      "destination": "/previous-year.html"
-    },
-    {
-      "source": "/previous-year/",
-      "destination": "/previous-year.html"
-    },
-    {
-      "source": "/job/:id",
-      "destination": "/job.html?id=:id"
+      "source": "/terms.html",
+      "destination": "/terms/index.html"
     }
   ]
 }
