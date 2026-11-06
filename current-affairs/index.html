@@ -57,6 +57,11 @@ button,input{font:inherit}
 .ca-card h2{font-size:19px;line-height:1.35;margin:0 0 9px;color:#0f172a}
 .ca-card p{font-size:14px;line-height:1.65;color:#475569;margin:0;white-space:pre-line}
 .ca-source{margin-top:14px;padding-top:12px;border-top:1px solid #eef2f7;font-size:12px;color:#64748b}
+.ca-source a{display:inline-flex;align-items:center;gap:5px;margin-left:3px;padding:4px 9px;border-radius:999px;background:linear-gradient(135deg,#e8f1ff,#f0eaff);color:#2457c5;font-weight:700;text-decoration:none;border:1px solid #cbdcff;transition:background .18s ease,color .18s ease,transform .18s ease}
+.ca-source a::after{content:'↗';font-size:11px;font-weight:800}
+.ca-source a:hover{background:linear-gradient(135deg,#2457c5,#6941c6);color:#fff;transform:translateY(-1px);text-decoration:none}
+.ca-source a:focus-visible{outline:3px solid #93c5fd;outline-offset:2px}
+
 .ca-empty,.ca-error{background:#fff;border:1px dashed #cbd5e1;border-radius:16px;padding:28px;text-align:center;color:#64748b;grid-column:1/-1}
 .ca-error{color:#b91c1c;border-color:#fecaca;background:#fffafa}
 .ca-foot{margin-top:26px;text-align:center;color:#64748b;font-size:12px}
@@ -237,6 +242,16 @@ async function load(){
       );
     }catch(_){}
 
+    // Load source metadata from the automated ingestion table independently.
+    // The legacy current_affairs table used by the admin panel does not store source_url.
+    let sourceRows=[];
+    try{
+      sourceRows=await fetchJson(
+        `${base}/rest/v1/current_affairs_v1?select=title,source_name,source_url,status&status=eq.published&limit=500`,
+        {headers}
+      );
+    }catch(_){}
+
     // If the primary table is empty/unavailable, use the automated ingestion table.
     if(!Array.isArray(data)||!data.length){
       data=await fetchJson(
@@ -245,7 +260,14 @@ async function load(){
       );
     }
 
-    rows=(Array.isArray(data)?data:[]).map(norm);
+    const sourceByTitle=new Map((Array.isArray(sourceRows)?sourceRows:[]).map(x=>[
+      String(x.title||'').trim().toLowerCase(),
+      {source_name:x.source_name||'',source_url:x.source_url||''}
+    ]));
+    rows=(Array.isArray(data)?data:[]).map(x=>{
+      const extra=sourceByTitle.get(String(x.title||'').trim().toLowerCase())||{};
+      return norm({...x,source_name:x.source_name||extra.source_name,source_url:x.source_url||extra.source_url});
+    });
     render();
   }catch(e){
     $('caCount').textContent='Unable to load current affairs';
