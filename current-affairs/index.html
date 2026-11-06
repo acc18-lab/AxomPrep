@@ -160,6 +160,18 @@ let rows=[];let cat='all';
 function esc(v){
   return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 }
+function decodeText(v){
+  let s=String(v??'');
+  // Decode source entities (including double-encoded &amp;nbsp;) into plain text.
+  for(let i=0;i<3;i++){
+    const t=document.createElement('textarea');
+    t.innerHTML=s;
+    const next=t.value;
+    if(next===s)break;
+    s=next;
+  }
+  return s.replace(/\\u00a0/g,' ').replace(/[ \\t]+/g,' ').replace(/\\s*\\n\\s*/g,' ').trim();
+}
 function dateText(v){
   if(!v)return '';
   const d=new Date(String(v).length===10 ? v+'T00:00:00' : v);
@@ -168,11 +180,11 @@ function dateText(v){
 }
 function norm(x){
   return {
-    title:x.title||'',
-    content:x.content||x.summary||'',
-    category:x.category||'India',
+    title:decodeText(x.title||''),
+    content:decodeText(x.content||x.summary||''),
+    category:decodeText(x.category||'India'),
     published_date:x.published_date||'',
-    source_name:x.source_name||x.source||''
+    source_name:decodeText(x.source_name||x.source||'')
   };
 }
 function render(){
