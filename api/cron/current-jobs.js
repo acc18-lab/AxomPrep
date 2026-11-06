@@ -8,9 +8,26 @@
 const TABLE = 'current_jobs_v1';
 const SOURCE_NAME = 'External job feeds';
 const MAX_ARTICLES = 100;
-const configuredUrls = name => String(process.env[name] || '').split(',').map(x => x.trim()).filter(Boolean);
+// Built-in public AssamCareer sources keep the cron working even when optional
+// Vercel source variables have not been configured. Environment values override
+// these defaults. Both comma-separated and newline-separated values are accepted.
+const DEFAULT_FEED_URLS = [
+  'https://www.assamcareer.com/feeds/posts/default?alt=json&max-results=150',
+  'https://www.assamcareer.com/feeds/posts/default/-/Private%20Job?alt=json&max-results=50'
+];
+const DEFAULT_LISTING_URLS = [
+  'https://www.assamcareer.com/',
+  'https://www.assamcareer.com/p/latest-updates.html',
+  'https://www.assamcareer.com/search?max-results=50'
+];
+const configuredUrls = name => String(process.env[name] || '')
+  .split(/[\\r\\n,]+/)
+  .map(x => x.trim())
+  .filter(Boolean);
 const FEED_URLS = configuredUrls('JOB_FEED_URLS');
 const LISTING_URLS = configuredUrls('JOB_LISTING_URLS');
+const ACTIVE_FEED_URLS = FEED_URLS.length ? FEED_URLS : DEFAULT_FEED_URLS;
+const ACTIVE_LISTING_URLS = LISTING_URLS.length ? LISTING_URLS : DEFAULT_LISTING_URLS;
 
 function json(res, status, body) {
   res.status(status).setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -245,11 +262,11 @@ module.exports = async function handler(req, res) {
   const listingUrlsConfigured = LISTING_URLS;
   const now = new Date();
   try {
-    const listingUrls = [...new Set(listingUrlsConfigured)];
-    if (!listingUrls.length && !FEED_URLS.length) throw new Error('Configure JOB_LISTING_URLS and/or JOB_FEED_URLS in Vercel to enable automatic job imports.');
+    const listingUrls = [...new Set(ACTIVE_LISTING_URLS)];
+    const feedUrls = [...new Set(ACTIVE_FEED_URLS)];
     const [listingResults, feedResults] = await Promise.all([
       Promise.allSettled(listingUrls.map(async url => ({url, html: await getHtml(url)}))),
-      Promise.allSettled(FEED_URLS.map(async url => ({url, articles: await getFeedArticles(url)})))
+      Promise.allSettled(feedUrls.map(async url => ({url, articles: await getFeedArticles(url)})))
     ]);
     const listingPages = listingResults.filter(x => x.status === 'fulfilled').map(x => x.value);
     const linkMap = new Map();
@@ -286,7 +303,10 @@ module.exports = async function handler(req, res) {
       statusesUpdated++;
     }
     return json(res, 200, {
-      ok: true, source: SOURCE_NAME, listingUrlsChecked: listingPages.map(p => p.url), feedsChecked: feedResults.filter(x => x.status === 'fulfilled').map(x => x.value.url), articlesFound: links.length,
+      ok: true, source: SOURCE_NAME, listingUrlsChecked: listingPages.map(p => p.url), feedsChecked: feedResults.filter(x => x.status === 'fulfilled').map(x => x.value.url),
+      feedErrors: feedResults.filter(x => x.status === 'rejected').map(x => String(x.reason && x.reason.message || x.reason)),
+      listingErrors: listingResults.filter(x => x.status === 'rejected').map(x => String(x.reason && x.reason.message || x.reason)),
+      articlesFound: links.length,
       importedOrUpdated: jobs.length, articleFetchErrors: articleErrors, statusesUpdated,
       checkedAt: now.toISOString(),
       warning: 'Job summaries are rewritten from extracted facts, not copied article text. Some fields may be unavailable; always verify against the linked official notice.'
