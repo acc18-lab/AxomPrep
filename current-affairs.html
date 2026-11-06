@@ -185,7 +185,8 @@ function norm(x){
     content:decodeText(x.content||x.summary||''),
     category:decodeText(x.category||'India'),
     published_date:x.published_date||'',
-    source_name:decodeText(x.source_name||x.source||'')
+    source_name:decodeText(x.source_name||x.source||''),
+    source_url:(()=>{try{const u=new URL(String(x.source_url||''));return ['http:','https:'].includes(u.protocol)?u.href:'';}catch(_){return '';}})()
   };
 }
 function render(){
@@ -200,7 +201,7 @@ function render(){
     ? `Latest published date: ${dateText(list[0].published_date)}`
     : 'No matching published updates';
   $('caGrid').innerHTML=list.length
-    ? list.map(x=>`<article class="ca-card"><div class="ca-top"><span class="ca-cat">${esc(x.category)}</span><span class="ca-date">${dateText(x.published_date)}</span></div><h2>${esc(x.title)}</h2><p>${esc(x.content)}</p>${x.source_name?`<div class="ca-source">Source: ${esc(x.source_name)}</div>`:''}</article>`).join('')
+    ? list.map(x=>`<article class="ca-card"><div class="ca-top"><span class="ca-cat">${esc(x.category)}</span><span class="ca-date">${dateText(x.published_date)}</span></div><h2>${esc(x.title)}</h2><p>${esc(x.content)}</p>${x.source_name?`<div class="ca-source">Source: ${x.source_url?`<a href="${esc(x.source_url)}" target="_blank" rel="noopener noreferrer">${esc(x.source_name)}</a>`:esc(x.source_name)}</div>`:''}</article>`).join('')
     : '<div class="ca-empty">No published current-affairs updates match this filter or search.</div>';
 }
 async function fetchJson(url, options={}){
@@ -239,7 +240,7 @@ async function load(){
     // If the primary table is empty/unavailable, use the automated ingestion table.
     if(!Array.isArray(data)||!data.length){
       data=await fetchJson(
-        `${base}/rest/v1/current_affairs_v1?select=title,summary,content,category,published_date,source_name,status&status=eq.published&order=published_date.desc&limit=100`,
+        `${base}/rest/v1/current_affairs_v1?select=title,summary,content,category,published_date,source_name,source_url,status&status=eq.published&order=published_date.desc&limit=100`,
         {headers}
       );
     }
