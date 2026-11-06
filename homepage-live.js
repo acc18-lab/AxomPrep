@@ -3,6 +3,9 @@
   if(!cfg || !window.supabase) return;
   const db=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
   const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  // Decode source HTML entities in plain-text fields before escaping for HTML output.
+  // This prevents literal strings such as &nbsp; from appearing in homepage summaries.
+  const decodeText=s=>{const t=document.createElement('textarea');t.innerHTML=String(s??'');return t.value.replace(/\\u00a0/g,' ').replace(/\\s+/g,' ').trim();};
   const safeUrl=v=>{try{const u=new URL(String(v||''),location.href);return /^https?:$/.test(u.protocol)?u.href:''}catch(_){return ''}};
   const state={jobs:[],jobCat:'all',news:[],newsCat:'all',focus:null,focusSelected:null};
   const $=id=>document.getElementById(id);
@@ -25,7 +28,8 @@
     if(!filtered.length){el.innerHTML='<div class="ax-empty"><strong>No current affairs in this category.</strong>Browse all current affairs for the latest entries.</div>';return}
     el.innerHTML=filtered.slice(0,5).map(n=>{
       const img=safeUrl(n.image_url), cat=esc(n.category||'Current Affairs');
-      return `<article class="ax-news-item"><div class="ax-news-img">${img?`<img src="${esc(img)}" alt="" loading="lazy" onerror="this.style.display='none'">`:''}</div><div><div class="ax-news-meta"><span class="ax-news-cat">${cat}</span><span>${esc(n.published_date||'')}</span></div><h3>${esc(n.title||'Current affairs update')}</h3><p>${esc(String(n.summary||'').slice(0,110))}${String(n.summary||'').length>110?'…':''}</p></div></article>`;
+      const summary=decodeText(n.summary||'');
+      return `<article class="ax-news-item"><div class="ax-news-img">${img?`<img src="${esc(img)}" alt="" loading="lazy" onerror="this.style.display='none'">`:''}</div><div><div class="ax-news-meta"><span class="ax-news-cat">${cat}</span><span>${esc(n.published_date||'')}</span></div><h3>${esc(n.title||'Current affairs update')}</h3><p>${esc(summary.slice(0,110))}${summary.length>110?'…':''}</p></div></article>`;
     }).join('')+`<div class="ax-news-more"><a class="ax-btn ax-btn-light" href="current-affairs.html">Read all current affairs →</a></div>`;
   }
 
