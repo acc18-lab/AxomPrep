@@ -162,15 +162,16 @@ function esc(v){
 }
 function decodeText(v){
   let s=String(v??'');
-  // Decode source entities (including double-encoded &amp;nbsp;) into plain text.
+  // Decode HTML entities, including double-encoded values such as &amp;nbsp;.
   for(let i=0;i<3;i++){
-    const t=document.createElement('textarea');
-    t.innerHTML=s;
-    const next=t.value;
-    if(next===s)break;
-    s=next;
+    const box=document.createElement('textarea');
+    box.innerHTML=s;
+    const decoded=box.value;
+    if(decoded===s) break;
+    s=decoded;
   }
-  return s.replace(/\\u00a0/g,' ').replace(/[ \\t]+/g,' ').replace(/\\s*\\n\\s*/g,' ').trim();
+  // Normalize whitespace only. Do not remove or replace ordinary letters.
+  return s.replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim();
 }
 function dateText(v){
   if(!v)return '';
