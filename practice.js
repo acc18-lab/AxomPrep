@@ -13,16 +13,33 @@ async function init(){
   const params=new URLSearchParams(location.search);
   await Promise.all([loadExams(),loadSubjects()]);
   const exam=params.get('exam'),subject=params.get('subject'),topic=params.get('topic');
-  if(exam) setSelectByText($('examFilter'),exam);
-  if(subject) setSelectByText($('subjectFilter'),subject);
+  const examMatched=!exam||setSelectByText($('examFilter'),exam);
+  const subjectMatched=!subject||setSelectByText($('subjectFilter'),subject);
   await loadTopics();
-  if(topic) setSelectByText($('topicFilter'),topic);
+  const topicMatched=!topic||setSelectByText($('topicFilter'),topic);
   $('startPractice').onclick=startPractice;
+  if((exam&&!examMatched)||(subject&&!subjectMatched)||(topic&&!topicMatched)){
+    const missing=[exam&&!examMatched?`exam "${exam}"`:null,subject&&!subjectMatched?`subject "${subject}"`:null,topic&&!topicMatched?`topic "${topic}"`:null].filter(Boolean).join(', ');
+    setStatus(`Could not find ${missing} in the Practice filters. No unfiltered questions were loaded.`);
+    $('practiceArea').innerHTML=`<div class="practice-empty"><h3>Category not found</h3><p>${esc(missing)} does not match an available Practice category. Please check the subject list in Admin.</p></div>`;
+    return;
+  }
+  if(exam||subject||topic) await startPractice();
   $('resetPractice').onclick=resetAll;
   $('examFilter').onchange=async()=>{await loadTopics();};
   $('subjectFilter').onchange=async()=>{await loadTopics();};
 }
-function setSelectByText(select,text){const opt=[...select.options].find(o=>o.text.toLowerCase()===text.toLowerCase());if(opt)select.value=opt.value;}
+function normalizeFilterName(value){
+  return String(value||'').normalize('NFKD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,' ').trim().replace(/\\s+/g,' ');
+}
+function setSelectByText(select,text){
+  const wanted=normalizeFilterName(text);
+  const options=[...select.options].filter(o=>o.value);
+  const opt=options.find(o=>normalizeFilterName(o.textContent)===wanted)
+    ||options.find(o=>normalizeFilterName(o.textContent).includes(wanted)||wanted.includes(normalizeFilterName(o.textContent)));
+  if(opt){select.value=opt.value;return true;}
+  return false;
+}
 async function loadExams(){const {data,error}=await client.from('exams').select('id,name').order('name');if(error){setStatus(error.message);return}exams=data||[];$('examFilter').innerHTML='<option value="">All Exams</option>'+exams.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}
 async function loadSubjects(){const {data,error}=await client.from('subjects').select('id,name').order('name');if(error){setStatus(error.message);return}subjects=data||[];$('subjectFilter').innerHTML='<option value="">All Subjects</option>'+subjects.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}
 async function loadTopics(){
@@ -55,7 +72,12 @@ async function startPractice(){
     // Some Supabase/PostgREST versions may reject the array filter syntax.
     // Fall back to a client-side safety filter so the UI remains usable.
     console.warn(error);
-    const fallback=await client.from('questions').select('id,question,option_a,option_b,option_c,option_d,answer,explanation,difficulty,year,tags,exam_id,subject_id,topic_id,exams(name),subjects(name)').eq('status','published').limit(500);
+    let fallbackQuery=client.from('questions').select('id,question,option_a,option_b,option_c,option_d,answer,explanation,difficulty,year,tags,exam_id,subject_id,topic_id,exams(name),subjects(name)').eq('status','published').limit(500);
+    if(exam)fallbackQuery=fallbackQuery.eq('exam_id',exam);
+    if(subject)fallbackQuery=fallbackQuery.eq('subject_id',subject);
+    if(topic)fallbackQuery=fallbackQuery.eq('topic_id',topic);
+    if(diff)fallbackQuery=fallbackQuery.eq('difficulty',diff);
+    const fallback=await fallbackQuery;
     if(fallback.error){setStatus(fallback.error.message);return}
     const safe=(fallback.data||[]).filter(q=>premiumState.active||!AxomPrepPremium.isTaggedPremium(q.tags));
     data=safe;
