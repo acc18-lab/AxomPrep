@@ -150,15 +150,38 @@ async function load(){
  try{
   const sb=await getSupabase();
   if(!sb) throw new Error("No Supabase config");
-  const {data,error}=await sb.from("questions").select("id,question,option_a,option_b,option_c,option_d,answer,explanation,difficulty,year,tags,exam_id,exams(name)").eq("status","published").limit(500);
-  if(error) throw error;
-  allQuestions=(data||[]).filter(q=>q.question&&q.option_a&&q.option_b&&q.option_c&&q.option_d).map(normalize);
- }catch(e){allQuestions=[]}
+
+  // Fetch every published question in stable 1,000-row pages.
+  // The previous .limit(500) only inspected the first 500 rows,
+  // which could contain questions from just one exam.
+  const pageSize=1000;
+  const rows=[];
+  for(let from=0; ; from+=pageSize){
+    const {data,error}=await sb
+      .from("questions")
+      .select("id,question,option_a,option_b,option_c,option_d,answer,explanation,difficulty,year,tags,exam_id,exams(name)")
+      .eq("status","published")
+      .order("id",{ascending:true})
+      .range(from,from+pageSize-1);
+    if(error) throw error;
+    const page=data||[];
+    rows.push(...page);
+    if(page.length<pageSize) break;
+  }
+
+  allQuestions=rows
+    .filter(q=>q.question&&q.option_a&&q.option_b&&q.option_c&&q.option_d)
+    .map(normalize);
+ }catch(e){
+  console.error("Could not load published mock-test questions:",e);
+  allQuestions=[];
+ }
  $("poolCount").textContent=allQuestions.length||"—";
  renderTests();
 }
 function renderTests(){
- const exams=[...new Map(allQuestions.filter(q=>q.exams?.name).map(q=>[q.exam_id,q.exams.name])).entries()];
+ const exams=[...new Map(allQuestions.filter(q=>q.exam_id&&q.exams?.name).map(q=>[q.exam_id,q.exams.name])).entries()]
+   .sort((a,b)=>a[1].localeCompare(b[1]));
  $("examSelect").innerHTML='<option value="all">All exam tracks</option>'+exams.map(([id,n])=>'<option value="'+esc(id)+'">'+esc(n)+'</option>').join("");
  const pool=currentExam==="all"?allQuestions:allQuestions.filter(q=>String(q.exam_id)===String(currentExam));
  const size=Number($("sizeSelect").value);
