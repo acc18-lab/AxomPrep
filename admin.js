@@ -68,11 +68,17 @@ async function loadOptions(){
   if(e.error) throw e.error;
   if(s.error) throw s.error;
 
-  $('exam').innerHTML=(e.data||[])
-    .map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');
+  const exams=e.data||[];
+  const subjects=s.data||[];
+  const examOptions=exams.map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('');
+  const subjectOptions=subjects.map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('');
 
-  $('subject').innerHTML=(s.data||[])
-    .map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');
+  $('exam').innerHTML=examOptions;
+  $('subject').innerHTML=subjectOptions;
+  $('editExam').innerHTML='<option value="">Select exam</option>'+examOptions;
+  $('editSubject').innerHTML='<option value="">Select subject</option>'+subjectOptions;
+  $('qExamFilter').innerHTML='<option value="">All exams</option>'+examOptions;
+  $('qSubjectFilter').innerHTML='<option value="">All subjects</option>'+subjectOptions;
 }
 
 async function loadStats(){
@@ -96,33 +102,156 @@ async function loadStats(){
 }
 
 async function loadQuestions(){
-  const {data,error}=await client
+  const tbody=$('questionRows');
+  tbody.innerHTML='<tr><td colspan="7">Loading questions…</td></tr>';
+
+  let query=client
     .from('questions')
-    .select('id,question,status,exam_id,subject_id,exams(name),subjects(name)')
+    .select('id,question,status,exam_id,subject_id,difficulty,exams(name),subjects(name),created_at')
     .order('created_at',{ascending:false})
-    .limit(50);
+    .limit(100);
 
-  if(error) throw error;
+  const search=$('qSearch')?.value.trim();
+  const examId=$('qExamFilter')?.value;
+  const subjectId=$('qSubjectFilter')?.value;
+  const status=$('qStatusFilter')?.value;
+  const difficulty=$('qDifficultyFilter')?.value;
 
-  $('questionRows').innerHTML=(data||[]).map(q=>`
+  if(search) query=query.ilike('question',`%${search}%`);
+  if(examId) query=query.eq('exam_id',examId);
+  if(subjectId) query=query.eq('subject_id',subjectId);
+  if(status) query=query.eq('status',status);
+  if(difficulty) query=query.eq('difficulty',difficulty);
+
+  const {data,error}=await query;
+  if(error){
+    tbody.innerHTML=`<tr><td colspan="7">Could not load questions: ${esc(error.message)}</td></tr>`;
+    throw error;
+  }
+
+  tbody.innerHTML=(data||[]).map(q=>`
     <tr>
+      <td><input type="checkbox" class="question-select" value="${esc(q.id)}" aria-label="Select question"></td>
       <td>${esc(q.question).slice(0,180)}</td>
       <td>${esc(q.subjects?.name||'')}</td>
       <td>${esc(q.exams?.name||'')}</td>
-      <td><span class="badge">${esc(q.status)}</span></td>
-      <td><button class="btn light" onclick="setStatus('${q.id}','published')">Publish</button></td>
+      <td>${esc(q.difficulty||'')}</td>
+      <td><span class="badge">${esc(q.status||'')}</span></td>
+      <td><button class="btn light" type="button" data-edit-question="${esc(q.id)}">Edit</button>${q.status!=='published'?` <button class="btn light" type="button" data-publish-question="${esc(q.id)}">Publish</button>`:''}</td>
     </tr>
-  `).join('')||'<tr><td colspan="5">No questions yet.</td></tr>';
+  `).join('')||'<tr><td colspan="7">No questions match these filters.</td></tr>';
 }
 
 window.setStatus=async(id,status)=>{
   const {error}=await client.from('questions').update({status}).eq('id',id);
-  if(error) alert(error.message);
-  else{
-    await loadQuestions();
-    await loadStats();
+  if(error){alert('Could not update question status: '+error.message);return;}
+  await loadQuestions();
+  await loadStats();
+};
+
+// Existing-question editor: load a complete record, prefill the existing form,
+// and update the same row without changing its ID or created_by value.
+function openAdminTab(name){
+  document.querySelectorAll('.admin-nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));
+  $('tab-'+name).classList.remove('hidden');
+  $('tab-'+name).scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+async function editQuestionAdmin(id){
+  msg('editMsg','Loading question…',false);
+  openAdminTab('edit');
+  try{
+    const {data:q,error}=await client.from('questions').select('*').eq('id',id).single();
+    if(error) throw error;
+    $('editId').value=q.id;
+    $('editQtext').value=q.question||'';
+    $('editA').value=q.option_a||'';
+    $('editB').value=q.option_b||'';
+    $('editC').value=q.option_c||'';
+    $('editD').value=q.option_d||'';
+    $('editAnswer').value=String(q.answer||'A').toUpperCase();
+    $('editExam').value=q.exam_id||'';
+    $('editSubject').value=q.subject_id||'';
+    $('editDifficulty').value=q.difficulty||'medium';
+    $('editYear').value=q.year??'';
+    $('editExplanation').value=q.explanation||'';
+    $('editStatus').value=q.status||'draft';
+    $('editTags').value=Array.isArray(q.tags)?q.tags.join(', '):(q.tags||'').toString().replace(/^\\{|\\}$/g,'');
+    msg('editMsg',`Editing question ${q.id}. Changes will update this existing record.`,false);
+  }catch(err){
+    msg('editMsg','Could not load question: '+(err?.message||err),false);
+  }
+}
+
+$('questionRows').addEventListener('click',async e=>{
+  const edit=e.target.closest('[data-edit-question]');
+  if(edit){await editQuestionAdmin(edit.dataset.editQuestion);return;}
+  const publish=e.target.closest('[data-publish-question]');
+  if(publish){
+    publish.disabled=true;
+    await window.setStatus(publish.dataset.publishQuestion,'published');
+  }
+});
+
+$('editQuestionForm').onsubmit=async e=>{
+  e.preventDefault();
+  const button=$('editQuestionForm').querySelector('button[type="submit"]');
+  const oldText=button.textContent;
+  button.disabled=true;
+  button.textContent='Saving changes…';
+  msg('editMsg','Updating existing question…',false);
+  try{
+    const id=$('editId').value;
+    if(!id) throw new Error('No question is selected. Return to Questions and click Edit.');
+    const tags=$('editTags').value.split(',').map(x=>x.trim()).filter(Boolean);
+    const payload={
+      question:$('editQtext').value.trim(),
+      option_a:$('editA').value.trim(),
+      option_b:$('editB').value.trim(),
+      option_c:$('editC').value.trim(),
+      option_d:$('editD').value.trim(),
+      answer:$('editAnswer').value,
+      explanation:$('editExplanation').value.trim()||null,
+      exam_id:$('editExam').value||null,
+      subject_id:$('editSubject').value||null,
+      difficulty:$('editDifficulty').value||'medium',
+      year:$('editYear').value?Number($('editYear').value):null,
+      tags,
+      status:$('editStatus').value||'draft'
+    };
+    if(!payload.question||!payload.option_a||!payload.option_b||!payload.option_c||!payload.option_d){
+      throw new Error('Question text and all four options are required.');
+    }
+    if(!['A','B','C','D'].includes(payload.answer)) throw new Error('Correct answer must be A, B, C or D.');
+    if(payload.year!==null&&(!Number.isInteger(payload.year)||payload.year<1900||payload.year>2100)) throw new Error('Enter a valid year.');
+    const {data,error}=await client.from('questions').update(payload).eq('id',id).select('id').single();
+    if(error) throw error;
+    msg('editMsg',`Question updated successfully. ID: ${data.id}`,false);
+    await Promise.all([loadQuestions(),loadStats()]);
+  }catch(err){
+    console.error('Question update failed:',err);
+    msg('editMsg','Could not update question: '+(err?.message||err),false);
+  }finally{
+    button.disabled=false;
+    button.textContent=oldText;
   }
 };
+
+$('cancelEdit').addEventListener('click',()=>{
+  $('editQuestionForm').reset();
+  $('editId').value='';
+  msg('editMsg','',true);
+  openAdminTab('questions');
+});
+
+let questionSearchTimer=null;
+['qSearch','qExamFilter','qSubjectFilter','qStatusFilter','qDifficultyFilter'].forEach(id=>{
+  $(id)?.addEventListener(id==='qSearch'?'input':'change',()=>{
+    clearTimeout(questionSearchTimer);
+    questionSearchTimer=setTimeout(()=>loadQuestions().catch(err=>console.error(err)),id==='qSearch'?250:0);
+  });
+});
 
 $('questionForm').onsubmit=async e=>{
   e.preventDefault();
