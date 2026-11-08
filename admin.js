@@ -325,9 +325,14 @@ $('questionRows').addEventListener('click',async e=>{
   }
 });
 
-$('editQuestionForm').onsubmit=async e=>{
+$('editQuestionForm').addEventListener('submit',async e=>{
   e.preventDefault();
-  const button=$('editQuestionForm').querySelector('button[type="submit"]');
+  const form=$('editQuestionForm');
+  const button=form.querySelector('button[type="submit"]')||form.querySelector('.admin-actions button');
+  if(!button){
+    msg('editMsg','Save button could not be found. Please reload the Admin page.',false);
+    return;
+  }
   const oldText=button.textContent;
   button.disabled=true;
   button.textContent='Saving changes…';
@@ -335,6 +340,11 @@ $('editQuestionForm').onsubmit=async e=>{
   try{
     const id=$('editId').value;
     if(!id) throw new Error('No question is selected. Return to Questions and click Edit.');
+
+    const {data:{user},error:userError}=await client.auth.getUser();
+    if(userError) throw userError;
+    if(!user) throw new Error('Your login session has expired. Please log in again.');
+
     const tags=$('editTags').value.split(',').map(x=>x.trim()).filter(Boolean);
     const payload={
       question:$('editQtext').value.trim(),
@@ -342,7 +352,7 @@ $('editQuestionForm').onsubmit=async e=>{
       option_b:$('editB').value.trim(),
       option_c:$('editC').value.trim(),
       option_d:$('editD').value.trim(),
-      answer:$('editAnswer').value,
+      answer:String($('editAnswer').value||'').toUpperCase(),
       explanation:$('editExplanation').value.trim()||null,
       exam_id:$('editExam').value||null,
       subject_id:$('editSubject').value||null,
@@ -356,18 +366,27 @@ $('editQuestionForm').onsubmit=async e=>{
     }
     if(!['A','B','C','D'].includes(payload.answer)) throw new Error('Correct answer must be A, B, C or D.');
     if(payload.year!==null&&(!Number.isInteger(payload.year)||payload.year<1900||payload.year>2100)) throw new Error('Enter a valid year.');
-    const {data,error}=await client.from('questions').update(payload).eq('id',id).select('id').single();
+
+    const {data,error}=await client.from('questions')
+      .update(payload)
+      .eq('id',id)
+      .select('id')
+      .maybeSingle();
     if(error) throw error;
+    if(!data?.id){
+      throw new Error('No question was updated. Check that your account has admin permissions and that this question is still accessible.');
+    }
+
     msg('editMsg',`Question updated successfully. ID: ${data.id}`,false);
     await Promise.all([loadQuestions(),loadStats()]);
   }catch(err){
     console.error('Question update failed:',err);
-    msg('editMsg','Could not update question: '+(err?.message||err),false);
+    msg('editMsg','Could not update question: '+(err?.message||String(err)),false);
   }finally{
     button.disabled=false;
     button.textContent=oldText;
   }
-};
+});
 
 $('cancelEdit').addEventListener('click',()=>{
   $('editQuestionForm').reset();
