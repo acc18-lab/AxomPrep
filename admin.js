@@ -140,7 +140,93 @@ async function loadQuestions(){
       <td><button class="btn light" type="button" data-edit-question="${esc(q.id)}">Edit</button>${q.status!=='published'?` <button class="btn light" type="button" data-publish-question="${esc(q.id)}">Publish</button>`:''}</td>
     </tr>
   `).join('')||'<tr><td colspan="7">No questions match these filters.</td></tr>';
+  if(typeof syncQuestionSelectionUI==='function') syncQuestionSelectionUI();
 }
+
+
+// Bulk question selection and status management.
+function getSelectedQuestionIds(){
+  return [...document.querySelectorAll('#questionRows .question-select:checked')]
+    .map(input=>input.value)
+    .filter(Boolean);
+}
+
+function syncQuestionSelectionUI(){
+  const boxes=[...document.querySelectorAll('#questionRows .question-select')];
+  const selected=boxes.filter(box=>box.checked);
+  const count=$('qSelectionCount');
+  if(count) count.textContent=`${selected.length} selected`;
+  const master=$('questionMaster');
+  if(master){
+    master.checked=boxes.length>0&&selected.length===boxes.length;
+    master.indeterminate=selected.length>0&&selected.length<boxes.length;
+  }
+}
+
+$('questionRows').addEventListener('change',e=>{
+  if(e.target.matches('.question-select')) syncQuestionSelectionUI();
+});
+
+$('questionMaster')?.addEventListener('change',e=>{
+  document.querySelectorAll('#questionRows .question-select').forEach(box=>{
+    box.checked=e.target.checked;
+  });
+  syncQuestionSelectionUI();
+});
+
+$('selectAllQuestions')?.addEventListener('click',()=>{
+  document.querySelectorAll('#questionRows .question-select').forEach(box=>{box.checked=true;});
+  syncQuestionSelectionUI();
+});
+
+$('clearQuestionSelection')?.addEventListener('click',()=>{
+  document.querySelectorAll('#questionRows .question-select').forEach(box=>{box.checked=false;});
+  if($('questionMaster')) $('questionMaster').checked=false;
+  syncQuestionSelectionUI();
+});
+
+$('applyBulkStatus')?.addEventListener('click',async()=>{
+  const ids=getSelectedQuestionIds();
+  const status=$('bulkStatus')?.value||'';
+  if(!ids.length){
+    alert('Select at least one question first.');
+    syncQuestionSelectionUI();
+    return;
+  }
+  if(!['draft','review','approved','published'].includes(status)){
+    alert('Choose a status before clicking Apply.');
+    return;
+  }
+  const button=$('applyBulkStatus');
+  const oldText=button.textContent;
+  button.disabled=true;
+  button.textContent='Updating…';
+  try{
+    const {data,error}=await client
+      .from('questions')
+      .update({status})
+      .in('id',ids)
+      .select('id');
+    if(error) throw error;
+    const updatedCount=Array.isArray(data)?data.length:0;
+    if(updatedCount===0){
+      throw new Error('Supabase did not update any selected rows. Check the admin UPDATE policy (Row Level Security) for public.questions.');
+    }
+    if(updatedCount!==ids.length){
+      alert(`${updatedCount} of ${ids.length} selected questions were updated. Some rows may be blocked by database permissions or no longer exist.`);
+    }else{
+      alert(`${updatedCount} question(s) successfully changed to "${status}".`);
+    }
+    await Promise.all([loadQuestions(),loadStats()]);
+    syncQuestionSelectionUI();
+  }catch(err){
+    console.error('Bulk question status update failed:',err);
+    alert('Bulk status update failed:\n\n'+(err?.message||String(err)));
+  }finally{
+    button.disabled=false;
+    button.textContent=oldText;
+  }
+});
 
 window.setStatus=async(id,status)=>{
   const {error}=await client.from('questions').update({status}).eq('id',id);
@@ -194,25 +280,16 @@ $('questionRows').addEventListener('click',async e=>{
   }
 });
 
-let editQuestionSaveInProgress=false;
-
-async function saveEditedQuestion(){
-  if(editQuestionSaveInProgress) return;
-  const form=$('editQuestionForm');
-  const button=$('saveEditQuestion')||form.querySelector('button[type="submit"]');
-  const oldText=button?.textContent||'Save changes';
-  editQuestionSaveInProgress=true;
-  if(button){button.disabled=true;button.textContent='Saving changes…';}
-  msg('editMsg','Saving changes to the existing question…',false);
-
+$('editQuestionForm').onsubmit=async e=>{
+  e.preventDefault();
+  const button=$('editQuestionForm').querySelector('button[type="submit"]');
+  const oldText=button.textContent;
+  button.disabled=true;
+  button.textContent='Saving changes…';
+  msg('editMsg','Updating existing question…',false);
   try{
-    const id=$('editId').value.trim();
+    const id=$('editId').value;
     if(!id) throw new Error('No question is selected. Return to Questions and click Edit.');
-
-    const {data:{user},error:userError}=await client.auth.getUser();
-    if(userError) throw userError;
-    if(!user) throw new Error('Your login session has expired. Please log in again.');
-
     const tags=$('editTags').value.split(',').map(x=>x.trim()).filter(Boolean);
     const payload={
       question:$('editQtext').value.trim(),
@@ -220,7 +297,7 @@ async function saveEditedQuestion(){
       option_b:$('editB').value.trim(),
       option_c:$('editC').value.trim(),
       option_d:$('editD').value.trim(),
-      answer:String($('editAnswer').value||'').trim().toUpperCase(),
+      answer:$('editAnswer').value,
       explanation:$('editExplanation').value.trim()||null,
       exam_id:$('editExam').value||null,
       subject_id:$('editSubject').value||null,
@@ -229,57 +306,23 @@ async function saveEditedQuestion(){
       tags,
       status:$('editStatus').value||'draft'
     };
-
     if(!payload.question||!payload.option_a||!payload.option_b||!payload.option_c||!payload.option_d){
       throw new Error('Question text and all four options are required.');
     }
-    if(!['A','B','C','D'].includes(payload.answer)){
-      throw new Error('Select the correct answer (A, B, C or D).');
-    }
-    if(payload.year!==null&&(!Number.isInteger(payload.year)||payload.year<1900||payload.year>2100)){
-      throw new Error('Enter a valid year.');
-    }
-
-    const {data:updated,error:updateError}=await client
-      .from('questions')
-      .update(payload)
-      .eq('id',id)
-      .select('id')
-      .maybeSingle();
-
-    if(updateError) throw updateError;
-    if(!updated?.id){
-      throw new Error('No row was updated. Check whether the admin account has an UPDATE permission in the questions table (Row Level Security).');
-    }
-
-    msg('editMsg',`Question updated successfully. ID: ${updated.id}`,false);
-    alert('Question updated successfully.');
+    if(!['A','B','C','D'].includes(payload.answer)) throw new Error('Correct answer must be A, B, C or D.');
+    if(payload.year!==null&&(!Number.isInteger(payload.year)||payload.year<1900||payload.year>2100)) throw new Error('Enter a valid year.');
+    const {data,error}=await client.from('questions').update(payload).eq('id',id).select('id').single();
+    if(error) throw error;
+    msg('editMsg',`Question updated successfully. ID: ${data.id}`,false);
     await Promise.all([loadQuestions(),loadStats()]);
   }catch(err){
     console.error('Question update failed:',err);
-    const detail=err?.message||String(err);
-    msg('editMsg','Save failed: '+detail,false);
-    alert('Could not save question:\n\n'+detail);
+    msg('editMsg','Could not update question: '+(err?.message||err),false);
   }finally{
-    editQuestionSaveInProgress=false;
-    if(button){button.disabled=false;button.textContent=oldText;}
+    button.disabled=false;
+    button.textContent=oldText;
   }
-}
-
-const editQuestionForm=$('editQuestionForm');
-const saveEditQuestionButton=$('saveEditQuestion');
-if(editQuestionForm){
-  editQuestionForm.addEventListener('submit',e=>{
-    e.preventDefault();
-    saveEditedQuestion();
-  });
-}
-if(saveEditQuestionButton){
-  saveEditQuestionButton.addEventListener('click',e=>{
-    e.preventDefault();
-    saveEditedQuestion();
-  });
-}
+};
 
 $('cancelEdit').addEventListener('click',()=>{
   $('editQuestionForm').reset();
