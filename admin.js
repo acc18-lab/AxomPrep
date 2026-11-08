@@ -194,16 +194,25 @@ $('questionRows').addEventListener('click',async e=>{
   }
 });
 
-$('editQuestionForm').onsubmit=async e=>{
-  e.preventDefault();
-  const button=$('editQuestionForm').querySelector('button[type="submit"]');
-  const oldText=button.textContent;
-  button.disabled=true;
-  button.textContent='Saving changes…';
-  msg('editMsg','Updating existing question…',false);
+let editQuestionSaveInProgress=false;
+
+async function saveEditedQuestion(){
+  if(editQuestionSaveInProgress) return;
+  const form=$('editQuestionForm');
+  const button=$('saveEditQuestion')||form.querySelector('button[type="submit"]');
+  const oldText=button?.textContent||'Save changes';
+  editQuestionSaveInProgress=true;
+  if(button){button.disabled=true;button.textContent='Saving changes…';}
+  msg('editMsg','Saving changes to the existing question…',false);
+
   try{
-    const id=$('editId').value;
+    const id=$('editId').value.trim();
     if(!id) throw new Error('No question is selected. Return to Questions and click Edit.');
+
+    const {data:{user},error:userError}=await client.auth.getUser();
+    if(userError) throw userError;
+    if(!user) throw new Error('Your login session has expired. Please log in again.');
+
     const tags=$('editTags').value.split(',').map(x=>x.trim()).filter(Boolean);
     const payload={
       question:$('editQtext').value.trim(),
@@ -211,7 +220,7 @@ $('editQuestionForm').onsubmit=async e=>{
       option_b:$('editB').value.trim(),
       option_c:$('editC').value.trim(),
       option_d:$('editD').value.trim(),
-      answer:$('editAnswer').value,
+      answer:String($('editAnswer').value||'').trim().toUpperCase(),
       explanation:$('editExplanation').value.trim()||null,
       exam_id:$('editExam').value||null,
       subject_id:$('editSubject').value||null,
@@ -220,23 +229,57 @@ $('editQuestionForm').onsubmit=async e=>{
       tags,
       status:$('editStatus').value||'draft'
     };
+
     if(!payload.question||!payload.option_a||!payload.option_b||!payload.option_c||!payload.option_d){
       throw new Error('Question text and all four options are required.');
     }
-    if(!['A','B','C','D'].includes(payload.answer)) throw new Error('Correct answer must be A, B, C or D.');
-    if(payload.year!==null&&(!Number.isInteger(payload.year)||payload.year<1900||payload.year>2100)) throw new Error('Enter a valid year.');
-    const {data,error}=await client.from('questions').update(payload).eq('id',id).select('id').single();
-    if(error) throw error;
-    msg('editMsg',`Question updated successfully. ID: ${data.id}`,false);
+    if(!['A','B','C','D'].includes(payload.answer)){
+      throw new Error('Select the correct answer (A, B, C or D).');
+    }
+    if(payload.year!==null&&(!Number.isInteger(payload.year)||payload.year<1900||payload.year>2100)){
+      throw new Error('Enter a valid year.');
+    }
+
+    const {data:updated,error:updateError}=await client
+      .from('questions')
+      .update(payload)
+      .eq('id',id)
+      .select('id')
+      .maybeSingle();
+
+    if(updateError) throw updateError;
+    if(!updated?.id){
+      throw new Error('No row was updated. Check whether the admin account has an UPDATE permission in the questions table (Row Level Security).');
+    }
+
+    msg('editMsg',`Question updated successfully. ID: ${updated.id}`,false);
+    alert('Question updated successfully.');
     await Promise.all([loadQuestions(),loadStats()]);
   }catch(err){
     console.error('Question update failed:',err);
-    msg('editMsg','Could not update question: '+(err?.message||err),false);
+    const detail=err?.message||String(err);
+    msg('editMsg','Save failed: '+detail,false);
+    alert('Could not save question:\n\n'+detail);
   }finally{
-    button.disabled=false;
-    button.textContent=oldText;
+    editQuestionSaveInProgress=false;
+    if(button){button.disabled=false;button.textContent=oldText;}
   }
-};
+}
+
+const editQuestionForm=$('editQuestionForm');
+const saveEditQuestionButton=$('saveEditQuestion');
+if(editQuestionForm){
+  editQuestionForm.addEventListener('submit',e=>{
+    e.preventDefault();
+    saveEditedQuestion();
+  });
+}
+if(saveEditQuestionButton){
+  saveEditQuestionButton.addEventListener('click',e=>{
+    e.preventDefault();
+    saveEditedQuestion();
+  });
+}
 
 $('cancelEdit').addEventListener('click',()=>{
   $('editQuestionForm').reset();
