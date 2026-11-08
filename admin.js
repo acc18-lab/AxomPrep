@@ -101,15 +101,42 @@ async function loadStats(){
   $('caCount').textContent=c??0;
 }
 
+const QUESTIONS_PER_PAGE=50;
+let questionCurrentPage=1;
+let questionTotalCount=0;
+
+function ensureQuestionPagination(){
+  let el=$('questionPagination');
+  if(!el){
+    el=document.createElement('div');
+    el.id='questionPagination';
+    el.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 4px;margin-top:8px;font-size:13px;color:#52627a';
+    $('questionRows').closest('.table-wrap').insertAdjacentElement('afterend',el);
+  }
+  return el;
+}
+
+function renderQuestionPagination(){
+  const el=ensureQuestionPagination();
+  const pages=Math.max(1,Math.ceil(questionTotalCount/QUESTIONS_PER_PAGE));
+  const first=questionTotalCount===0?0:(questionCurrentPage-1)*QUESTIONS_PER_PAGE+1;
+  const last=Math.min(questionCurrentPage*QUESTIONS_PER_PAGE,questionTotalCount);
+  el.innerHTML=`
+    <span>Showing <strong>${first}–${last}</strong> of <strong>${questionTotalCount.toLocaleString()}</strong> questions · Page <strong>${questionCurrentPage}</strong> of <strong>${pages}</strong></span>
+    <span style="display:flex;align-items:center;gap:8px">
+      <button type="button" class="btn light" data-question-page="prev" ${questionCurrentPage<=1?'disabled':''}>Previous</button>
+      <button type="button" class="btn light" data-question-page="next" ${questionCurrentPage>=pages?'disabled':''}>Next</button>
+    </span>`;
+}
+
 async function loadQuestions(){
   const tbody=$('questionRows');
   tbody.innerHTML='<tr><td colspan="7">Loading questions…</td></tr>';
 
   let query=client
     .from('questions')
-    .select('id,question,status,exam_id,subject_id,difficulty,exams(name),subjects(name),created_at')
-    .order('created_at',{ascending:false})
-    .limit(100);
+    .select('id,question,status,exam_id,subject_id,difficulty,exams(name),subjects(name),created_at',{count:'exact'})
+    .order('created_at',{ascending:false});
 
   const search=$('qSearch')?.value.trim();
   const examId=$('qExamFilter')?.value;
@@ -123,13 +150,22 @@ async function loadQuestions(){
   if(status) query=query.eq('status',status);
   if(difficulty) query=query.eq('difficulty',difficulty);
 
-  const {data,error}=await query;
+  const from=(questionCurrentPage-1)*QUESTIONS_PER_PAGE;
+  const to=from+QUESTIONS_PER_PAGE-1;
+  const {data,error,count}=await query.range(from,to);
   if(error){
     tbody.innerHTML=`<tr><td colspan="7">Could not load questions: ${esc(error.message)}</td></tr>`;
     throw error;
   }
 
-  tbody.innerHTML=(data||[]).map(q=>`
+  questionTotalCount=count||0;
+  const maxPages=Math.max(1,Math.ceil(questionTotalCount/QUESTIONS_PER_PAGE));
+  if(questionCurrentPage>maxPages){
+    questionCurrentPage=maxPages;
+    return loadQuestions();
+  }
+
+  tbody.innerHTML=(data||[]).map((q,index)=>`
     <tr>
       <td><input type="checkbox" class="question-select" value="${esc(q.id)}" aria-label="Select question"></td>
       <td>${esc(q.question).slice(0,180)}</td>
@@ -140,9 +176,18 @@ async function loadQuestions(){
       <td><button class="btn light" type="button" data-edit-question="${esc(q.id)}">Edit</button>${q.status!=='published'?` <button class="btn light" type="button" data-publish-question="${esc(q.id)}">Publish</button>`:''}</td>
     </tr>
   `).join('')||'<tr><td colspan="7">No questions match these filters.</td></tr>';
+  renderQuestionPagination();
   if(typeof syncQuestionSelectionUI==='function') syncQuestionSelectionUI();
 }
 
+ensureQuestionPagination().addEventListener('click',async e=>{
+  const button=e.target.closest('[data-question-page]');
+  if(!button||button.disabled) return;
+  questionCurrentPage+=button.dataset.questionPage==='next'?1:-1;
+  document.querySelectorAll('#questionRows .question-select').forEach(box=>{box.checked=false;});
+  if($('questionMaster')) $('questionMaster').checked=false;
+  await loadQuestions();
+});
 
 // Bulk question selection and status management.
 function getSelectedQuestionIds(){
@@ -335,6 +380,7 @@ let questionSearchTimer=null;
 ['qSearch','qExamFilter','qSubjectFilter','qStatusFilter','qDifficultyFilter'].forEach(id=>{
   $(id)?.addEventListener(id==='qSearch'?'input':'change',()=>{
     clearTimeout(questionSearchTimer);
+    questionCurrentPage=1;
     questionSearchTimer=setTimeout(()=>loadQuestions().catch(err=>console.error(err)),id==='qSearch'?250:0);
   });
 });
@@ -723,3 +769,97 @@ client.auth.onAuthStateChange((event) => {
   }
 });
 init();
+
+
+// Export questions by status to CSV (exports all matching records, not just current page).
+function csvCell(value){
+  if(value===null||value===undefined) return '""';
+  const text=Array.isArray(value)?value.join(', '):String(value);
+  return '"'+text.replace(/"/g,'""')+'"';
+}
+function downloadCsvFile(filename,rows){
+  const csv='\uFEFF'+rows.map(row=>row.map(csvCell).join(',')).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();a.remove();
+  URL.revokeObjectURL(url);
+}
+$('exportQuestionsCsv')?.addEventListener('click',async()=>{
+  const button=$('exportQuestionsCsv');
+  const oldText=button.textContent;
+  button.disabled=true;button.textContent='Preparing CSV…';
+  try{
+    const status=$('exportQuestionStatus')?.value||'';
+    const filters={
+      search:$('qSearch')?.value.trim(),
+      examId:$('qExamFilter')?.value,
+      subjectId:$('qSubjectFilter')?.value,
+      listStatus:$('qStatusFilter')?.value,
+      difficulty:$('qDifficultyFilter')?.value
+    };
+    let all=[],from=0,chunk=1000;
+    while(true){
+      let query=client.from('questions')
+        .select('id,question,option_a,option_b,option_c,option_d,answer,explanation,exam_id,subject_id,difficulty,year,tags,status,created_at,exams(name),subjects(name)')
+        .order('created_at',{ascending:false})
+        .range(from,from+chunk-1);
+      if(status) query=query.eq('status',status);
+      if(filters.search) query=query.ilike('question',`%${filters.search}%`);
+      if(filters.examId) query=query.eq('exam_id',filters.examId);
+      if(filters.subjectId) query=query.eq('subject_id',filters.subjectId);
+      if(filters.listStatus) query=query.eq('status',filters.listStatus);
+      if(filters.difficulty) query=query.eq('difficulty',filters.difficulty);
+      const {data,error}=await query;
+      if(error) throw error;
+      const rows=data||[];
+      all.push(...rows);
+      if(rows.length<chunk) break;
+      from+=chunk;
+    }
+    if(!all.length){alert('No questions found for the selected status and filters.');return;}
+    const headers=['ID','Question','Option A','Option B','Option C','Option D','Correct Answer','Explanation','Exam','Subject','Difficulty','Year','Tags','Status','Created At'];
+    const rows=[headers,...all.map(q=>[
+      q.id,q.question,q.option_a,q.option_b,q.option_c,q.option_d,q.answer,q.explanation,
+      q.exams?.name||q.exam_id,q.subjects?.name||q.subject_id,q.difficulty,q.year,q.tags,q.status,q.created_at
+    ])];
+    const suffix=status||'all';
+    downloadCsvFile(`axomprep-questions-${suffix}-${new Date().toISOString().slice(0,10)}.csv`,rows);
+    alert(`Downloaded ${all.length} question(s) as CSV.`);
+  }catch(err){
+    console.error('CSV export failed:',err);
+    alert('CSV export failed:\n\n'+(err?.message||String(err)));
+  }finally{
+    button.disabled=false;button.textContent=oldText;
+  }
+});
+
+// Delete only explicitly selected question rows after confirmation.
+$('deleteSelectedQuestions')?.addEventListener('click',async()=>{
+  const ids=getSelectedQuestionIds();
+  if(!ids.length){alert('Select one or more questions to delete first.');return;}
+  const confirmed=confirm(`Permanently delete ${ids.length} selected question(s)? This cannot be undone.`);
+  if(!confirmed)return;
+  const button=$('deleteSelectedQuestions');
+  const oldText=button.textContent;
+  button.disabled=true;button.textContent='Deleting…';
+  try{
+    const {data,error}=await client.from('questions').delete().in('id',ids).select('id');
+    if(error)throw error;
+    const deleted=Array.isArray(data)?data.length:0;
+    if(!deleted)throw new Error('No rows were deleted. Check the admin DELETE policy (Row Level Security) for public.questions.');
+    if(deleted!==ids.length){
+      alert(`${deleted} of ${ids.length} selected questions were deleted. Some records may be protected by database permissions or may no longer exist.`);
+    }else{
+      alert(`${deleted} selected question(s) permanently deleted.`);
+    }
+    await Promise.all([loadQuestions(),loadStats()]);
+    syncQuestionSelectionUI();
+  }catch(err){
+    console.error('Delete selected questions failed:',err);
+    alert('Could not delete selected questions:\n\n'+(err?.message||String(err)));
+  }finally{
+    button.disabled=false;button.textContent=oldText;
+  }
+});
